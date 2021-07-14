@@ -18,6 +18,11 @@ public class Category {
 	@Column(name="category", nullable=false, unique=true)
 	private String category;
 
+	public Category(String category) {
+		super();
+		this.category = category;
+	}
+
 	public long getCategoryId() {
 		return categoryId;
 	}

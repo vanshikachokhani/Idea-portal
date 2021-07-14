@@ -21,14 +21,14 @@ public class Controller {
 	@GetMapping(path="/view")
     public List<Theme> viewThemes(){
 		// view all themes
-		List ans = null;
+		List<Theme> ans = null;
 		return ans;
 	}
 	
 	@GetMapping(path="/view/{themeID}")
     public List<Idea> viewIdeas(){
 		// view all themes
-		List ans = null;
+		List<Idea> ans = null;
 		return ans;
 	}
 }

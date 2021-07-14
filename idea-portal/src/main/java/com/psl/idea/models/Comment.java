@@ -27,6 +27,12 @@ public class Comment {
 	@JoinColumn(name="idea_id")
 	private Idea idea;
 	
+	public Comment(String comment, Users user, Idea idea) {
+		super();
+		this.comment = comment;
+		this.user = user;
+		this.idea = idea;
+	}
 	public long getCommentId() {
 		return commentId;
 	}
