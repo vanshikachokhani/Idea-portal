@@ -1,7 +1,11 @@
 package com.psl.idea.models;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -9,11 +13,18 @@ import javax.persistence.Table;
 public class Theme {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long themeId;
 	private String title;
 	private String description;
-	private long categoryId;
-	private long userId;
+	
+	@ManyToOne
+	@JoinColumn(name="categoryid")
+	private Category category;
+	
+	@ManyToOne
+	@JoinColumn(name="userid")
+	private Users user;
 	
 	private String[] files;
 
@@ -41,20 +52,20 @@ public class Theme {
 		this.description = description;
 	}
 
-	public long getCategoryId() {
-		return categoryId;
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCategoryId(long categoryId) {
-		this.categoryId = categoryId;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public long getUserId() {
-		return userId;
+	public Users getUser() {
+		return user;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setUser(Users user) {
+		this.user = user;
 	}
 
 	public String[] getFiles() {
@@ -68,7 +79,7 @@ public class Theme {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Theme [id=" + themeId + ", title=" + title + ", category=" + categoryId + "]";
+		return "Theme [id=" + themeId + ", title=" + title + ", category=" + category.getCategoryId() + "]";
 	}
 	
 }

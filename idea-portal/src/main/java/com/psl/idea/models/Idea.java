@@ -1,7 +1,11 @@
 package com.psl.idea.models;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -9,14 +13,22 @@ import javax.persistence.Table;
 public class Idea {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long ideaId;
 	
 	private String title;
 	private String description;
 	private String[] files;
-	private long themeId;
 	private long rating;
-	private long userId;
+	
+	@ManyToOne
+	@JoinColumn(name="themeid")
+	private Theme theme;
+	
+	@ManyToOne
+	@JoinColumn(name="userid")
+	private Users user;
+	
 	public long getIdeaId() {
 		return ideaId;
 	}
@@ -41,29 +53,29 @@ public class Idea {
 	public void setFiles(String[] files) {
 		this.files = files;
 	}
-	public long getThemeId() {
-		return themeId;
-	}
-	public void setThemeId(long themeId) {
-		this.themeId = themeId;
-	}
 	public long getRating() {
 		return rating;
 	}
 	public void setRating(long rating) {
 		this.rating = rating;
 	}
-	public long getUserId() {
-		return userId;
-	}
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
 	
+	public Theme getTheme() {
+		return theme;
+	}
+	public void setTheme(Theme theme) {
+		this.theme = theme;
+	}
+	public Users getUser() {
+		return user;
+	}
+	public void setUser(Users user) {
+		this.user = user;
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Idea [id=" + ideaId + ", title=" + title + ", theme=" + themeId + ", submitted by=" + userId + "]";
+		return "Idea [id=" + ideaId + ", title=" + title + ", theme=" + theme.getThemeId() + ", submitted by=" + user.getUserId() + "]";
 	}
 	
 }

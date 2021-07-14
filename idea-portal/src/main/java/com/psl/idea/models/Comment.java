@@ -1,7 +1,11 @@
 package com.psl.idea.models;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -9,11 +13,19 @@ import javax.persistence.Table;
 public class Comment {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long commentId;
 	
 	private String comment;
-	private long userId;
-	private long ideaId;
+	
+	@ManyToOne
+	@JoinColumn(name="userid")
+	private Users user;
+	
+	@ManyToOne
+	@JoinColumn(name="ideaid")
+	private Idea idea;
+	
 	public long getCommentId() {
 		return commentId;
 	}
@@ -26,23 +38,23 @@ public class Comment {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public long getUserId() {
-		return userId;
-	}
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-	public long getIdeaId() {
-		return ideaId;
-	}
-	public void setIdeaId(long ideaId) {
-		this.ideaId = ideaId;
-	}
 	
+	public Users getUser() {
+		return user;
+	}
+	public void setUser(Users user) {
+		this.user = user;
+	}
+	public Idea getIdea() {
+		return idea;
+	}
+	public void setIdea(Idea idea) {
+		this.idea = idea;
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Comment [id=" + commentId + ", user=" + userId + ", idea=" + ideaId + "]";
+		return "Comment [id=" + commentId + ", user=" + user.getUserId() + ", idea=" + idea.getIdeaId() + "]";
 	}
 
 }
