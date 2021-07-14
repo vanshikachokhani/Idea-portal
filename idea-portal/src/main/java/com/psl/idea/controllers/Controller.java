@@ -16,7 +16,7 @@ import com.psl.idea.service.IdeaService;
 @RequestMapping("/control")
 public class Controller {
 
-	@Autowired
+	@Autowired(required = false)
 	IdeaService service;
 	@GetMapping(path="/view")
     public List<Theme> viewThemes(){

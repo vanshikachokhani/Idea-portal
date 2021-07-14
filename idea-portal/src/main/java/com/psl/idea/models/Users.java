@@ -30,9 +30,8 @@ public class Users {
 	@Column(nullable = false, name = "password")
 	private String password;
 
-	@Column(nullable = false)
 	@ManyToOne
-	@JoinColumn(name="priviledge_id")
+	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
 
 	public long getUserId() {

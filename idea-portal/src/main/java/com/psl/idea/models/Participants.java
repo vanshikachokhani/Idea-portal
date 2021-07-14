@@ -1,6 +1,9 @@
 package com.psl.idea.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -8,16 +11,19 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="participants")
-public class Participants {
+public class Participants implements Serializable{
 	
+	@Id
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private Users user;
 	
+	@Id
 	@ManyToOne
 	@JoinColumn(name="idea_id")
 	private Idea idea;
 	
+	@Id
 	@OneToOne
 	@JoinColumn(name="role_id")
 	private Roles role;

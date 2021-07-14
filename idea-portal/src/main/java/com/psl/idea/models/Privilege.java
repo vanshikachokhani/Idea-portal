@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class Privilege {
 	
 	@Id
-	@Column(name = "priviledge_id")
+	@Column(name = "privilege_id")
 	private long privilegeId;
 	
 	@Column(name = "priviledge")
