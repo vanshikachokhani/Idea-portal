@@ -1,5 +1,6 @@
 package com.psl.idea.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,8 +10,10 @@ import javax.persistence.Table;
 public class Privilege {
 	
 	@Id
+	@Column(name = "PRIVILEGE_ID")
 	private long privilegeId;
 	
+	@Column(name = "PRIVILEGE")
 	private String privilege;
 	
 	public long getPrivilegeId() {
@@ -20,9 +23,6 @@ public class Privilege {
 	public void setPrivilegeId(long privilegeId) {
 		this.privilegeId = privilegeId;
 	}
-
-	
-	
 	public String getPrivilege() {
 		return privilege;
 	}
@@ -30,4 +30,11 @@ public class Privilege {
 	public void setPrivilege(String privilege) {
 		this.privilege = privilege;
 	}
+
+	@Override
+	public String toString() {
+		return "Privilege [privilegeId=" + privilegeId + ", privilege=" + privilege + "]";
+	}
+	
+	
 }

@@ -1,47 +1,52 @@
 package com.psl.idea.models;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="participants")
 public class Participants {
 	
-	private long userId;
+	@ManyToOne
+	@JoinColumn(name = "USER_ID")
+	private Users user;
 	
-	private long privilegeId;
+	private Idea idea;
 	
-	private long roleId;
+	@OneToOne
+	@JoinColumn(name="ROLE_ID")
+	private Roles role;
 
-	public long getUserId() {
-		return userId;
+	public Users getUser() {
+		return user;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setUser(Users user) {
+		this.user = user;
+	}
+	
+	public Idea getIdea() {
+		return idea;
 	}
 
-	public long getPrivilegeId() {
-		return privilegeId;
+	public void setIdea(Idea idea) {
+		this.idea = idea;
 	}
 
-	public void setPrivilegeId(long privilegeId) {
-		this.privilegeId = privilegeId;
+	public Roles getRole() {
+		return role;
 	}
 
-	public long getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(long roleId) {
-		this.roleId = roleId;
+	public void setRole(Roles role) {
+		this.role = role;
 	}
 
 	@Override
 	public String toString() {
-		return "Participants [userId=" + userId + ", privilegeId=" + privilegeId + ", roleId=" + roleId + "]";
+		return "Participants [user=" + user + ", idea=" + idea + ", role=" + role + "]";
 	}
-	
-	
 }
 
