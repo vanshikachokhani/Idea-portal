@@ -6,14 +6,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="privilege")
+@Table(name="privileges")
 public class Privilege {
 	
 	@Id
-	@Column(name = "PRIVILEGE_ID")
+	@Column(name = "priviledge_id")
 	private long privilegeId;
 	
-	@Column(name = "PRIVILEGE")
+	@Column(name = "priviledge")
 	private String privilege;
 	
 	public long getPrivilegeId() {

@@ -1,5 +1,6 @@
 package com.psl.idea.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,21 +10,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="comment")
+@Table(name="comments")
 public class Comment {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long commentId;
-	
+	@Column(name="comment", nullable=false)
 	private String comment;
 	
 	@ManyToOne
-	@JoinColumn(name="userid")
+	@JoinColumn(name="user_id")
 	private Users user;
 	
 	@ManyToOne
-	@JoinColumn(name="ideaid")
+	@JoinColumn(name="idea_id")
 	private Idea idea;
 	
 	public long getCommentId() {

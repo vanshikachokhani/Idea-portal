@@ -1,5 +1,6 @@
 package com.psl.idea.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,21 +10,23 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="theme")
+@Table(name="themes")
 public class Theme {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long themeId;
+	@Column(name="title", nullable=false)
 	private String title;
+	@Column(name="description", nullable=false)
 	private String description;
 	
 	@ManyToOne
-	@JoinColumn(name="categoryid")
+	@JoinColumn(name="category_id")
 	private Category category;
 	
 	@ManyToOne
-	@JoinColumn(name="userid")
+	@JoinColumn(name="user_id")
 	private Users user;
 	
 	private String[] files;
@@ -79,7 +82,7 @@ public class Theme {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Theme [id=" + themeId + ", title=" + title + ", category=" + category.getCategoryId() + "]";
+		return "Theme [id=" + themeId + ", title=" + title + ", category=" + category.getCategoryId() + ", user=" + user.getUserId() + "]";
 	}
 	
 }

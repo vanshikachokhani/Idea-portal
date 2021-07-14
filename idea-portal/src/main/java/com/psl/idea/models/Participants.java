@@ -11,13 +11,15 @@ import javax.persistence.Table;
 public class Participants {
 	
 	@ManyToOne
-	@JoinColumn(name = "USER_ID")
+	@JoinColumn(name = "user_id")
 	private Users user;
 	
+	@ManyToOne
+	@JoinColumn(name="idea_id")
 	private Idea idea;
 	
 	@OneToOne
-	@JoinColumn(name="ROLE_ID")
+	@JoinColumn(name="role_id")
 	private Roles role;
 
 	public Users getUser() {
@@ -46,7 +48,7 @@ public class Participants {
 
 	@Override
 	public String toString() {
-		return "Participants [user=" + user + ", idea=" + idea + ", role=" + role + "]";
+		return "Participants [user=" + user.getUserId() + ", idea=" + idea.getIdeaId() + ", role=" + role.getRoleId() + "]";
 	}
 }
 

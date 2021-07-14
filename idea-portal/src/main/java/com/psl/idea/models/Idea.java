@@ -1,5 +1,6 @@
 package com.psl.idea.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,24 +11,27 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="idea")
+@Table(name="ideas")
 public class Idea {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long ideaId;
 	
+	@Column(name="title", nullable=false)
 	private String title;
+	@Column(name="description", nullable=false)
 	private String description;
 	private String[] files;
-	private long rating;
+	@Column(name="rating")
+	private float rating = 0;
 	
 	@ManyToOne
-	@JoinColumn(name="themeid")
+	@JoinColumn(name="theme_id")
 	private Theme theme;
 	
 	@ManyToOne
-	@JoinColumn(name="userid")
+	@JoinColumn(name="user_id")
 	private Users user;
 	
 	public long getIdeaId() {
@@ -54,13 +58,13 @@ public class Idea {
 	public void setFiles(String[] files) {
 		this.files = files;
 	}
-	public long getRating() {
+	
+	public float getRating() {
 		return rating;
 	}
-	public void setRating(long rating) {
+	public void setRating(float rating) {
 		this.rating = rating;
 	}
-	
 	public Theme getTheme() {
 		return theme;
 	}

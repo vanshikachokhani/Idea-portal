@@ -15,24 +15,24 @@ public class Users {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
+	@Column(name = "user_id")
 	private long userId;
 
-	@Column(nullable = false, unique = true, name = "USER_NAME")
+	@Column(nullable = false, name = "name")
 	private String name;
 	
-	@Column(nullable = false, unique = true, name = "PHONE_NUMBER")
+	@Column(nullable = false, unique = true, name = "phone_number")
 	private long phoneNumber;
 	
-	@Column(nullable = false, unique = true, name = "EMAIL_ID")
+	@Column(nullable = false, unique = true, name = "email_id")
 	private String emailId;
 	
-	@Column(nullable = false, name = "PASSWORD")
+	@Column(nullable = false, name = "password")
 	private String password;
 
 	@Column(nullable = false)
 	@ManyToOne
-	@JoinColumn(name="PRIVILEGE_ID")
+	@JoinColumn(name="priviledge_id")
 	private Privilege privilege;
 
 	public long getUserId() {
@@ -78,7 +78,7 @@ public class Users {
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", name=" + name + ", phoneNumber=" + phoneNumber + ", emailId=" + emailId
-				+ ", password=" + password + ", privilege=" + privilege + "]";
+				+ ", privilege=" + privilege.getPrivilegeId() + "]";
 	}
 	
 	
