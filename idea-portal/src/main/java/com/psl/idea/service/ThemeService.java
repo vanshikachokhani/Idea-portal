@@ -18,6 +18,7 @@ public class ThemeService {
 	{
 		theme.setUser(null);
 		themeRepo.save(theme);
+		
 	}
 	 public List<Theme> viewThemes(){
 			return themeRepo.findAll();

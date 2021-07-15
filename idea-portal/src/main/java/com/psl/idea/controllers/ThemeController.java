@@ -29,6 +29,12 @@ public class ThemeController {
 		return themeService.viewThemes();
 	}
 	
+	@PostMapping(path="/add")
+    public void addThemes(@RequestBody Theme t){
+	themeService.createTheme(t);
+	}
+
+	
 	@GetMapping(path="/{themeID}")
     public List<Idea> viewIdeas(){
 		return ideaService.viewIdeas();
