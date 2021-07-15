@@ -12,14 +12,14 @@ import javax.persistence.Table;
 public class Category {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long categoryId;
 	
 	@Column(name="category", nullable=false, unique=true)
 	private String category;
 
-	public Category(String category) {
+	public Category(long categoryId, String category) {
 		super();
+		this.categoryId = categoryId;
 		this.category = category;
 	}
 

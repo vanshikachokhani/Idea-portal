@@ -13,7 +13,7 @@ public class Privilege {
 	@Column(name = "privilege_id")
 	private long privilegeId;
 	
-	@Column(name = "priviledge")
+	@Column(name = "privilege")
 	private String privilege;
 	
 	

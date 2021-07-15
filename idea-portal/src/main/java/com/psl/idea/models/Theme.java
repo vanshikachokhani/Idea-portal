@@ -30,12 +30,16 @@ public class Theme {
 	private Users user;
 	
 	private String[] files;
+	
+	public Theme()
+	{}
 
-	public Theme(String title, String description, String[] files) {
+	public Theme(String title, String description, Category category, String[] files) {
 		super();
 		this.title = title;
 		this.description = description;
 		this.files = files;
+		this.category = category;
 	}
 
 	public long getThemeId() {

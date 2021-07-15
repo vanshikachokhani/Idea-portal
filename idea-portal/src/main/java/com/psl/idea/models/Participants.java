@@ -13,6 +13,8 @@ import javax.persistence.Table;
 @Table(name="participants")
 public class Participants implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "user_id")
