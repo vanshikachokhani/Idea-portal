@@ -33,6 +33,9 @@ public class Participants implements Serializable{
 	private Roles role;
 	
 	
+	public Participants() {
+		super();
+	}
 
 	public Participants(Users user, Idea idea, Roles role) {
 		super();

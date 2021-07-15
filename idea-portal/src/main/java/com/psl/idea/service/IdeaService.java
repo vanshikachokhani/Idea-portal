@@ -47,4 +47,17 @@ public class IdeaService{
 		return ideaRepo.findAll();
 	}
 
+	public void createIdea(long themeId, Idea idea) {
+		Theme t = themeRepo.findById(themeId).orElse(null);
+		
+		if(t != null)
+		{
+			idea.setTheme(t);
+			ideaRepo.save(idea);
+		}
+		else
+			System.out.println("Invalid Theme");
+		
+	}
+
 }
