@@ -26,7 +26,7 @@ public class ThemeController {
 	
 	@GetMapping(path="/")
     public List<Theme> viewThemes(){
-		return ideaService.viewThemes();
+		return themeService.viewThemes();
 	}
 	
 	@GetMapping(path="/{themeID}")

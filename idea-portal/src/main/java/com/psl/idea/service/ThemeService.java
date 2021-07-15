@@ -1,5 +1,7 @@
 package com.psl.idea.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,8 @@ public class ThemeService {
 		theme.setUser(null);
 		themeRepo.save(theme);
 	}
-	
+	 public List<Theme> viewThemes(){
+			return themeRepo.findAll();
+		}
+		
 }
