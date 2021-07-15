@@ -33,14 +33,11 @@ public class Users {
 	@ManyToOne
 	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
-
-
-	public Users(String name)
-	{
-		super();
-		this.name = name;
-	}
 	
+	public Users() {
+		super();
+	}
+
 	public Users(String name, long phoneNumber, String emailId, String password, Privilege privilege) {
 		super();
 		this.name = name;

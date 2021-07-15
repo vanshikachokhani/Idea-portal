@@ -34,6 +34,10 @@ public class Idea {
 	@JoinColumn(name="user_id")
 	private Users user;
 	
+	
+	public Idea() {
+		super();
+	}
 	public Idea(String title, String description, String[] files, float rating, Theme theme, Users user) {
 		super();
 		this.title = title;

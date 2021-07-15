@@ -16,7 +16,10 @@ public class Roles {
 	@Column(name = "role")
 	private String roles;
 	
-	
+
+	public Roles() {
+		super();
+	}
 
 	public Roles(long roleId, String roles) {
 		super();

@@ -26,6 +26,7 @@ public class Rating implements Serializable {
 	
 	private boolean rating; // true means liked, false means disliked
 
+
 	public Rating(Users user, Idea idea, boolean rating) {
 		super();
 		this.user = user;

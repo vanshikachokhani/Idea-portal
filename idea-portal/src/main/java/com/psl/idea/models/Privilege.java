@@ -15,9 +15,12 @@ public class Privilege {
 	
 	@Column(name = "privilege")
 	private String privilege;
+
 	
-	
-	
+	public Privilege() {
+		super();
+	}
+
 	public Privilege(long privilegeId, String privilege) {
 		super();
 		this.privilegeId = privilegeId;

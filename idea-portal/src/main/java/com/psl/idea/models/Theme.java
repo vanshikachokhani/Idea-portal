@@ -32,7 +32,9 @@ public class Theme {
 	private String[] files;
 	
 	public Theme()
-	{}
+	{
+		super();
+	}
 
 	public Theme(String title, String description, Category category, String[] files) {
 		super();

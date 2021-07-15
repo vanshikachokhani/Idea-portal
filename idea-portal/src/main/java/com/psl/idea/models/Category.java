@@ -17,6 +17,10 @@ public class Category {
 	@Column(name="category", nullable=false, unique=true)
 	private String category;
 
+	public Category() {
+		super();
+	}
+
 	public Category(long categoryId, String category) {
 		super();
 		this.categoryId = categoryId;
