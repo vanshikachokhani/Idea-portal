@@ -18,8 +18,8 @@ import com.psl.idea.models.Theme;
 
 
 @Repository
-public class ThemeRepo implements JpaRepository<Theme, Id>{
-
+public class ThemeRepo implements JpaRepository<Theme, Long>{
+	
 	@Override
 	public Page<Theme> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -33,13 +33,13 @@ public class ThemeRepo implements JpaRepository<Theme, Id>{
 	}
 
 	@Override
-	public Optional<Theme> findById(Id id) {
+	public Optional<Theme> findById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean existsById(Id id) {
+	public boolean existsById(Long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -51,7 +51,7 @@ public class ThemeRepo implements JpaRepository<Theme, Id>{
 	}
 
 	@Override
-	public void deleteById(Id id) {
+	public void deleteById(Long id) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -63,7 +63,7 @@ public class ThemeRepo implements JpaRepository<Theme, Id>{
 	}
 
 	@Override
-	public void deleteAllById(Iterable<? extends Id> ids) {
+	public void deleteAllById(Iterable<? extends Long> ids) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -117,7 +117,7 @@ public class ThemeRepo implements JpaRepository<Theme, Id>{
 	}
 
 	@Override
-	public List<Theme> findAllById(Iterable<Id> ids) {
+	public List<Theme> findAllById(Iterable<Long> ids) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -153,7 +153,7 @@ public class ThemeRepo implements JpaRepository<Theme, Id>{
 	}
 
 	@Override
-	public void deleteAllByIdInBatch(Iterable<Id> ids) {
+	public void deleteAllByIdInBatch(Iterable<Long> ids) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -165,13 +165,13 @@ public class ThemeRepo implements JpaRepository<Theme, Id>{
 	}
 
 	@Override
-	public Theme getOne(Id id) {
+	public Theme getOne(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Theme getById(Id id) {
+	public Theme getById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -36,3 +36,4 @@ build/
 ### Java ###
 application.properties
 *.class
+*.log

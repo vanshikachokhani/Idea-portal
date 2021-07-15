@@ -10,10 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.psl.idea.models.Idea;
 
-public class IdeaRepo implements JpaRepository<Idea, Id>{
+@Repository
+public class IdeaRepo implements JpaRepository<Idea, Long>{
 
 	@Override
 	public Page<Idea> findAll(Pageable pageable) {
@@ -28,13 +30,7 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 	}
 
 	@Override
-	public Optional<Idea> findById(ID id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean existsById(ID id) {
+	public boolean existsById(Long id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -46,7 +42,7 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 	}
 
 	@Override
-	public void deleteById(ID id) {
+	public void deleteById(Long id) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -58,7 +54,7 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 	}
 
 	@Override
-	public void deleteAllById(Iterable<? extends ID> ids) {
+	public void deleteAllById(Iterable<? extends Long> ids) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -112,7 +108,7 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 	}
 
 	@Override
-	public List<Idea> findAllById(Iterable<ID> ids) {
+	public List<Idea> findAllById(Iterable<Long> ids) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -148,7 +144,7 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 	}
 
 	@Override
-	public void deleteAllByIdInBatch(Iterable<ID> ids) {
+	public void deleteAllByIdInBatch(Iterable<Long> ids) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -160,13 +156,13 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 	}
 
 	@Override
-	public Idea getOne(ID id) {
+	public Idea getOne(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Idea getById(ID id) {
+	public Idea getById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -179,6 +175,12 @@ public class IdeaRepo implements JpaRepository<Idea, Id>{
 
 	@Override
 	public <S extends Idea> List<S> findAll(Example<S> example, Sort sort) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Optional<Idea> findById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

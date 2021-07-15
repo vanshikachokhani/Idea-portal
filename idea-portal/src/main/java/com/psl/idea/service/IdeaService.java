@@ -10,42 +10,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.Users;
 import com.psl.idea.repository.IdeaRepo;
 import com.psl.idea.repository.ThemeRepo;
 
 @Service
 public class IdeaService{
-	
-@Autowired
-ThemeRepo repo;
+		
+	@Autowired
+	ThemeRepo themeRepo;
 
-@Autowired
-IdeaRepo repo1;
-	
-public List<Theme> viewThemes(){
-	return 	repo.findAll();
-}
+	@Autowired
+	IdeaRepo ideaRepo;
 
-public List<Idea> viewIdeas(){
-	return repo1.findAll();
-}
+	public List<Theme> viewThemes(){
+		return 	themeRepo.findAll();
+	}
 
-
-// sort by most likes
-public List<Idea> viewIdeasbyLikes(){
-	return repo1.findAll();
-}
-
-// sort by newest first
-public List<Idea> viewIdeasbyDate(){
-	return repo1.findAll();
-}
-
-//sort by most commented first
-public List<Idea> viewIdeasbyComment(){
-	return repo1.findAll();
-}
+	public List<Idea> viewIdeas(){
+		return ideaRepo.findAll();
+	}
 
 
+	// sort by most likes
+	public List<Idea> viewIdeasbyLikes(){
+		return ideaRepo.findAll();
+	}
+
+	// sort by newest first
+	public List<Idea> viewIdeasbyDate(){
+		return ideaRepo.findAll();
+	}
+
+	//sort by most commented first
+	public List<Idea> viewIdeasbyComment(){
+		return ideaRepo.findAll();
+	}
 
 }
