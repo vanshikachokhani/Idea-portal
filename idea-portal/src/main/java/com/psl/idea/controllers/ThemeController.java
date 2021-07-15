@@ -63,6 +63,8 @@ public class ThemeController {
 	@PostMapping(path="/")
 	public void createTheme(@RequestBody Theme theme)
 	{
+		System.out.println("Post Request CreateTheme");
+		System.out.println(theme);
 		themeService.createTheme(theme);
 	}
 

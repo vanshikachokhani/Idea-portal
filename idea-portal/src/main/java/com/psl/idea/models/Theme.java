@@ -31,12 +31,10 @@ public class Theme {
 	
 	private String[] files;
 
-	public Theme(String title, String description, Category category, Users user, String[] files) {
+	public Theme(String title, String description, String[] files) {
 		super();
 		this.title = title;
 		this.description = description;
-		this.category = category;
-		this.user = user;
 		this.files = files;
 	}
 

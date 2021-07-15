@@ -35,9 +35,14 @@ public class Users {
 	private Privilege privilege;
 
 
-	public Users(long userId, String name, long phoneNumber, String emailId, String password, Privilege privilege) {
+	public Users(String name)
+	{
 		super();
-		this.userId = userId;
+		this.name = name;
+	}
+	
+	public Users(String name, long phoneNumber, String emailId, String password, Privilege privilege) {
+		super();
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 		this.emailId = emailId;

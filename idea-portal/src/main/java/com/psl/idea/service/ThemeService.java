@@ -16,6 +16,7 @@ public class ThemeService {
 	
 	public void createTheme(Theme theme)
 	{
+		theme.setCategory(null);
 		theme.setUser(null);
 		themeRepo.save(theme);
 		
