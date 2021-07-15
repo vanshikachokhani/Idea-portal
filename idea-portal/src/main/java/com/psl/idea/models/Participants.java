@@ -27,6 +27,15 @@ public class Participants implements Serializable{
 	@OneToOne
 	@JoinColumn(name="role_id")
 	private Roles role;
+	
+	
+
+	public Participants(Users user, Idea idea, Roles role) {
+		super();
+		this.user = user;
+		this.idea = idea;
+		this.role = role;
+	}
 
 	public Users getUser() {
 		return user;
