@@ -34,6 +34,17 @@ public class Users {
 	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
 
+
+	public Users(long userId, String name, long phoneNumber, String emailId, String password, Privilege privilege) {
+		super();
+		this.userId = userId;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.emailId = emailId;
+		this.password = password;
+		this.privilege = privilege;
+	}
+
 	public long getUserId() {
 		return userId;
 	}
