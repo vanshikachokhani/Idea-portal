@@ -25,12 +25,14 @@ public class ThemeController {
 	@Autowired
 	ThemeService themeService;
 	
-
+     // view all themes
 	@GetMapping(path="/")
     public List<Theme> viewThemes(){
 		return themeService.viewThemes();
 	}
 	
+	
+	// view all ideas of a particular theme
 	@GetMapping(path="/{themeID}/ideas")
     public List<Idea> viewIdeas(){
 		return ideaService.viewIdeas();
