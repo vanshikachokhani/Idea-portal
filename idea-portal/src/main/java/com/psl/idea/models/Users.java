@@ -22,7 +22,7 @@ public class Users {
 	private String name;
 	
 	@Column(nullable = false, unique = true, name = "phone_number")
-	private long phoneNumber;
+	private String phoneNumber;
 	
 	@Column(nullable = false, unique = true, name = "email_id")
 	private String emailId;
@@ -38,7 +38,7 @@ public class Users {
 		super();
 	}
 
-	public Users(String name, long phoneNumber, String emailId, String password, Privilege privilege) {
+	public Users(String name, String phoneNumber, String emailId, String password, Privilege privilege) {
 		super();
 		this.name = name;
 		this.phoneNumber = phoneNumber;
@@ -63,11 +63,11 @@ public class Users {
 		this.name = name;
 	}
 
-	public long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
