@@ -16,12 +16,12 @@ import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.models.Users;
 
 @Repository
-public interface UserRepo extends JpaRepository<Users, Serializable> {
+public interface UserRepo extends JpaRepository<Users, Long> {
 
 
-	public List<Users> findByemailId(String email_id);
+	public Users findByEmailId(String email_id);
 	
-	public List<Users> findByuserId (String user_id);
+	public List<Users> findByuserId (long user_id);
 	
 	public Users findByemailIdAndPassword(String email_id, String password);
 }

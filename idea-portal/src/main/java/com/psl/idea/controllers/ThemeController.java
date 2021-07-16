@@ -26,7 +26,7 @@ public class ThemeController {
 	ThemeService themeService;
 	
      // view all themes
-	@GetMapping(path="/")
+	@GetMapping(path="")
     public List<Theme> viewThemes(){
 		return themeService.viewThemes();
 	}
@@ -58,9 +58,10 @@ public class ThemeController {
 	}
 	
 	// create a theme
-	@PostMapping(path="/")
+	@PostMapping(path="")
 	public void createTheme(@RequestBody Theme theme)
 	{
+		System.out.println("Create theme");
 		themeService.createTheme(theme);
 	}
 	

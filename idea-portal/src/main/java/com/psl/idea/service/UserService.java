@@ -26,6 +26,7 @@ public class UserService {
 	}
 	
 	public void registerUser(Users user) throws AuthException {
+		System.out.println(user.getPassword());
 		String email_id = user.getEmailId();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 		if(email_id!=null) {
@@ -34,7 +35,7 @@ public class UserService {
 		}
 		if(!pattern.matcher(email_id).matches())
 			throw new AuthException("Invalid email format");
-		List <Users> u = userRepo.findByemailId(email_id);
+		Users u = userRepo.findByEmailId(email_id);
 		
 		if(u!=null)
 			throw new AuthException("Email is already in use");
