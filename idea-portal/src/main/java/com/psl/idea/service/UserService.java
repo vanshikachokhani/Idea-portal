@@ -26,7 +26,6 @@ public class UserService {
 	}
 	
 	public void registerUser(Users user) throws AuthException {
-		System.out.println(user.getPassword());
 		String email_id = user.getEmailId();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 		if(email_id!=null) {

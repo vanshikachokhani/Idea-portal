@@ -1,5 +1,6 @@
 package com.psl.idea.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,14 @@ public class ThemeService {
 	}
 	 public List<Theme> viewThemes(){
 			return themeRepo.findAll();
-		}
+	}
+	
+	public List<Theme> getThemesByUser(long userId) {
+		List<Theme> themes = new ArrayList<>();
+		
+		themes = themeRepo.findByUserUserId(userId);
+		
+		return themes;
+	}
 		
 }

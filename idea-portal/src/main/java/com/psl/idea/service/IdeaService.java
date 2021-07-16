@@ -1,4 +1,5 @@
 package com.psl.idea.service;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -58,6 +59,14 @@ public class IdeaService{
 		else
 			System.out.println("Invalid Theme");
 		
+	}
+
+	public List<Idea> getIdeasByUser(long userId) {
+		List<Idea> ideas = new ArrayList<>();
+		
+		ideas = ideaRepo.findByUserUserId(userId);
+		
+		return ideas;
 	}
 
 }
