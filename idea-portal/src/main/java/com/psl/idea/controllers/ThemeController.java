@@ -34,26 +34,26 @@ public class ThemeController {
 	
 	// view all ideas of a particular theme
 	@GetMapping(path="/{themeID}/ideas")
-    public List<Idea> viewIdeas(@PathVariable long themeID){
-		return ideaService.viewIdeas(themeID);
+    public List<Idea> viewIdeas(){
+		return ideaService.viewIdeas();
 	}
 	
 	
 	// sort by most likes
 	@GetMapping(path="/{themeID}/likes")
-    public List<Idea> viewIdeasbyLikes(@PathVariable long themeID){
+    public List<Idea> viewIdeasbyLikes(){
 		return ideaService.viewIdeasbyLikes();
 	}
 	
 	// sort by newest first
 	@GetMapping(path="/{themeID}/date")
-    public List<Idea> viewIdeasbyDate(@PathVariable long themeID){
+    public List<Idea> viewIdeasbyDate(){
 		return ideaService.viewIdeasbyDate();
 	}
 	
 	//sort by most commented first
 	@GetMapping(path="/{themeID}/comment")
-    public List<Idea> viewIdeasbyComment(@PathVariable long themeID){
+    public List<Idea> viewIdeasbyComment(){
 		return ideaService.viewIdeasbyComment();
 	}
 	
