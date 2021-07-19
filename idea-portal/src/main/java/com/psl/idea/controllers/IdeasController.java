@@ -64,7 +64,7 @@ public class IdeasController {
 		return commentservice.viewComments();
 	}
 	
-	//interest in indea
+	//interest in idea
 	@PostMapping(path="/Interested")
 	public void interestedParticipant(@RequestBody Participants participants) {
 		participantservice.interestIn(participants);
