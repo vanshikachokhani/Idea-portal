@@ -24,18 +24,23 @@ public class ParticipantService {
 	IdeaRepo ideaRepo;
 
 	//interested participants in this idea
-	public void interestIn(Participants participants,Idea idea, Users user, Roles role) {
-		participants.setIdea(idea);
-		participants.setRole(role);
-		participants.setUser(user);
-		repo.save(participants);
+	public void interestIn(Participants participants,Long ideaId) {
+		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
+		if(idea.isPresent()) {
+			repo.save(participants);
+		}
+		else {
+			System.out.println("Invalid participant");
+		}
+		
 	}
 	
 	//view interested participants
 	public List<Participants> viewInterested(Long ideaId){
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		if(idea.isPresent()) {
-			return idea.get().getParticipant();
+		//	return idea.get().getParticipant();
+			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {
 			return new ArrayList<Participants>();
