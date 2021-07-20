@@ -67,6 +67,15 @@ public class Users {
 	public List<Comment> getComments() {
 		return comments;
 	}
+	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;

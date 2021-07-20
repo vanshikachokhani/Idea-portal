@@ -22,7 +22,7 @@ import com.psl.idea.service.ParticipantService;
 import com.psl.idea.service.RatingService;
 
 @RestController
-@RequestMapping("/{ideaId}")
+@RequestMapping("/api/loggedin/{ideaId}")
 public class IdeasController {
 	
 	@Autowired

@@ -17,7 +17,7 @@ import com.psl.idea.service.ThemeService;
 
 
 @RestController
-@RequestMapping("/themes")
+@RequestMapping("/api/loggedin/themes")
 public class ThemeController {
 	@Autowired
 	IdeaService ideaService;
