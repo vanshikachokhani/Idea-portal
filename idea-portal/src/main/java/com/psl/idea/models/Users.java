@@ -38,7 +38,7 @@ public class Users {
 	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	/*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Comment> comments;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -79,7 +79,7 @@ public class Users {
 
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
-	}
+	}*/
 
 	public Users() {
 		super();

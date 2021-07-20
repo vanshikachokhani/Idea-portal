@@ -44,14 +44,14 @@ public class IdeasController {
 	
 	//like or dislike an idea
 	@PostMapping(path="/like")
-	public void likeDislike(@RequestBody Rating r, @RequestBody Idea idea, @RequestBody Users user) {
-		ratingservice.doLike(r,idea,user);
+	public void likeDislike(@PathVariable long ideaId,@RequestBody Rating rate) {
+		ratingservice.doLike(ideaId,rate);
 	}
 	
 	//do comment
 	@PostMapping(path="/comment")
-	public void createComment(@RequestBody Comment comment, @RequestBody Idea idea, @RequestBody Users user) {
-		commentservice.createComment(comment,idea,user);
+	public void createComment(@RequestBody Comment comment,@PathVariable Long ideaId) {
+		commentservice.createComment(comment,ideaId);
 	}
 	// showing all ratings
 	@GetMapping(path="/viewLike")
@@ -67,8 +67,8 @@ public class IdeasController {
 	
 	//interest in indea
 	@PostMapping(path="/Interested")
-	public void interestedParticipant(@RequestBody Participants participants, @RequestBody Idea idea, @RequestBody Users user, @RequestBody Roles role) {
-		participantservice.interestIn(participants,idea,user, role);
+	public void interestedParticipant(@RequestBody Participants participants,@PathVariable Long ideaId) {
+		participantservice.interestIn(participants,ideaId);
 	}
 	
 	// see all interested participants in this idea
