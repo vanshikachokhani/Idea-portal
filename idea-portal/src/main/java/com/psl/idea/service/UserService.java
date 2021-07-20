@@ -3,6 +3,8 @@ package com.psl.idea.service;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.mindrot.jbcrypt.BCrypt;
+//import org.mindrot.jbcrypt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,15 @@ public class UserService {
 	public Users validateUser(String email_id, String password) throws AuthException {
 		if(email_id!=null)
 			email_id.toLowerCase();
-			Users user =  userRepo.findByemailIdAndPassword(email_id, password);
-			if(user==null)
-				throw new AuthException("Ivalid Login credentials");
+//			System.out.println(email_id);
+			Users user = userRepo.findByEmailId(email_id);
+			
+//			System.out.println(user.getPassword());
+			if(!BCrypt.checkpw(password, user.getPassword()))
+				throw new AuthException("Invalid Login credentials");
+//			Users users =  userRepo.findByemailIdAndPassword(email_id, password);
+//			if(users==null)
+//				throw new AuthException("Invalid Login credentials");
 			return user;
 	}
 	
@@ -38,7 +46,8 @@ public class UserService {
 		
 		if(u!=null)
 			throw new AuthException("Email is already in use");
-		
+		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
+		user.setPassword(hashedPassword);
 		userRepo.save(user);
 		
 	}
