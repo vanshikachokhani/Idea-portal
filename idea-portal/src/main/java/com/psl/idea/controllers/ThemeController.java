@@ -2,7 +2,11 @@ package com.psl.idea.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,19 +15,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
-import com.psl.idea.repository.ThemeRepo;
+import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
+import com.psl.idea.service.UserService;
+import com.psl.idea.util.UsersUtil;
 
 
 @RestController
 @RequestMapping("/api/loggedin/themes")
 public class ThemeController {
 	@Autowired
-	IdeaService ideaService;
-	
+	private IdeaService ideaService;
 	@Autowired
-	ThemeService themeService;
+	private ThemeService themeService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private UsersUtil usersUtil;
 	
      // view all themes
 	@GetMapping(path="")
@@ -59,10 +68,18 @@ public class ThemeController {
 	
 	// create a theme
 	@PostMapping(path="")
-	public void createTheme(@RequestBody Theme theme)
+	public ResponseEntity<Object> createTheme(@RequestBody Theme theme, HttpServletRequest httpServletRequest)
 	{
-		System.out.println("Create theme");
-		themeService.createTheme(theme);
+		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
+		if(userPrivilege == 1)
+		{
+			Theme t = themeService.createTheme(theme);
+			return ResponseEntity.status(HttpStatus.OK).body(t);
+		}
+		else
+		{
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("401: Not Authorized");
+		}
 	}
 	
 	// create an idea
