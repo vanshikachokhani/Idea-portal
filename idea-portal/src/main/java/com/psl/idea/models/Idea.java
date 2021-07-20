@@ -20,7 +20,6 @@ public class Idea {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "idea_id")
 	private long ideaId;
 	
 	@Column(name="title", nullable=false)
@@ -40,7 +39,7 @@ public class Idea {
 	@JoinColumn(name="user_id")
 	private Users user;
 	
-	/*@OneToMany(mappedBy = "idea",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "idea",cascade = CascadeType.ALL)
 	private List<Comment> comments;
 	
 	@OneToMany(mappedBy = "idea",cascade =CascadeType.ALL)
@@ -70,7 +69,6 @@ public class Idea {
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
-	*/
 	public Idea() {
 		super();
 	}
