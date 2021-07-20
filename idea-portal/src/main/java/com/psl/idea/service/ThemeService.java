@@ -15,9 +15,9 @@ public class ThemeService {
 	@Autowired
 	ThemeRepo themeRepo;
 	
-	public void createTheme(Theme theme)
+	public Theme createTheme(Theme theme)
 	{
-		themeRepo.save(theme);
+		return themeRepo.save(theme);
 		
 	}
 	 public List<Theme> viewThemes(){

@@ -1,8 +1,5 @@
 package com.psl.idea.models;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +8,6 @@ import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Entity
 @Table(name="users")
@@ -67,20 +63,11 @@ public class Users {
 	public List<Comment> getComments() {
 		return comments;
 	}
-	
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}*/
-
+	
 	public Users() {
 		super();
 	}
@@ -133,6 +120,16 @@ public class Users {
 	public void setPrivilege(Privilege privilege) {
 		this.privilege = privilege;
 	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
 
 	@Override
 	public String toString() {

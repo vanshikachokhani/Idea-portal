@@ -1,6 +1,5 @@
 package com.psl.idea.service;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -50,6 +49,10 @@ public class UserService {
 		user.setPassword(hashedPassword);
 		userRepo.save(user);
 		
+	}
+
+	public Users getUserByUserId(long userId) {
+		return userRepo.findByuserId(userId);
 	}
 	
 }
