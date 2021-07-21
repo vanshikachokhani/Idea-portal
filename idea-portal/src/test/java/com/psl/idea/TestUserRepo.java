@@ -14,16 +14,16 @@ class TestUserRepo {
 	@Autowired
 	UserRepo userRepo;
 
-	@Autowired
-	Privilege p;
+	
+	Privilege p=new Privilege();
 	
 	@Test
-	public void testfindByEmailId(String email_id) {
+	public void testfindByEmailId() {
 		//fail("Not yet implemented");
 		p.setPrivilege("ProductManager");
 		p.setPrivilegeId(1);
 		Users user=new Users("vaibhav","8423","email@gmail.com","pass",p);
-		assertEquals(user, userRepo.findByEmailId(email_id));
+		assertEquals(user, userRepo.findByEmailId("email@gmail.com"));
 	}
 
 }
