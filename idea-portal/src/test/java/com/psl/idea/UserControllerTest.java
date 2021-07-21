@@ -4,53 +4,42 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.psl.idea.controllers.UserController;
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.Users;
-import com.psl.idea.repository.CommentRepo;
-import com.psl.idea.repository.IdeaRepo;
-import com.psl.idea.repository.ParticipantRepo;
-import com.psl.idea.repository.RatingRepo;
-import com.psl.idea.repository.ThemeRepo;
-import com.psl.idea.repository.UserRepo;
+import com.psl.idea.service.IdeaService;
+import com.psl.idea.service.ThemeService;
+import com.psl.idea.service.UserService;
 
-@ComponentScan
-@WebMvcTest
-@AutoConfigureMockMvc
-@ContextConfiguration
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = UserController.class)
 public class UserControllerTest {
-
+	
 	@MockBean
-	private ThemeRepo themeRepo;
+	UserService userService;
 	@MockBean
-	private UserRepo userRepo;
+	ThemeService themeService;
 	@MockBean
-	private CommentRepo commentRepo;
-	@MockBean
-	private IdeaRepo ideaRepo;
-	@MockBean
-	private ParticipantRepo participantRepo;
-	@MockBean
-	private RatingRepo ratingRepo;
-	@MockBean
-	private SessionFactory sessionFactory;
+	IdeaService ideaService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -62,27 +51,38 @@ public class UserControllerTest {
 	private String[] files = {};
 	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1, files);
 	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", files, 0, t, user2);
-	private String jwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjY4NTEzNzgsImV4cCI6MTYyNjg1ODU3OCwidXNlcklkIjo0LCJlbWFpbElkIjoicmF0aGlyb2hhbjhAZ21haWwuY29tIiwibmFtZSI6IlJvaGFuIFJhdGhpIiwicHJpdmlsZWdlIjp7InByaXZpbGVnZUlkIjoxLCJwcml2aWxlZ2UiOiJDbGllbnQgUGFydG5lciJ9fQ.IQ7xjBkJOprB1yYcPl6kOejHTpwyKMJuLBDw0IqpFTA";
+//	private String jwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjY4NTEzNzgsImV4cCI6MTYyNjg1ODU3OCwidXNlcklkIjo0LCJlbWFpbElkIjoicmF0aGlyb2hhbjhAZ21haWwuY29tIiwibmFtZSI6IlJvaGFuIFJhdGhpIiwicHJpdmlsZWdlIjp7InByaXZpbGVnZUlkIjoxLCJwcml2aWxlZ2UiOiJDbGllbnQgUGFydG5lciJ9fQ.IQ7xjBkJOprB1yYcPl6kOejHTpwyKMJuLBDw0IqpFTA";
+	
+	//creates JWT token
+	private String generateJWTToken(Users user){
+		long timestamp = System.currentTimeMillis();
+		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_KEY)
+				.setIssuedAt(new Date(timestamp))
+				.setExpiration(new Date(timestamp + Constants.TOKEN_VALIDAITY))
+				.claim("userId", user.getUserId())
+				.claim("emailId", user.getEmailId())
+				.claim("name",user.getName())
+				.claim("privilege", user.getPrivilege())
+				.compact();
+		return token;
+	}
 	
 	@Test
 	public void getUserThemesTest() throws Exception {
 		List<Theme> themes = new ArrayList<>();
 		themes.add(t);
-		when(themeRepo.findByUserUserId(1)).thenReturn(themes);
-		when(userRepo.findByuserId(1)).thenReturn(user1);
 		
+		when(themeService.getThemesByUser(1)).thenReturn(themes);
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/themes")
-				.header("Authorization", "Bearer " + jwtToken))
+				.header("Authorization", "Bearer " + this.generateJWTToken(user1)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].title").value("Test Theme"))
 				.andExpect(jsonPath("$[0].themeId").value(1))
 				.andReturn();
 		
-		when(themeRepo.findByUserUserId(2)).thenReturn(new ArrayList<Theme>());
-		when(userRepo.findByuserId(2)).thenReturn(user2);
-		
+		when(themeService.getThemesByUser(2)).thenReturn(new ArrayList<Theme>());
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/themes")
-				.header("Authorization", "Bearer " + jwtToken))
+				.header("Authorization", "Bearer " + this.generateJWTToken(user1)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isEmpty())
 				.andReturn();
@@ -93,21 +93,19 @@ public class UserControllerTest {
 	public void getUserIdeasTest() throws Exception {
 		List<Idea> ideas = new ArrayList<>();
 		ideas.add(i);
-		when(ideaRepo.findByUserUserId(2)).thenReturn(ideas);
-		when(userRepo.findByuserId(2)).thenReturn(user2);
-		when(ideaRepo.findByUserUserId(1)).thenReturn(new ArrayList<Idea>());
-		when(userRepo.findByuserId(1)).thenReturn(user1);
 		
+		when(ideaService.getIdeasByUser(2)).thenReturn(ideas);
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/ideas")
-				.header("Authorization", "Bearer " + jwtToken))
+				.header("Authorization", "Bearer " + generateJWTToken(user2)))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$[0].ideaId").value(1))
 		.andExpect(jsonPath("$[0].title").value("Test Idea"))
 		.andExpect(jsonPath("$[0].user.userId").value(2))
 		.andReturn();
 		
+		when(ideaService.getIdeasByUser(1)).thenReturn(new ArrayList<Idea>());
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/ideas")
-				.header("Authorization", "Bearer " + jwtToken))
+				.header("Authorization", "Bearer " + generateJWTToken(user1)))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$").isEmpty())
 		.andReturn();
