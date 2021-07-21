@@ -40,32 +40,16 @@ public class UserController {
 	@Autowired
 	IdeaService ideaService;
 	
-<<<<<<< HEAD
 	@PostMapping("/api/users/register")
-=======
-	//to register user
-	@PostMapping("/register")
->>>>>>> f1515960528c0860c33998d163c9932bc91a7022
 	public ResponseEntity<Map<String,String>> registerUser(@RequestBody Users user) {
 		userService.registerUser(user);
 		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
 	}
 
-<<<<<<< HEAD
 	@PostMapping("/api/users/login")
-	public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, Object> userMap) {
-		String email = (String) userMap.get("emailId");
-		String password = (String) userMap.get("password");
-		
-		Users user = userService.validateUser(email, password);
-		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
-=======
-	//user login
-	@PostMapping("/login")
 	public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user) {	
 		Users responseUser = userService.validateUser(user);
 		return new ResponseEntity<>(generateJWTToken(responseUser), HttpStatus.OK);
->>>>>>> f1515960528c0860c33998d163c9932bc91a7022
 	}
 	
 	//creates JWT token
