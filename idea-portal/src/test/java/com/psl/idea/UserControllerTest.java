@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
@@ -100,11 +104,11 @@ public class UserControllerTest {
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/ideas")
 				.header("Authorization", "Bearer " + jwtToken))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$[0].ideaId").value(1))
-		.andExpect(jsonPath("$[0].title").value("Test Idea"))
-		.andExpect(jsonPath("$[0].user.userId").value(2))
-		.andReturn();
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].ideaId").value(1))
+				.andExpect(jsonPath("$[0].title").value("Test Idea"))
+				.andExpect(jsonPath("$[0].user.userId").value(2))
+				.andReturn();
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/ideas")
 				.header("Authorization", "Bearer " + jwtToken))
@@ -113,4 +117,32 @@ public class UserControllerTest {
 		.andReturn();
 	}
 	
+	@Test
+	public void registerUserTest() throws Exception {
+		String jsonString="{\"emailId\":\"johndoe@gmail.com\", \"name\": \"John Doe\", \"password\":\"123456\" ,\"phoneNumber\":\"9423160789\" , \"privilege\": {\"privilegeId\": 1}}";
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/register")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonString))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.emailId", Matchers.is("johndoe@gmail.com")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("John Doe")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.password", Matchers.is("123456")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber", Matchers.is("9423160789")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.privilege.privilegeId", Matchers.is(1)))
+				.andReturn();
+	}
+	
+	public void loginUserTest() throws Exception {
+		String jsonString="{\"emailId\":\"johndoe@gmail.com\", \"password\":\"123456\"}";
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/login")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonString))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.emailId", Matchers.is("johndoe@gmail.com")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.password", Matchers.is("123456")))
+				.andReturn();
+	}
+
 }
