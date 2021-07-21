@@ -11,6 +11,7 @@
 	<groupId>com.psl.idea</groupId>
 	<artifactId>idea-portal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>idea-portal</name>
 	<description>Demo project for Spring Boot and Rest API</description>
 	<properties>
@@ -36,6 +37,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator-annotation-processor -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-validator-annotation-processor</artifactId>
+		    <version>6.1.6.Final</version>
+		</dependency>
+				
 		<!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
 		<dependency>
 		    <groupId>org.mindrot</groupId>

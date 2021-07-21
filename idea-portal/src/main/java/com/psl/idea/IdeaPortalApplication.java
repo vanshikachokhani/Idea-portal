@@ -3,12 +3,13 @@ package com.psl.idea;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
 import com.psl.idea.filters.AuthFilter;
 
 @SpringBootApplication
-public class IdeaPortalApplication {
+public class IdeaPortalApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
 		SpringApplication.run(IdeaPortalApplication.class, args);}
