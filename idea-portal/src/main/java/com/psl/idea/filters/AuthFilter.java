@@ -19,6 +19,8 @@ import io.jsonwebtoken.Jwts;
 
 public class AuthFilter extends GenericFilter {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {

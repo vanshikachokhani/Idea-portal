@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
-import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
-import com.psl.idea.service.UserService;
 import com.psl.idea.util.UsersUtil;
 
 
@@ -29,8 +27,6 @@ public class ThemeController {
 	private IdeaService ideaService;
 	@Autowired
 	private ThemeService themeService;
-	@Autowired
-	private UserService userService;
 	@Autowired
 	private UsersUtil usersUtil;
 	

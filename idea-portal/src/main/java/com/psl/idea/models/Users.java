@@ -72,6 +72,16 @@ public class Users {
 		super();
 	}
 
+	public Users(long userId, String name, String phoneNumber, String emailId, String password, Privilege privilege) {
+		super();
+		this.userId = userId;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.emailId = emailId;
+		this.password = password;
+		this.privilege = privilege;
+	}
+
 	public Users(String name, String phoneNumber, String emailId, String password, Privilege privilege) {
 		super();
 		this.name = name;

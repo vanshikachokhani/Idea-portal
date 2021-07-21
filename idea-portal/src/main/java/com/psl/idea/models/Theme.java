@@ -36,6 +36,16 @@ public class Theme {
 		super();
 	}
 
+	public Theme(long themeId, String title, String description, Category category, Users user, String[] files) {
+		super();
+		this.themeId = themeId;
+		this.title = title;
+		this.description = description;
+		this.category = category;
+		this.user = user;
+		this.files = files;
+	}
+
 	public Theme(String title, String description, Category category, String[] files) {
 		super();
 		this.title = title;
