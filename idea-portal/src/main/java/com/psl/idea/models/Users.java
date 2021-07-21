@@ -126,6 +126,10 @@ public class Users {
 	public Privilege getPrivilege() {
 		return privilege;
 	}
+	
+	public String privilege() {
+		return privilege.getPrivilege();
+	}
 
 	public void setPrivilege(Privilege privilege) {
 		this.privilege = privilege;
