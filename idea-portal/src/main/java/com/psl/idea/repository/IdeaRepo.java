@@ -9,5 +9,6 @@ import com.psl.idea.models.Idea;
 public interface IdeaRepo extends JpaRepository<Idea, Long> {
 
 	List<Idea> findByUserUserId(long userId);
+	Idea findByIdeaId(long idea_id);
 
 }

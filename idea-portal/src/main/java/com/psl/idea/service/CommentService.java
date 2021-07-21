@@ -2,6 +2,7 @@ package com.psl.idea.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,11 @@ public class CommentService {
 	IdeaRepo ideaRepo;
 	
 	
-	public void createComment(Comment comment,Long ideaId) {	
+	public void createComment(Comment comment,long ideaId) {	
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
+		Idea i=ideaRepo.findByIdeaId(ideaId);
 		if(idea.isPresent()) {
+			comment.setIdea(i);
 			repo.save(comment);
 		}
 		else {

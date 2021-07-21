@@ -50,7 +50,6 @@ public class IdeaService{
 
 	public void createIdea(long themeId, Idea idea) {
 		Theme t = themeRepo.findById(themeId).orElse(null);
-		
 		if(t != null)
 		{
 			idea.setTheme(t);
