@@ -21,7 +21,9 @@ public class RatingService {
 	
 	public void doLike(Long ideaId,Rating rate) {
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
+		Idea i=ideaRepo.findByIdeaId(ideaId);
 		if(idea.isPresent()) {
+			rate.setIdea(i);
 			repo.save(rate);
 		}
 		else {

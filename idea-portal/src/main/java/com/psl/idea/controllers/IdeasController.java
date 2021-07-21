@@ -14,8 +14,6 @@ import com.psl.idea.models.Comment;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Participants;
 import com.psl.idea.models.Rating;
-import com.psl.idea.models.Roles;
-import com.psl.idea.models.Users;
 import com.psl.idea.service.CommentService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ParticipantService;
@@ -65,7 +63,7 @@ public class IdeasController {
 		return commentservice.viewComments(ideaId);
 	}
 	
-	//interest in indea
+	//interest in idea
 	@PostMapping(path="/Interested")
 	public void interestedParticipant(@RequestBody Participants participants,@PathVariable Long ideaId) {
 		participantservice.interestIn(participants,ideaId);

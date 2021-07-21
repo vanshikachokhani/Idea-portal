@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.psl.idea.Constants;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
 
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping()
 public class UserController {
 	
 	@Autowired
@@ -40,21 +40,19 @@ public class UserController {
 	@Autowired
 	IdeaService ideaService;
 	
-	@PostMapping("/register")
+	@PostMapping("/api/users/register")
 	public ResponseEntity<Map<String,String>> registerUser(@RequestBody Users user) {
 		userService.registerUser(user);
 		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, Object> userMap) {
-		String email = (String) userMap.get("emailId");
-		String password = (String) userMap.get("password");
-		
-		Users user = userService.validateUser(email, password);
-		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+	@PostMapping("/api/users/login")
+	public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user) {	
+		Users responseUser = userService.validateUser(user);
+		return new ResponseEntity<>(generateJWTToken(responseUser), HttpStatus.OK);
 	}
 	
+	//creates JWT token
 	private Map<String,String> generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
 		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_KEY)
@@ -71,13 +69,13 @@ public class UserController {
 		return map;
 	}
 	
-	@GetMapping("/{userId}/themes")
+	@GetMapping("api/loggedin/users/{userId}/themes")
 	public List<Theme> getUserThemes(@PathVariable long userId)
 	{
 		return themeService.getThemesByUser(userId);
 	}
 	
-	@GetMapping("/{userId}/ideas")
+	@GetMapping("api/loggedin/users/{userId}/ideas")
 	public List<Idea> getUserIdeas(@PathVariable long userId)
 	{
 		return ideaService.getIdeasByUser(userId);

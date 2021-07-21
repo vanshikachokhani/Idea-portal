@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Participants;
-import com.psl.idea.models.Roles;
-import com.psl.idea.models.Users;
 import com.psl.idea.repository.IdeaRepo;
 import com.psl.idea.repository.ParticipantRepo;
 
@@ -26,7 +24,9 @@ public class ParticipantService {
 	//interested participants in this idea
 	public void interestIn(Participants participants,Long ideaId) {
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
+		Idea i=ideaRepo.findByIdeaId(ideaId);
 		if(idea.isPresent()) {
+			participants.setIdea(i);
 			repo.save(participants);
 		}
 		else {
