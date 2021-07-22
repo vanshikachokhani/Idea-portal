@@ -56,13 +56,16 @@ public class UserService {
 		userRepo.save(user);
 	}
 	
-	public Users updatePassword(UpdateUser user) {
+	public Users updatePassword(UpdateUser user) throws AuthException {
 		String email_id = user.getEmailId();
 		String password = user.getOldpassword();
 		if(email_id!=null)
 			email_id.toLowerCase();
 
 			Users dbuser = userRepo.findByEmailId(email_id);
+			if(dbuser==null)
+				throw new AuthException("This email id does not exists.");
+			
 			if(!BCrypt.checkpw(password, dbuser.getPassword()))
 				throw new AuthException("Incorrect password");
 		
