@@ -2,7 +2,11 @@ package com.psl.idea.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Comment;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Participants;
@@ -18,6 +23,7 @@ import com.psl.idea.service.CommentService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ParticipantService;
 import com.psl.idea.service.RatingService;
+import com.psl.idea.util.UsersUtil;
 
 @RestController
 @RequestMapping("/api/loggedin/{ideaId}")
@@ -34,6 +40,9 @@ public class IdeasController {
 	
 	@Autowired
 	RatingService ratingservice;
+	
+	@Autowired
+	private UsersUtil usersUtil;
 	
 	@GetMapping(path="/viewIdea")
 	public Idea viewIdea(@PathVariable Long ideaId) {
@@ -65,14 +74,32 @@ public class IdeasController {
 	
 	//interest in idea
 	@PostMapping(path="/Interested")
-	public void interestedParticipant(@RequestBody Participants participants,@PathVariable Long ideaId) {
-		participantservice.interestIn(participants,ideaId);
+	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) {
+		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
+		if(userPrivilege == 3)
+		{
+		  participantservice.interestIn(participants,ideaId);
+		  return ResponseEntity.status(HttpStatus.OK).body("your interest created");
+		}
+		else
+		{
+			throw new UnauthorizedException("you are not Authorized to participate");
+		}
 	}
 	
 	// see all interested participants in this idea
 	@GetMapping(path="/viewInterested")
-	public List<Participants> viewInterestedParticipants(@PathVariable Long ideaId){
-		return participantservice.viewInterested(ideaId);
+	public ResponseEntity<Object> viewInterestedParticipants(HttpServletRequest httpServletRequest,@PathVariable Long ideaId){
+		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
+		if(userPrivilege == 1)
+		{
+	        	List<Participants> participant= participantservice.viewInterested(ideaId);
+	        	return ResponseEntity.status(HttpStatus.OK).body(participant);
+		}
+		else
+		{
+			throw new UnauthorizedException("you are not Authorized to see interested Participants");
+		}
 	}
 
 }

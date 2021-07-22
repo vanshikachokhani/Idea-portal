@@ -29,58 +29,31 @@ public class Users {
 	
 	@Column(nullable = false, name = "password")
 	private String password;
-
+	
+	@Column(nullable=false, name="company")
+	private String company;
+	
 	@ManyToOne
 	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
 	
-	/*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Comment> comments;
-	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Rating> ratings;
-	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Participants> participant;
-	
-	
-	public List<Participants> getParticipant() {
-		return participant;
-	}
-
-	public void setParticipant(List<Participants> participant) {
-		this.participant = participant;
-	}
-
-	public List<Rating> getRatings() {
-		return ratings;
-	}
-
-	public void setRatings(List<Rating> ratings) {
-		this.ratings = ratings;
-	}
-
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}*/
-	
 	public Users() {
 		super();
 	}
-
-	public Users(long userId, String name, String phoneNumber, String emailId, String password, Privilege privilege) {
+	
+	
+	public Users(long userId, String name, String phoneNumber, String emailId, String password, String company, Privilege privilege) {
 		super();
 		this.userId = userId;
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 		this.emailId = emailId;
 		this.password = password;
+		this.company = company;
 		this.privilege = privilege;
 	}
+
+
 
 	public Users(String name, String phoneNumber, String emailId, String password, Privilege privilege) {
 		super();
@@ -89,6 +62,14 @@ public class Users {
 		this.emailId = emailId;
 		this.password = password;
 		this.privilege = privilege;
+	}
+
+	
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public long getUserId() {
@@ -142,8 +123,6 @@ public class Users {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 
 	@Override
 	public String toString() {

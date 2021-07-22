@@ -6,17 +6,19 @@ import java.util.Objects;
 public class ParticipantsId implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private Users user;
-	private Idea idea;
-	private Roles role;
-	public ParticipantsId(Users user, Idea idea, Roles role) {
+	private long user;
+	private long idea;
+	private long role;
+	public ParticipantsId(long user, long idea, long role) {
 		super();
 		this.user = user;
 		this.idea = idea;
 		this.role = role;
 	}
-	
-	
+	public ParticipantsId() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(idea, role, user);
@@ -30,8 +32,10 @@ public class ParticipantsId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ParticipantsId other = (ParticipantsId) obj;
-		return Objects.equals(idea, other.idea) && Objects.equals(role, other.role) && Objects.equals(user, other.user);
+		return idea == other.idea && role == other.role && user == other.user;
 	}
+	
+	
 	
 	
 

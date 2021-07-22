@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
 import com.psl.idea.service.IdeaService;
@@ -63,7 +65,7 @@ public class ThemeController {
 	}
 	
 	// create a theme
-	@PostMapping(path="/api/loggedin/themes")
+/*	@PostMapping(path="/api/loggedin/themes")
 	public ResponseEntity<Object> createTheme(@RequestBody Theme theme, HttpServletRequest httpServletRequest)
 	{
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
@@ -76,6 +78,23 @@ public class ThemeController {
 		{
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("401: Not Authorized");
 		}
+	}*/
+	
+	// create a theme
+	@PostMapping(path="/api/loggedin/themes")
+	public ResponseEntity<Object> createTheme(@RequestBody Theme theme, HttpServletRequest httpServletRequest) {
+		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
+		if(userPrivilege == 1)
+		{
+			Theme t = themeService.createTheme(theme);
+			return ResponseEntity.status(HttpStatus.OK).body(t);
+			
+		}
+		else {
+			throw new UnauthorizedException("you are not Authorized to create Theme");
+		}
+		
+		
 	}
 	
 	// create an idea
@@ -93,7 +112,7 @@ public class ThemeController {
 		}
 		else
 		{
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("401: Unauthorized");
+			throw new UnauthorizedException("you are not Authorized to create Idea");
 		}
 	}
 

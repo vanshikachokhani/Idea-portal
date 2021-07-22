@@ -9,6 +9,9 @@ public class User {
 		this.emailId = emailId;
 		this.password = password;
 	}
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getEmailId() {
 		return emailId;
 	}
