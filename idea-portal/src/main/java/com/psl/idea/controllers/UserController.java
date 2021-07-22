@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.psl.idea.Constants;
 import com.psl.idea.models.Idea;
+import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
@@ -41,19 +42,19 @@ public class UserController {
 	IdeaService ideaService;
 	
 	@PostMapping("/api/users/register")
-	public ResponseEntity<Map<String,String>> registerUser(@RequestBody Users user) {
+	public ResponseEntity<Map<String,Object>> registerUser(@RequestBody Users user) {
 		userService.registerUser(user);
 		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
 	}
 
 	@PostMapping("/api/users/login")
-	public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user) {	
+	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {	
 		Users responseUser = userService.validateUser(user);
 		return new ResponseEntity<>(generateJWTToken(responseUser), HttpStatus.OK);
 	}
 	
 	//creates JWT token
-	private Map<String,String> generateJWTToken(Users user){
+	private Map<String,Object> generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
 		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_KEY)
 				.setIssuedAt(new Date(timestamp))
@@ -63,9 +64,12 @@ public class UserController {
 				.claim("name",user.getName())
 				.claim("privilege", user.getPrivilege())
 				.compact();
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
+		
+		ResponseUser responseuser=new ResponseUser(user.getName(),user.getEmailId(),user.privilege());
 		
 		map.put("token", token);
+		map.put("user", responseuser);
 		return map;
 	}
 	
@@ -79,5 +83,10 @@ public class UserController {
 	public List<Idea> getUserIdeas(@PathVariable long userId)
 	{
 		return ideaService.getIdeasByUser(userId);
+	}
+	
+	@GetMapping("/sendMail")
+	public void sendMail() {
+		userService.sendEmail();
 	}
 }
