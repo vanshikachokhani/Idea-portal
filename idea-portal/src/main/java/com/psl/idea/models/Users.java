@@ -30,6 +30,8 @@ public class Users {
 	@Column(nullable = false, name = "password")
 	private String password;
 
+	@Column(nullable = false, name = "company")
+	private String company;
 	@ManyToOne
 	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
@@ -72,15 +74,21 @@ public class Users {
 		super();
 	}
 
-	public Users(long userId, String name, String phoneNumber, String emailId, String password, Privilege privilege) {
+	
+
+	public Users(long userId, String name, String phoneNumber, String emailId, String password, String company,
+			Privilege privilege) {
 		super();
 		this.userId = userId;
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 		this.emailId = emailId;
 		this.password = password;
+		this.company = company;
 		this.privilege = privilege;
 	}
+
+
 
 	public Users(String name, String phoneNumber, String emailId, String password, Privilege privilege) {
 		super();
@@ -89,6 +97,14 @@ public class Users {
 		this.emailId = emailId;
 		this.password = password;
 		this.privilege = privilege;
+	}
+
+	
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public long getUserId() {

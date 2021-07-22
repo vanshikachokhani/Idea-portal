@@ -20,6 +20,8 @@ import com.psl.idea.models.Idea;
 import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.UpdateUser;
+import com.psl.idea.models.UpdateUserCompany;
+import com.psl.idea.models.UpdateUserEmail;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
@@ -59,7 +61,7 @@ public class UserController {
 		Users responseuser = userService.updatePassword(user);
 		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
-	
+
 	//creates JWT token
 	private Map<String,Object> generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
@@ -70,14 +72,26 @@ public class UserController {
 				.claim("emailId", user.getEmailId())
 				.claim("name",user.getName())
 				.claim("privilege", user.getPrivilege())
+				.claim("company", user.getCompany())
 				.compact();
+		
 		Map<String, Object> map = new HashMap<>();
-		
-		ResponseUser responseuser=new ResponseUser(user.getName(),user.getEmailId(),user.privilege());
-		
+		ResponseUser responseuser=new ResponseUser(user.getUserId(),user.getName(),user.getEmailId(),user.privilege(),user.getCompany());
 		map.put("token", token);
 		map.put("user", responseuser);
 		return map;
+	}
+	
+	@PostMapping("/api/users/updateemailId")
+	public ResponseEntity<Map<String,Object>> updateEmailId(@RequestBody UpdateUserEmail user){
+		Users responseuser = userService.updateEmailId(user);
+		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
+	}
+	
+	@PostMapping("/api/users/updatecompany")
+	public ResponseEntity<Map<String,Object>> updateCompany(@RequestBody UpdateUserCompany user){
+		Users responseuser = userService.updateCompany(user);
+		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/themes")
