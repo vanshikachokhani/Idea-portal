@@ -45,7 +45,16 @@ public class CustomExceptionHandler {
 		error.setMessage(ex.getMessage());
 
 	        return new ResponseEntity<String>(error.toString(), HttpStatus.UNAUTHORIZED);
-		
+	}	
+	        
+ @ExceptionHandler(ForbiddenException.class)
+public ResponseEntity<String> ForbiddenException(ForbiddenException ex){
+	CustomErrorMessage error = new CustomErrorMessage();
+	 error.setStatus(403);
+	   error.setError("Forbidden");
+	 error.setMessage(ex.getMessage());
+
+return new ResponseEntity<String>(error.toString(), HttpStatus.FORBIDDEN);
 		
 	}
 
