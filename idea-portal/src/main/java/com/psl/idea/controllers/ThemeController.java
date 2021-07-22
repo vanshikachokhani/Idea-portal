@@ -31,7 +31,7 @@ public class ThemeController {
 	private UsersUtil usersUtil;
 	
      // view all themes
-	@GetMapping(path="/themes")
+	@GetMapping(path="/api/themes")
     public List<Theme> viewThemes(){
 		return themeService.viewThemes();
 	}
