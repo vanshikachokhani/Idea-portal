@@ -1,8 +1,5 @@
 package com.psl.idea.models;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -40,37 +36,6 @@ public class Idea {
 	@JoinColumn(name="user_id")
 	private Users user;
 	
-	/*@OneToMany(mappedBy = "idea",cascade = CascadeType.ALL)
-	private List<Comment> comments;
-	
-	@OneToMany(mappedBy = "idea",cascade =CascadeType.ALL)
-	private List<Rating> ratings;
-	
-	@OneToMany(mappedBy = "idea", cascade = CascadeType.ALL)
-	private List<Participants> participant;
-	
-	
-	
-	
-	public List<Participants> getParticipant() {
-		return participant;
-	}
-	public void setParticipant(List<Participants> participant) {
-		this.participant = participant;
-	}
-	public List<Rating> getRatings() {
-		return ratings;
-	}
-	public void setRatings(List<Rating> ratings) {
-		this.ratings = ratings;
-	}
-	public List<Comment> getComments() {
-		return comments;
-	}
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-	*/
 	public Idea() {
 		super();
 	}

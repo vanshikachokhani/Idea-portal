@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 import org.mindrot.jbcrypt.BCrypt;
 //import org.mindrot.jbcrypt.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.psl.idea.exceptions.AuthException;
@@ -13,10 +15,14 @@ import com.psl.idea.models.Users;
 import com.psl.idea.repository.UserRepo;
 
 @Service
+
 public class UserService {
 	
 	@Autowired
 	UserRepo userRepo;
+
+	@Autowired
+	JavaMailSender mail;
 	
 	public Users validateUser(User user) throws AuthException {
 		String email_id = user.getEmailId();
@@ -51,6 +57,18 @@ public class UserService {
 
 	public Users getUserByUserId(long userId) {
 		return userRepo.findByuserId(userId);
+	}
+	
+	public void sendEmail() {
+		SimpleMailMessage mailmsg = new SimpleMailMessage();
+		
+		mailmsg.setTo("ideaportaldevelopment@gmail.com");
+		
+		mailmsg.setSubject("Password Reset");
+		
+		mailmsg.setText("ABCDEFGH");
+		
+		mail.send(mailmsg);
 	}
 	
 }

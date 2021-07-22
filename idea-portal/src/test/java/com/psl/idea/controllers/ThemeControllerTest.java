@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.sql.Date;
 import static org.mockito.ArgumentMatchers.any;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +39,6 @@ public class ThemeControllerTest {
 	ThemeService themeService;
 	@MockBean
 	UsersUtil usersUtil;
-	
-//	@MockBean
-//	private ThemeRepo themeRepo;
-//	@MockBean
-//	private UserRepo userRepo;
-//	@MockBean
-//	private CommentRepo commentRepo;
-//	@MockBean
-//	private IdeaRepo ideaRepo;
-//	@MockBean
-//	private ParticipantRepo participantRepo;
-//	@MockBean
-//	private RatingRepo ratingRepo;
-	@MockBean
-	private SessionFactory sessionFactory;
 
 	private Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	private Privilege pmPrivilege = new Privilege(2, "Product Manager");
@@ -92,6 +76,28 @@ public class ThemeControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.content("{\"title\":\"Test Theme\", \"description\": \"Testing Theme\", \"category\": {\"categoryId\": 1}, \"user\": {\"userId\": 1}, \"files\": []}"))
+				.andExpect(status().isOk());
+		
+		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
+		
+		mockMvc.perform(post("/api/loggedin/themes")
+				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content("{\"title\":\"Test Theme\", \"description\": \"Testing Theme\", \"category\": {\"categoryId\": 1}, \"user\": {\"userId\": 2}, \"files\": []}"))
+				.andExpect(status().isUnauthorized());
+		
+	}
+	
+	@Test
+	public void createIdeaTest() throws Exception {
+		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
+		when(ideaService.createIdea(1, i)).thenReturn(i);
+		mockMvc.perform(post("/api/loggedin/themes/1/ideas")
+				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"title\": \"Test Idea\", \"description\": \"Testing Idea\", \"files\": [], \"user\": {\"userId\": 2}}")
+				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 	

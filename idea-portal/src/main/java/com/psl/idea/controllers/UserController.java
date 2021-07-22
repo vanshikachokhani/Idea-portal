@@ -84,4 +84,9 @@ public class UserController {
 	{
 		return ideaService.getIdeasByUser(userId);
 	}
+	
+	@GetMapping("/sendMail")
+	public void sendMail() {
+		userService.sendEmail();
+	}
 }
