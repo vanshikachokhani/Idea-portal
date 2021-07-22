@@ -44,22 +44,18 @@ public class UserController {
 	@Autowired
 	IdeaService ideaService;
 	
+	//Sign-Up 
 	@PostMapping("/api/users/register")
 	public ResponseEntity<Map<String,Object>> registerUser(@RequestBody Users user) {
 		userService.registerUser(user);
 		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
 	}
 
+	//Login 
 	@PostMapping("/api/users/login")
 	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {	
 		Users responseUser = userService.validateUser(user);
 		return new ResponseEntity<>(generateJWTToken(responseUser), HttpStatus.OK);
-	}
-	
-	@PostMapping("/api/users/updatepassword")
-	public ResponseEntity<Map<String,Object>> updatePassword(@RequestBody UpdateUser user){
-		Users responseuser = userService.updatePassword(user);
-		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 
 	//creates JWT token
@@ -82,32 +78,46 @@ public class UserController {
 		return map;
 	}
 	
-	@PostMapping("/api/users/updateemailId")
+	//Update EmailId 
+	@PostMapping("/api/users/update-emailId")
 	public ResponseEntity<Map<String,Object>> updateEmailId(@RequestBody UpdateUserEmail user){
 		Users responseuser = userService.updateEmailId(user);
 		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
-	@PostMapping("/api/users/updatecompany")
+	//Update company 
+	@PostMapping("/api/users/update-company")
 	public ResponseEntity<Map<String,Object>> updateCompany(@RequestBody UpdateUserCompany user){
 		Users responseuser = userService.updateCompany(user);
 		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
+	//Update password 
+	@PostMapping("/api/users/update-password")
+	public ResponseEntity<Map<String,Object>> updatePassword(@RequestBody UpdateUser user){
+		Users responseuser = userService.updatePassword(user);
+		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
+	}
+	
+	//Forgot password
+	@PostMapping("/api/users/forgot-password")
+	public void forgotPassword(@RequestBody Map<String, Object> userMap) {
+		String email_id = (String) userMap.get("emailId");
+		userService.forgotPassword(email_id);
+	}
+	
 	@GetMapping("api/loggedin/users/{userId}/themes")
-	public List<Theme> getUserThemes(@PathVariable long userId)
-	{
+	public List<Theme> getUserThemes(@PathVariable long userId){
 		return themeService.getThemesByUser(userId);
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/ideas")
-	public List<Idea> getUserIdeas(@PathVariable long userId)
-	{
+	public List<Idea> getUserIdeas(@PathVariable long userId){
 		return ideaService.getIdeasByUser(userId);
 	}
 	
-	@GetMapping("/sendMail")
-	public void sendMail() {
-		userService.sendEmail();
-	}
+//	@GetMapping("/sendMail")
+//	public void sendMail() {
+//		userService.sendEmail();
+//	}
 }

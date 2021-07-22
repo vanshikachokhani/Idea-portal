@@ -10,11 +10,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.psl.idea.exceptions.AuthException;
+import com.psl.idea.models.ConfirmationToken;
 import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.UpdateUserCompany;
 import com.psl.idea.models.UpdateUserEmail;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
+import com.psl.idea.repository.ConfirmationTokenRepo;
 import com.psl.idea.repository.UserRepo;
 
 @Service
@@ -26,6 +28,9 @@ public class UserService {
 
 	@Autowired
 	JavaMailSender mail;
+	
+	@Autowired
+	ConfirmationTokenRepo confirmationTokenRepo;
 	
 	public Users validateUser(User user) throws AuthException {
 		String email_id = user.getEmailId();
@@ -122,17 +127,20 @@ public class UserService {
 	public Users getUserByUserId(long userId) {
 		return userRepo.findByuserId(userId);
 	}
-	
-	public void sendEmail() {
+
+	public void forgotPassword(String email_id) {
+		if(email_id!=null)
+			email_id.toLowerCase();
+		Users dbuser = userRepo.findByEmailId(email_id);
+		
+		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
+		confirmationTokenRepo.save(confirmationToken);
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
-		
 		mailmsg.setTo("ideaportaldevelopment@gmail.com");
-		
-		mailmsg.setSubject("Password Reset");
-		
-		mailmsg.setText("ABCDEFGH");
-		
+		mailmsg.setSubject("Password Reset!");
+		mailmsg.setText("To confirm your account, please click here : "
+	            +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
 		mail.send(mailmsg);
-	}
 	
+	}
 }
