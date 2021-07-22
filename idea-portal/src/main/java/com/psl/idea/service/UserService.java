@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.psl.idea.exceptions.AuthException;
+import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
 import com.psl.idea.repository.UserRepo;
@@ -53,6 +54,23 @@ public class UserService {
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
 		user.setPassword(hashedPassword);
 		userRepo.save(user);
+	}
+	
+	public Users updatePassword(UpdateUser user) {
+		String email_id = user.getEmailId();
+		String password = user.getOldpassword();
+		if(email_id!=null)
+			email_id.toLowerCase();
+
+			Users dbuser = userRepo.findByEmailId(email_id);
+			if(!BCrypt.checkpw(password, dbuser.getPassword()))
+				throw new AuthException("Incorrect password");
+		
+		String newPassword = user.getNewpassword();
+		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
+		dbuser.setPassword(hashedPassword);
+		userRepo.save(dbuser);
+		return dbuser;
 	}
 
 	public Users getUserByUserId(long userId) {

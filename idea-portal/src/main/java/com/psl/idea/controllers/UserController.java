@@ -19,6 +19,7 @@ import com.psl.idea.Constants;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
@@ -51,6 +52,12 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {	
 		Users responseUser = userService.validateUser(user);
 		return new ResponseEntity<>(generateJWTToken(responseUser), HttpStatus.OK);
+	}
+	
+	@PostMapping("/api/users/updatepassword")
+	public ResponseEntity<Map<String,Object>> updatePassword(@RequestBody UpdateUser user){
+		Users responseuser = userService.updatePassword(user);
+		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
 	//creates JWT token
