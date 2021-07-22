@@ -2,16 +2,12 @@ package com.psl.idea.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
-import com.psl.idea.models.Users;
 import com.psl.idea.repository.IdeaRepo;
 import com.psl.idea.repository.ThemeRepo;
 
@@ -48,16 +44,16 @@ public class IdeaService{
 		return ideaRepo.findAll();
 	}
 
-	public void createIdea(long themeId, Idea idea) {
+	public Idea createIdea(long themeId, Idea idea) {
 		Theme t = themeRepo.findById(themeId).orElse(null);
 		if(t != null)
 		{
 			idea.setTheme(t);
-			ideaRepo.save(idea);
+			return ideaRepo.save(idea);
 		}
 		else
 			System.out.println("Invalid Theme");
-		
+		return null;
 	}
 
 	public List<Idea> getIdeasByUser(long userId) {
