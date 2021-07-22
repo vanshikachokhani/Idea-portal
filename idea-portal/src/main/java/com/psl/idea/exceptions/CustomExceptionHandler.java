@@ -36,5 +36,17 @@ public class CustomExceptionHandler {
 		error.setMessage(e.getMessage());
 		return new ResponseEntity<String>(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<String> NotAuthorizedExceptionHandler (UnauthorizedException ex){
+		CustomErrorMessage error = new CustomErrorMessage();
+		error.setStatus(401);
+		error.setError("UNAUTHORIZED");
+		error.setMessage(ex.getMessage());
+
+	        return new ResponseEntity<String>(error.toString(), HttpStatus.UNAUTHORIZED);
+		
+		
+	}
 
 }
