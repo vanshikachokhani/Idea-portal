@@ -124,15 +124,6 @@ public class Users {
 		this.password = password;
 	}
 
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", name=" + name + ", phoneNumber=" + phoneNumber + ", emailId=" + emailId
