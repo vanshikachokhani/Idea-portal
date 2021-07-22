@@ -3,20 +3,37 @@ package com.psl.idea.models;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 public class RatingId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Users user;
-	private Idea idea;
-	public RatingId(Users user, Idea idea) {
+	
+	private long user;
+	
+	
+	private long idea;
+	
+	public RatingId() {
+		super();
+	}
+
+
+	public RatingId(long user, long idea) {
 		super();
 		this.user = user;
 		this.idea = idea;
 	}
+
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(idea, user);
 	}
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -26,8 +43,13 @@ public class RatingId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		RatingId other = (RatingId) obj;
-		return Objects.equals(idea, other.idea) && Objects.equals(user, other.user);
+		return idea == other.idea && user == other.user;
 	}
+	
+	
+	
+	
+	
 	
 	
 }
