@@ -14,8 +14,8 @@ class TestUserRepo {
 	@Autowired
 	UserRepo userRepo;
 
-	
-	Privilege p=new Privilege();
+	@Autowired
+	Privilege p;
 	
 	@Test
 	public void testfindByEmailId() {
