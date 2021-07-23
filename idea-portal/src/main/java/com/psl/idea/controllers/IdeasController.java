@@ -73,7 +73,7 @@ public class IdeasController {
 	}
 	
 	//interest in idea
-	@PostMapping(path="/Interested")
+	@PostMapping(path="/interested")
 	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 3)

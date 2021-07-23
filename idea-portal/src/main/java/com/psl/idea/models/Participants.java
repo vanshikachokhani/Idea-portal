@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,7 +27,7 @@ public class Participants implements Serializable{
 	private Idea idea;
 	
 	@Id
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="role_id")
 	private Roles role;
 	
