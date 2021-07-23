@@ -128,7 +128,7 @@ public class UserService {
 		return userRepo.findByuserId(userId);
 	}
 
-	public void forgotPassword(String email_id) {
+	public String forgotPassword(String email_id) {
 		if(email_id!=null)
 			email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
@@ -138,9 +138,11 @@ public class UserService {
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
 		mailmsg.setTo("ideaportaldevelopment@gmail.com");
 		mailmsg.setSubject("Password Reset!");
-		mailmsg.setText("To confirm your account, please click here : "
-	            +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
+		mailmsg.setText("To reset your password, please enter this : "
+//	            +"http://localhost:8080/confirm-account?token="
+				+confirmationToken.getConfirmationToken());
 		mail.send(mailmsg);
+		return "Confirmation token sent to mail id";
 	
 	}
 }
