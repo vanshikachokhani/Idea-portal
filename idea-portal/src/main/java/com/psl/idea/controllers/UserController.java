@@ -108,9 +108,9 @@ public class UserController {
 	
 	//Forgot password
 	@PostMapping("/api/users/forgot-password")
-	public void forgotPassword(@RequestBody Map<String, Object> userMap) {
+	public String forgotPassword(@RequestBody Map<String, Object> userMap) {
 		String email_id = (String) userMap.get("emailId");
-		userService.forgotPassword(email_id);
+		return userService.forgotPassword(email_id);
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/themes")
