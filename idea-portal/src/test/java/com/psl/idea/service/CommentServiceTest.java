@@ -10,12 +10,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Comment;
 import com.psl.idea.models.Idea;
@@ -25,8 +24,8 @@ import com.psl.idea.models.Users;
 import com.psl.idea.repository.CommentRepo;
 import com.psl.idea.repository.IdeaRepo;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@WebMvcTest(controllers=CommentService.class)
+@ExtendWith(SpringExtension.class)
 class CommentServiceTest {
 	
 	@MockBean
@@ -39,22 +38,33 @@ class CommentServiceTest {
 	private CommentService commentService;
 	
 	@Test
-	public void viewCommentsTest() {
+	public void viewCommentsTest(){
 		int i=1;
 		long id=i;
-		Idea idea=new Idea("ok ok","dk jn knd",null,1.0f,new Theme("om","ok ok",new Category(1,"om"),null),new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm")));
+		String[] files = {};
+		Privilege cpPrivilege = new Privilege(1, "Client Partner");
+		Category category = new Category(1, "WebApp");
+		Users user = new Users(1, "Bharat", "8830850789", "bk@persistent.com", "bk", "Persistent", cpPrivilege);
+		Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user, files);
+		Idea idea=new Idea("ok", "acha", files, 0.0f, theme, user);
+		Comment comment=new Comment("this is nice",user,idea);
 		Optional<Idea> ideaoptional=Optional.of(idea);
 		when(ideaRepo.findById(id)).thenReturn(ideaoptional);
-		when(commentRepo.findByIdeaIdeaId(id)).thenReturn(Stream.of(new Comment("I love this idea",new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm")),new Idea("ok ok","dk jn knd",null,1.0f,new Theme("om","ok ok",new Category(1,"om"),null),new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm")))),new Comment("you can work on this",new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm")),new Idea("ok ok","dk jn knd",null,1.0f,new Theme("om","ok ok",new Category(1,"om"),null),new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm"))))).collect(Collectors.toList()));
-		assertEquals(2,commentService.viewComments(id).size());	
+		when(commentRepo.findByIdeaIdeaId(id)).thenReturn(Stream.of(comment).collect(Collectors.toList()));
+		assertEquals(1, commentService.viewComments(id).size());
 	}
 	
 	@Test
 	public void createCommentTest() {
 		int i=1;
 		long id=i;
-		Comment comment=new Comment("I love this idea",new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm")),new Idea("ok ok","dk jn knd",null,1.0f,new Theme("om","ok ok",new Category(1,"om"),null),new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm"))));
-		Idea idea=new Idea("ok ok","dk jn knd",null,1.0f,new Theme("om","ok ok",new Category(1,"om"),null),new Users("bharat","9999999","fh@ok.com","fdh@Q1",new Privilege(1,"pm")));
+		String[] files = {};
+		Privilege cpPrivilege = new Privilege(1, "Client Partner");
+		Category category = new Category(1, "WebApp");
+		Users user = new Users(1, "Bharat", "8830850789", "bk@persistent.com", "bk", "Persistent", cpPrivilege);
+		Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user, files);
+		Idea idea=new Idea("ok", "acha", files, 0.0f, theme, user);
+		Comment comment=new Comment("this is nice",user,idea);
 		Optional<Idea> ideaoptional=Optional.of(idea);
 		when(ideaRepo.findById(id)).thenReturn(ideaoptional);
 		when(ideaRepo.findByIdeaId(id)).thenReturn(idea);
@@ -62,5 +72,6 @@ class CommentServiceTest {
 		commentService.createComment(comment, id);
 		verify(commentRepo,times(1)).save(comment);
 		assertEquals(comment.getIdea(), idea);
-			}
+		
+	}
 }
