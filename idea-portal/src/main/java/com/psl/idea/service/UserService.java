@@ -34,13 +34,16 @@ public class UserService {
 	
 	public Users validateUser(User user) throws AuthException {
 		String email_id = user.getEmailId();
-		String password = user.getPassword();
+	
 		if(email_id!=null)
 			email_id.toLowerCase();
 
 			Users dbuser = userRepo.findByEmailId(email_id);
 
-			if(!BCrypt.checkpw(password, dbuser.getPassword()))
+			if(dbuser==null)
+				throw new AuthException("This email id does not exists");
+			
+			if(!BCrypt.checkpw(user.getPassword(), dbuser.getPassword()))
 				throw new AuthException("Invalid Login credentials");
 			return dbuser;
 	}

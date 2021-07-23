@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.psl.idea.Constants;
+import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
@@ -108,10 +109,10 @@ public class UserController {
 	}
 	
 	@GetMapping("/confirm-account")
-	public String confirmAccount(@RequestParam String token) {
-		if(userService.checkToken(token))
-			return "Valid";
-		return "Invalid";
+	public ResponseEntity<Object> confirmAccount(@RequestParam String token)  throws AuthException{
+		if(userService.checkToken(token)==false)
+			throw new AuthException("Link expired");
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 	
 	@PostMapping("/confirm-account")
