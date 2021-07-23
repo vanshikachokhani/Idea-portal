@@ -49,8 +49,8 @@ public class UserControllerTest {
 	
 	private Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	private Category webapp = new Category(1, "WebApp");
-	private Users user1 = new Users(1, "Rohan Rathi", "8830850720", "rathirohan8@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", cpPrivilege);
-	private Users user2 = new Users(2, "Rohan Rathi", "8830850720", "rathirohan8@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", cpPrivilege);
+	private Users user1 = new Users(1, "Rohan Rathi", "8830850720", "rathirohan8@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", "Persistent", cpPrivilege);
+	private Users user2 = new Users(2, "Rohan Rathi", "8830850720", "rathirohan8@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", "Persistent", cpPrivilege);
 	private String[] files = {};
 	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1, files);
 	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", files, 0, t, user2);
