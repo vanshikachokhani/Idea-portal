@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Comment;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Participants;
@@ -78,11 +79,11 @@ public class IdeasController {
 		if(userPrivilege == 3)
 		{
 		  participantservice.interestIn(participants,ideaId);
-		  return ResponseEntity.status(HttpStatus.OK).body(null);
+		  return ResponseEntity.status(HttpStatus.OK).body("your interest created");
 		}
 		else
 		{
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("401: Not Authorized");
+			throw new UnauthorizedException("you are not Authorized to participate");
 		}
 	}
 	
@@ -97,7 +98,7 @@ public class IdeasController {
 		}
 		else
 		{
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("401: Not Authorized");
+			throw new UnauthorizedException("you are not Authorized to see interested Participants");
 		}
 	}
 

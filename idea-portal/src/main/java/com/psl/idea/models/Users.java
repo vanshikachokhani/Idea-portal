@@ -32,7 +32,7 @@ public class Users {
 	
 	@Column(nullable=false, name="company")
 	private String company;
-
+	
 	@ManyToOne
 	@JoinColumn(name="privilege_id")
 	private Privilege privilege;
@@ -40,7 +40,8 @@ public class Users {
 	public Users() {
 		super();
 	}
-
+	
+	
 	public Users(long userId, String name, String phoneNumber, String emailId, String password, String company, Privilege privilege) {
 		super();
 		this.userId = userId;
@@ -52,6 +53,8 @@ public class Users {
 		this.privilege = privilege;
 	}
 
+
+
 	public Users(String name, String phoneNumber, String emailId, String password, Privilege privilege) {
 		super();
 		this.name = name;
@@ -59,6 +62,14 @@ public class Users {
 		this.emailId = emailId;
 		this.password = password;
 		this.privilege = privilege;
+	}
+
+	
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public long getUserId() {
@@ -112,15 +123,6 @@ public class Users {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
 
 	@Override
 	public String toString() {
