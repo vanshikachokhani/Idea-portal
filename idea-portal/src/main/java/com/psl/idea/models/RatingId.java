@@ -3,10 +3,6 @@ package com.psl.idea.models;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 public class RatingId implements Serializable {
 
 	private static final long serialVersionUID = 1L;

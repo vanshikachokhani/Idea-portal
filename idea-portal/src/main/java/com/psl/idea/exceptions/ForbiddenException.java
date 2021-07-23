@@ -6,5 +6,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class ForbiddenException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 403L;
+
+	public ForbiddenException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
 	
 }

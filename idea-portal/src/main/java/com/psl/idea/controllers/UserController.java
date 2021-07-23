@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.psl.idea.Constants;
 import com.psl.idea.exceptions.AuthException;
+import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
@@ -29,6 +32,7 @@ import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
+import com.psl.idea.util.UsersUtil;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -45,6 +49,9 @@ public class UserController {
 	
 	@Autowired
 	IdeaService ideaService;
+	
+	@Autowired
+	UsersUtil usersUtil;
 	
 	//Sign-Up 
 	@PostMapping("/api/users/register")
@@ -122,12 +129,18 @@ public class UserController {
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/themes")
-	public List<Theme> getUserThemes(@PathVariable long userId){
-		return themeService.getThemesByUser(userId);
+	public List<Theme> getUserThemes(@PathVariable long userId, HttpServletRequest httpServletRequest) {
+		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 1)
+			return themeService.getThemesByUser(userId);
+		else
+			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/ideas")
-	public List<Idea> getUserIdeas(@PathVariable long userId){
-		return ideaService.getIdeasByUser(userId);
+	public List<Idea> getUserIdeas(@PathVariable long userId, HttpServletRequest httpServletRequest) {
+		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 2)
+			return ideaService.getIdeasByUser(userId);
+		else
+			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");
 	}
 }

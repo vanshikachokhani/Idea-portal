@@ -43,19 +43,26 @@ public class CustomExceptionHandler {
 		error.setStatus(401);
 		error.setError("UNAUTHORIZED");
 		error.setMessage(ex.getMessage());
-
-	        return new ResponseEntity<String>(error.toString(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<String>(error.toString(), HttpStatus.UNAUTHORIZED);
 	}	
 	        
- @ExceptionHandler(ForbiddenException.class)
-public ResponseEntity<String> ForbiddenException(ForbiddenException ex){
-	CustomErrorMessage error = new CustomErrorMessage();
-	 error.setStatus(403);
-	   error.setError("Forbidden");
-	 error.setMessage(ex.getMessage());
-
-return new ResponseEntity<String>(error.toString(), HttpStatus.FORBIDDEN);
+	@ExceptionHandler(ForbiddenException.class)
+ 	public ResponseEntity<String> ForbiddenException(ForbiddenException ex){
+	 	CustomErrorMessage error = new CustomErrorMessage();
+	 	error.setStatus(403);
+	   	error.setError("Forbidden");
+	   	error.setMessage(ex.getMessage());
+	 	return new ResponseEntity<String>(error.toString(), HttpStatus.FORBIDDEN);
+	}
+	
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<String> NotFoundExceptionHandler(NotFoundException nf) {
+		CustomErrorMessage error = new CustomErrorMessage();
+		error.setStatus(404);
+		error.setError("Not Found");
+		error.setMessage(nf.getMessage());
 		
+		return new ResponseEntity<String>(error.toString(), HttpStatus.NOT_FOUND);
 	}
 
 }

@@ -162,16 +162,17 @@ public class UserService {
 //		if(tokenentity.getUserEntity().getEmailId()!=user.getEmailId()) {
 //			throw new AuthException("Incorrect token");	
 //		}
+		System.out.println(tokenentity.getUserEntity().getEmailId());
 		if(checkToken(token)==false)
 			throw new AuthException("Incorrect token");	
 		Users dbuser = tokenentity.getUserEntity();
+		System.out.println(user.getPassword());
 		dbuser = changepassword(dbuser, user.getPassword());
 		return dbuser;
 	}
 	
 	public Users changepassword(Users user, String newpassword) {
-		String newPassword = user.getPassword();
-		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
+		String hashedPassword = BCrypt.hashpw(newpassword, BCrypt.gensalt(10));
 		user.setPassword(hashedPassword);
 		userRepo.save(user);
 		return user;

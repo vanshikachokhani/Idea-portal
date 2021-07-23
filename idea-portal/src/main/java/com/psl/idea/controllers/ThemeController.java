@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
@@ -65,22 +66,6 @@ public class ThemeController {
 	}
 	
 	// create a theme
-/*	@PostMapping(path="/api/loggedin/themes")
-	public ResponseEntity<Object> createTheme(@RequestBody Theme theme, HttpServletRequest httpServletRequest)
-	{
-		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
-		if(userPrivilege == 1)
-		{
-			Theme t = themeService.createTheme(theme);
-			return ResponseEntity.status(HttpStatus.OK).body(t);
-		}
-		else
-		{
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("401: Not Authorized");
-		}
-	}*/
-	
-	// create a theme
 	@PostMapping(path="/api/loggedin/themes")
 	public ResponseEntity<Object> createTheme(@RequestBody Theme theme, HttpServletRequest httpServletRequest) {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
@@ -91,7 +76,7 @@ public class ThemeController {
 			
 		}
 		else {
-			throw new UnauthorizedException("you are not Authorized to create Theme");
+			throw new UnauthorizedException("You are not Authorized to create a Theme");
 		}
 		
 		
@@ -99,7 +84,7 @@ public class ThemeController {
 	
 	// create an idea
 	@PostMapping(path="/api/loggedin/themes/{themeId}/ideas")
-	public ResponseEntity<Object> createIdea(@PathVariable long themeId, @RequestBody Idea idea, HttpServletRequest httpServletRequest)
+	public ResponseEntity<Object> createIdea(@PathVariable long themeId, @RequestBody Idea idea, HttpServletRequest httpServletRequest) throws NotFoundException
 	{
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 2)
@@ -108,11 +93,11 @@ public class ThemeController {
 			if(i != null)
 				return ResponseEntity.status(HttpStatus.OK).body(i);
 			else
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404: Theme Not Found! Could not submit Idea");
+				throw new NotFoundException("404: Theme Not Found! Could not submit Idea");
 		}
 		else
 		{
-			throw new UnauthorizedException("you are not Authorized to create Idea");
+			throw new UnauthorizedException("You are not Authorized to create an Idea");
 		}
 	}
 
