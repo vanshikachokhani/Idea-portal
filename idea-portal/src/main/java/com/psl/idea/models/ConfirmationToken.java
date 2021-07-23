@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.psl.idea.Constants;
+
 @Entity
 @Table(name="confirmationToken")
 public class ConfirmationToken {
@@ -32,6 +34,7 @@ public class ConfirmationToken {
 	@ManyToOne(targetEntity = Users.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private Users userEntity;
+
 	
 	public ConfirmationToken() {}
 	
@@ -71,5 +74,12 @@ public class ConfirmationToken {
 
 	public void setUserEntity(Users userEntity) {
 		this.userEntity = userEntity;
+	}
+	
+	public boolean validateToken() {
+		Date currentTime = new Date(System.currentTimeMillis()-Constants.CONFIRMATION_TOKEN_VALIDAITY);
+		
+		return currentTime.before(createdDate);
+//		System.out.println(createdDate.toString());
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.psl.idea.Constants;
@@ -106,6 +107,19 @@ public class UserController {
 		return userService.forgotPassword(email_id);
 	}
 	
+	@GetMapping("/confirm-account")
+	public String confirmAccount(@RequestParam String token) {
+		if(userService.checkToken(token))
+			return "Valid";
+		return "Invalid";
+	}
+	
+	@PostMapping("/confirm-account")
+	public ResponseEntity<Map<String,Object>> setPassword(@RequestParam String token, @RequestBody User user) {
+		Users responseuser = userService.updateForgotPassword(token, user);
+		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
+	}
+	
 	@GetMapping("api/loggedin/users/{userId}/themes")
 	public List<Theme> getUserThemes(@PathVariable long userId){
 		return themeService.getThemesByUser(userId);
@@ -115,9 +129,4 @@ public class UserController {
 	public List<Idea> getUserIdeas(@PathVariable long userId){
 		return ideaService.getIdeasByUser(userId);
 	}
-	
-//	@GetMapping("/sendMail")
-//	public void sendMail() {
-//		userService.sendEmail();
-//	}
 }

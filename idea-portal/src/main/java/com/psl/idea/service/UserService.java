@@ -134,15 +134,43 @@ public class UserService {
 		Users dbuser = userRepo.findByEmailId(email_id);
 		
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
+//		confirmationToken.validateToken();
 		confirmationTokenRepo.save(confirmationToken);
+		
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
-		mailmsg.setTo("ideaportaldevelopment@gmail.com");
+		mailmsg.setTo(email_id);
 		mailmsg.setSubject("Password Reset!");
 		mailmsg.setText("To reset your password, please enter this : "
-//	            +"http://localhost:8080/confirm-account?token="
+	            +"http://localhost:8080/confirm-account?token="
 				+confirmationToken.getConfirmationToken());
 		mail.send(mailmsg);
 		return "Confirmation token sent to mail id";
 	
+	}
+	
+	public boolean checkToken(String token) {
+		ConfirmationToken tokenentity = confirmationTokenRepo.findByConfirmationToken(token);
+		return tokenentity.validateToken();
+	}
+	
+	
+	public Users updateForgotPassword(String token, User user) {
+		ConfirmationToken tokenentity = confirmationTokenRepo.findByConfirmationToken(token);
+//		if(tokenentity.getUserEntity().getEmailId()!=user.getEmailId()) {
+//			throw new AuthException("Incorrect token");	
+//		}
+		if(checkToken(token)==false)
+			throw new AuthException("Incorrect token");	
+		Users dbuser = tokenentity.getUserEntity();
+		dbuser = changepassword(dbuser, user.getPassword());
+		return dbuser;
+	}
+	
+	public Users changepassword(Users user, String newpassword) {
+		String newPassword = user.getPassword();
+		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
+		user.setPassword(hashedPassword);
+		userRepo.save(user);
+		return user;
 	}
 }
