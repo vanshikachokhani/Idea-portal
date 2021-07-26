@@ -41,12 +41,11 @@ class CommentServiceTest {
 	public void viewCommentsTest(){
 		int i=1;
 		long id=i;
-		String[] files = {};
 		Privilege cpPrivilege = new Privilege(1, "Client Partner");
 		Category category = new Category(1, "WebApp");
 		Users user = new Users(1, "Bharat", "8830850789", "bk@persistent.com", "bk", "Persistent", cpPrivilege);
-		Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user, files);
-		Idea idea=new Idea("ok", "acha", files, 0.0f, theme, user);
+		Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
+		Idea idea=new Idea("ok", "acha", 0.0f, theme, user);
 		Comment comment=new Comment("this is nice",user,idea);
 		Optional<Idea> ideaoptional=Optional.of(idea);
 		when(ideaRepo.findById(id)).thenReturn(ideaoptional);
@@ -58,12 +57,11 @@ class CommentServiceTest {
 	public void createCommentTest() {
 		int i=1;
 		long id=i;
-		String[] files = {};
 		Privilege cpPrivilege = new Privilege(1, "Client Partner");
 		Category category = new Category(1, "WebApp");
 		Users user = new Users(1, "Bharat", "8830850789", "bk@persistent.com", "bk", "Persistent", cpPrivilege);
-		Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user, files);
-		Idea idea=new Idea("ok", "acha", files, 0.0f, theme, user);
+		Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
+		Idea idea=new Idea("ok", "acha", 0.0f, theme, user);
 		Comment comment=new Comment("this is nice",user,idea);
 		Optional<Idea> ideaoptional=Optional.of(idea);
 		when(ideaRepo.findById(id)).thenReturn(ideaoptional);

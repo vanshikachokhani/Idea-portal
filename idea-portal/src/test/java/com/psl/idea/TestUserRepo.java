@@ -23,7 +23,7 @@ class TestUserRepo {
 		//fail("Not yet implemented");
 		p.setPrivilege("ProductManager");
 		p.setPrivilegeId(1);
-		Users user=new Users("vaibhav","8423","email@gmail.com","pass",p);
+		Users user=new Users(1, "vaibhav", "8423", "email@gmail.com", "pass", "Persistent", p);
 		System.out.println(user.toString());
 		assertEquals(user, userRepo.findByEmailId("email@gmail.com"));
 	}

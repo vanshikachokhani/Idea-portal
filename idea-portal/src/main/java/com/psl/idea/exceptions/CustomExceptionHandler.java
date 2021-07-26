@@ -34,6 +34,7 @@ public class CustomExceptionHandler {
 		error.setStatus(500);
 		error.setError("Internal Server Error");
 		error.setMessage(e.getMessage());
+		e.printStackTrace();
 		return new ResponseEntity<String>(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	

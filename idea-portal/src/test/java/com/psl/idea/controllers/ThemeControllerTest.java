@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.psl.idea.Constants;
 import com.psl.idea.models.Category;
@@ -45,9 +46,9 @@ public class ThemeControllerTest {
 	private Category webapp = new Category(1, "WebApp");
 	private Users user1 = new Users(1, "Rohan Rathi", "8830850720", "rathirohan8@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", "Persistent", cpPrivilege);
 	private Users user2 = new Users(2, "Rohan Rathi", "8830850720", "rathirohan8@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", "Persistent", pmPrivilege);
-	private String[] files = {};
-	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1, files);
-	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", files, 0, t, user2);
+	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1);
+	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", 0, t, user2);
+	private MultipartFile[] files = {};
 //	String jwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjY4NjA5ODEsImV4cCI6MTYyNjg2ODE4MSwidXNlcklkIjo0LCJlbWFpbElkIjoicmF0aGlyb2hhbjhAZ21haWwuY29tIiwibmFtZSI6IlJvaGFuIFJhdGhpIiwicHJpdmlsZWdlIjp7InByaXZpbGVnZUlkIjoxLCJwcml2aWxlZ2UiOiJDbGllbnQgUGFydG5lciJ9fQ.NOCopJfwqEaIZA9S9x_BeNSANjAd95g8vFfe2m_bI3M";
 	
 	@Autowired
@@ -70,7 +71,7 @@ public class ThemeControllerTest {
 	@Test
 	public void createThemeTest() throws Exception {
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user1.getPrivilege().getPrivilegeId());
-		when(themeService.createTheme(t)).thenReturn(t);
+		when(themeService.createTheme(t, files)).thenReturn(t);
 		mockMvc.perform(post("/api/loggedin/themes")
 				.header("Authorization", "Bearer " + this.generateJWTToken(user1))
 				.contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +93,7 @@ public class ThemeControllerTest {
 	@Test
 	public void createIdeaTest() throws Exception {
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
-		when(ideaService.createIdea(1, i)).thenReturn(i);
+		when(ideaService.createIdea(1, i, files)).thenReturn(i);
 		mockMvc.perform(post("/api/loggedin/themes/1/ideas")
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
 				.contentType(MediaType.APPLICATION_JSON)

@@ -29,28 +29,25 @@ public class Theme {
 	@JoinColumn(name="user_id")
 	private Users user;
 	
-	private String[] files;
 	
 	public Theme()
 	{
 		super();
 	}
 
-	public Theme(long themeId, String title, String description, Category category, Users user, String[] files) {
+	public Theme(long themeId, String title, String description, Category category, Users user) {
 		super();
 		this.themeId = themeId;
 		this.title = title;
 		this.description = description;
 		this.category = category;
 		this.user = user;
-		this.files = files;
 	}
 
-	public Theme(String title, String description, Category category, String[] files) {
+	public Theme(String title, String description, Category category) {
 		super();
 		this.title = title;
 		this.description = description;
-		this.files = files;
 		this.category = category;
 	}
 
@@ -92,14 +89,6 @@ public class Theme {
 
 	public void setUser(Users user) {
 		this.user = user;
-	}
-
-	public String[] getFiles() {
-		return files;
-	}
-
-	public void setFiles(String[] files) {
-		this.files = files;
 	}
 	
 	@Override

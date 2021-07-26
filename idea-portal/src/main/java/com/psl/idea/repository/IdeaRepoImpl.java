@@ -17,33 +17,33 @@ public class IdeaRepoImpl {
 	public List<Idea> findbyUserUserId(long userId){
 		Session session=sessionFactory.openSession();
 		String hql="SELECT * FROM Idea I where I.user_id=:id";
-		Query query=session.createQuery(hql);
+		Query<Idea> query=session.createQuery(hql, Idea.class);
 		query.setParameter("id", userId);
-		List ans=query.list();
+		List<Idea> ans=query.list();
 		session.close();
 		return ans;
 	}
 	public List<Idea> findbylike() {
 		Session session=sessionFactory.openSession();
 		String hql="SELECT * FROM Idea I ORDER BY I.rating ASC";
-		Query query=session.createQuery(hql);
-		List ans=query.list();
+		Query<Idea> query=session.createQuery(hql, Idea.class);
+		List<Idea> ans=query.list();
 		session.close();
 		return ans;
 	}
 	public List<Idea> findbydate() {
 		Session session=sessionFactory.openSession();
 		String hql="SELECT * FROM Idea I ORDER BY I.date ASC";
-		Query query=session.createQuery(hql);	
-		List ans=query.list();
+		Query<Idea> query=session.createQuery(hql, Idea.class);	
+		List<Idea> ans=query.list();
 		session.close();
 		return ans;
 	}
 	public List<Idea> findbycomment() {
 		Session session=sessionFactory.openSession();
 		String hql="SELECT * FROM Idea I ORDER BY I.comment ASC";
-		Query query=session.createQuery(hql);
-		List ans=query.list();
+		Query<Idea> query=session.createQuery(hql, Idea.class);
+		List<Idea> ans=query.list();
 		session.close();
 		return ans;
 	}

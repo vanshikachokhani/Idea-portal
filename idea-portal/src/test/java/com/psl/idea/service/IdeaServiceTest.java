@@ -1,9 +1,11 @@
 package com.psl.idea.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
@@ -36,12 +39,12 @@ public class IdeaServiceTest {
 	@Autowired
 	MockMvc mockMvc;
 	
-	String[] files = {};
+	MultipartFile[] files = {};
 	Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	Category category = new Category(1, "WebApp");
 	Users user = new Users(1, "Rohan Rathi", "8830850720", "rohan_rathi@persistent.com", "RohanRathi", "Persistent", cpPrivilege);
-	Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user, files);
-	Idea idea = new Idea(1, "Test Idea", "Testing Theme", files, 0, theme, user);
+	Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
+	Idea idea = new Idea(1, "Test Idea", "Testing Theme", 0, theme, user);
 	
 	@Test
 	public void createIdeaServiceTest() {
@@ -49,12 +52,17 @@ public class IdeaServiceTest {
 		when(themeRepo.findById(theme.getThemeId())).thenReturn(optionalTheme);
 		when(ideaRepo.save(idea)).thenReturn(idea);
 		
-		assertEquals(idea, ideaService.createIdea(1, idea));
-		
 		optionalTheme = Optional.empty();
 		when(themeRepo.findById((long) 2)).thenReturn(optionalTheme);
-		
-		assertEquals(null, ideaService.createIdea(2, idea));
+
+		try {
+			assertEquals(idea, ideaService.createIdea(1, idea, files));
+			
+			assertEquals(null, ideaService.createIdea(2, idea, files));
+		} catch(IOException io) {
+			fail();
+			io.printStackTrace();
+		}
 		
 		verify(themeRepo).findById(theme.getThemeId());
 		verify(ideaRepo).save(idea);

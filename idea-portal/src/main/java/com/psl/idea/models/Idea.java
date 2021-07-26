@@ -23,39 +23,36 @@ public class Idea {
 	private String title;
 	@Column(name="description", nullable=false)
 	private String description;
-	private String[] files;
 	
 	@Column(name="rating")
 	private float rating = 0;
 	
 	@ManyToOne
-	@JoinColumn(name="theme_id")
+	@JoinColumn(name="theme_id", nullable=false)
 	private Theme theme;
 	
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name="user_id", nullable=false)
 	private Users user;
 	
 	public Idea() {
 		super();
 	}
 	
-	public Idea(long ideaId, String title, String description, String[] files, float rating, Theme theme, Users user) {
+	public Idea(long ideaId, String title, String description, float rating, Theme theme, Users user) {
 		super();
 		this.ideaId = ideaId;
 		this.title = title;
 		this.description = description;
-		this.files = files;
 		this.rating = rating;
 		this.theme = theme;
 		this.user = user;
 	}
 
-	public Idea(String title, String description, String[] files, float rating, Theme theme, Users user) {
+	public Idea(String title, String description, float rating, Theme theme, Users user) {
 		super();
 		this.title = title;
 		this.description = description;
-		this.files = files;
 		this.rating = rating;
 		this.theme = theme;
 		this.user = user;
@@ -77,12 +74,6 @@ public class Idea {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String[] getFiles() {
-		return files;
-	}
-	public void setFiles(String[] files) {
-		this.files = files;
 	}
 	
 	public float getRating() {
