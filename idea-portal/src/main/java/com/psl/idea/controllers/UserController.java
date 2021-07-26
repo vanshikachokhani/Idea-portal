@@ -130,7 +130,7 @@ public class UserController {
 	
 	@GetMapping("api/loggedin/users/{userId}/themes")
 	public List<Theme> getUserThemes(@PathVariable long userId, HttpServletRequest httpServletRequest) {
-		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 1)
+		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 1 && userId == (int) httpServletRequest.getAttribute("userId"))
 			return themeService.getThemesByUser(userId);
 		else
 			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");
@@ -138,7 +138,7 @@ public class UserController {
 	
 	@GetMapping("api/loggedin/users/{userId}/ideas")
 	public List<Idea> getUserIdeas(@PathVariable long userId, HttpServletRequest httpServletRequest) {
-		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 2)
+		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 2 && userId == (int) httpServletRequest.getAttribute("userId"))
 			return ideaService.getIdeasByUser(userId);
 		else
 			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");

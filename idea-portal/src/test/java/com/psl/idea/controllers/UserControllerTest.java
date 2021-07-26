@@ -1,14 +1,15 @@
 package com.psl.idea.controllers;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.Matchers;
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
+import com.psl.idea.util.UsersUtil;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,6 +45,10 @@ public class UserControllerTest {
 	ThemeService themeService;
 	@MockBean
 	IdeaService ideaService;
+	@MockBean
+	UsersUtil usersUtil;
+	@MockBean
+	HttpServletRequest httpServletRequest;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -73,21 +79,19 @@ public class UserControllerTest {
 	public void getUserThemesTest() throws Exception {
 		List<Theme> themes = new ArrayList<>();
 		themes.add(t);
+
+		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn((long) 1);
+		when(httpServletRequest.getAttribute("userId")).thenReturn(1);
 		
 		when(themeService.getThemesByUser(1)).thenReturn(themes);
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/themes")
 				.header("Authorization", "Bearer " + this.generateJWTToken(user1)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].title").value("Test Theme"))
-				.andExpect(jsonPath("$[0].themeId").value(1))
-				.andReturn();
+				.andExpect(status().isOk());
 		
 		when(themeService.getThemesByUser(2)).thenReturn(new ArrayList<Theme>());
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/themes")
-				.header("Authorization", "Bearer " + this.generateJWTToken(user1)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").isEmpty())
-				.andReturn();
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/themes")
+				.header("Authorization", "Bearer " + this.generateJWTToken(user2)))
+				.andExpect(status().isUnauthorized());
 		
 	}
 	
@@ -96,19 +100,18 @@ public class UserControllerTest {
 		List<Idea> ideas = new ArrayList<>();
 		ideas.add(i);
 		
+		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn((long) 2);
+		
 		when(ideaService.getIdeasByUser(2)).thenReturn(ideas);
+		when(httpServletRequest.getAttribute("userId")).thenReturn(2);
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/ideas")
 				.header("Authorization", "Bearer " + generateJWTToken(user2)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].ideaId").value(1))
-				.andExpect(jsonPath("$[0].title").value("Test Idea"))
-				.andExpect(jsonPath("$[0].user.userId").value(2));
+				.andExpect(status().isOk());
 		
 		when(ideaService.getIdeasByUser(1)).thenReturn(new ArrayList<Idea>());
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/ideas")
-				.header("Authorization", "Bearer " + generateJWTToken(user1)))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$").isEmpty())
+				.header("Authorization", "Bearer " + generateJWTToken(user2)))
+		.andExpect(status().isUnauthorized())
 		.andReturn();
 	}
 	
@@ -119,13 +122,7 @@ public class UserControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/register")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonString))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.emailId", Matchers.is("johndoe@gmail.com")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("John Doe")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.password", Matchers.is("123456")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber", Matchers.is("9423160789")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.privilege.privilegeId", Matchers.is(1)))
-				.andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	public void loginUserTest() throws Exception {
@@ -134,10 +131,7 @@ public class UserControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/login")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonString))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.emailId", Matchers.is("johndoe@gmail.com")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.password", Matchers.is("123456")))
-				.andReturn();
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
 }
