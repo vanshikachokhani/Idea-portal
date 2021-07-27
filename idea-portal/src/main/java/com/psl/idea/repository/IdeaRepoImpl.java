@@ -16,7 +16,7 @@ public class IdeaRepoImpl {
 	SessionFactory sessionFactory;
 	public List<Idea> findbyUserUserId(long userId){
 		Session session=sessionFactory.openSession();
-		String hql="SELECT * FROM Idea I where I.user_id=:id";
+		String hql="SELECT * FROM Idea I where I.user.userId=:id";
 		Query<Idea> query=session.createQuery(hql, Idea.class);
 		query.setParameter("id", userId);
 		List<Idea> ans=query.list();
@@ -25,7 +25,7 @@ public class IdeaRepoImpl {
 	}
 	public List<Idea> findbylike(long themeID) {
 		Session session=sessionFactory.openSession();
-		String hql="SELECT * FROM Idea I where I.theme_id=:id ORDER BY I.rating ASC";
+		String hql="FROM Idea I where I.theme.themeId=:id ORDER BY I.rating ASC";
 		Query<Idea> query=session.createQuery(hql, Idea.class);
 		query.setParameter("id", themeID);
 		List<Idea> ans=query.list();
@@ -34,7 +34,7 @@ public class IdeaRepoImpl {
 	}
 	public List<Idea> findbydate(long themeID) {
 		Session session=sessionFactory.openSession();
-		String hql="SELECT * FROM Idea I where I.theme_id=:id ORDER BY I.date ASC";
+		String hql="SELECT * FROM Idea I where I.theme.themeId=:id ORDER BY I.date ASC";
 		Query<Idea> query=session.createQuery(hql, Idea.class);	
 		query.setParameter("id", themeID);
 		List<Idea> ans=query.list();
@@ -43,7 +43,7 @@ public class IdeaRepoImpl {
 	}
 	public List<Idea> findbycomment(long themeID) {
 		Session session=sessionFactory.openSession();
-		String hql="SELECT * FROM Idea I where I.theme_id=:id ORDER BY I.comment ASC";
+		String hql="SELECT * FROM Idea I where I.theme.themeId=:id ORDER BY I.comment ASC";
 		Query<Idea> query=session.createQuery(hql, Idea.class);
 		query.setParameter("id", themeID);
 		List<Idea> ans=query.list();
@@ -52,7 +52,7 @@ public class IdeaRepoImpl {
 	}
 	public List<Idea> findAll(long themeID) {
 		Session session=sessionFactory.openSession();
-		String hql="SELECT * FROM Idea I where I.theme_id=:id";
+		String hql="FROM Idea I where I.theme.themeId=:id";
 		Query<Idea> query=session.createQuery(hql, Idea.class);
 		query.setParameter("id", themeID);
 		List<Idea> ans=query.list();
