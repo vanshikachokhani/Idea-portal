@@ -26,6 +26,7 @@ import com.psl.idea.models.Theme;
 import com.psl.idea.models.Users;
 import com.psl.idea.repository.IdeaFilesRepository;
 import com.psl.idea.repository.IdeaRepo;
+import com.psl.idea.repository.IdeaRepoImpl;
 import com.psl.idea.repository.ThemeRepo;
 
 @WebMvcTest(controllers=IdeaService.class)
@@ -40,6 +41,8 @@ public class IdeaServiceTest {
 	DataSource dataSource;
 	@MockBean
 	IdeaFilesRepository ideaFilesRepository;
+	@MockBean
+	IdeaRepoImpl ideaRepoImpl;
 	
 	@Autowired
 	IdeaService ideaService;

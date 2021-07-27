@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import com.psl.idea.models.Category;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.Users;
+import com.psl.idea.repository.CategoryRepository;
+import com.psl.idea.repository.ThemeFileRepository;
 import com.psl.idea.repository.ThemeRepo;
 
 @WebMvcTest(controllers=ThemeService.class)
@@ -28,6 +32,12 @@ public class ThemeServiceTests {
 	
 	@MockBean
 	ThemeRepo themeRepo;
+	@MockBean
+	ThemeFileRepository themeFilesRepository;
+	@MockBean
+	CategoryRepository categoryRepository;
+	@MockBean
+	DataSource dataSource;
 	
 	@Autowired
 	ThemeService themeService;
