@@ -3,7 +3,6 @@ package com.psl.idea.service;
 import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
-//import org.mindrot.jbcrypt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.models.ConfirmationToken;
 import com.psl.idea.models.UpdateUser;
-import com.psl.idea.models.UpdateUserCompany;
 import com.psl.idea.models.UpdateUserEmail;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
@@ -20,7 +18,6 @@ import com.psl.idea.repository.ConfirmationTokenRepo;
 import com.psl.idea.repository.UserRepo;
 
 @Service
-
 public class UserService {
 	
 	@Autowired
@@ -34,15 +31,11 @@ public class UserService {
 	
 	public Users validateUser(User user) throws AuthException {
 		String email_id = user.getEmailId();
-	
 		if(email_id!=null)
 			email_id.toLowerCase();
-
 			Users dbuser = userRepo.findByEmailId(email_id);
-
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists");
-			
 			if(!BCrypt.checkpw(user.getPassword(), dbuser.getPassword()))
 				throw new AuthException("Invalid Login credentials");
 			return dbuser;
@@ -71,14 +64,11 @@ public class UserService {
 		String password = user.getOldpassword();
 		if(email_id!=null)
 			email_id.toLowerCase();
-
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists.");
-			
 			if(!BCrypt.checkpw(password, dbuser.getPassword()))
-				throw new AuthException("Incorrect password");
-		
+				throw new AuthException("Incorrect password");	
 		String newPassword = user.getNewpassword();
 		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
 		dbuser.setPassword(hashedPassword);
@@ -86,7 +76,7 @@ public class UserService {
 		return dbuser;
 	}
 	
-	public Users updateEmailId(UpdateUserEmail user) throws AuthException {
+	public Users updateEmailIdAndCompany(UpdateUserEmail user) throws AuthException {
 		String email_id = user.getOldemailId();
 		String password = user.getPassword();
 		if(email_id!=null)
@@ -98,30 +88,12 @@ public class UserService {
 			throw new AuthException("Incorrect password");
 		
 		String newemailId = user.getNewemailId();
-		dbuser.setEmailId(newemailId);
-		userRepo.save(dbuser);
-		return dbuser;
-	}
-
-	public Users updateCompany(UpdateUserCompany user) throws AuthException {
-		String email_id = user.getEmailId();
-		String password = user.getPassword();
-		if(email_id!=null)
-			email_id.toLowerCase();
-		Users dbuser = userRepo.findByEmailId(email_id);
-		if(dbuser==null)
-			throw new AuthException("This email id does not exists.");
-		if(!BCrypt.checkpw(password, dbuser.getPassword()))
-			throw new AuthException("Incorrect password");
-		
-		String oldcompany = user.getOldcompany();
+		if(newemailId!=null) {
+			newemailId.toLowerCase();
+			dbuser.setEmailId(newemailId);
+		}
 		String newcompany = user.getNewcompany();
-		
-		Users dbusercheck = userRepo.findByemailIdAndCompany(email_id, oldcompany);
-		
-		if(dbuser!=dbusercheck)
-			throw new AuthException("Company and email id do not match");
-		
+		if(newcompany!=null)
 		dbuser.setCompany(newcompany);
 		userRepo.save(dbuser);
 		return dbuser;
@@ -135,7 +107,6 @@ public class UserService {
 		if(email_id!=null)
 			email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
-		
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
 //		confirmationToken.validateToken();
 		confirmationTokenRepo.save(confirmationToken);
@@ -148,7 +119,6 @@ public class UserService {
 				+confirmationToken.getConfirmationToken());
 		mail.send(mailmsg);
 		return "Confirmation token sent to mail id";
-	
 	}
 	
 	public boolean checkToken(String token) {
@@ -159,9 +129,6 @@ public class UserService {
 	
 	public Users updateForgotPassword(String token, User user) {
 		ConfirmationToken tokenentity = confirmationTokenRepo.findByConfirmationToken(token);
-//		if(tokenentity.getUserEntity().getEmailId()!=user.getEmailId()) {
-//			throw new AuthException("Incorrect token");	
-//		}
 		System.out.println(tokenentity.getUserEntity().getEmailId());
 		if(checkToken(token)==false)
 			throw new AuthException("Incorrect token");	

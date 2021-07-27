@@ -25,7 +25,6 @@ import com.psl.idea.models.Idea;
 import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.UpdateUser;
-import com.psl.idea.models.UpdateUserCompany;
 import com.psl.idea.models.UpdateUserEmail;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
@@ -87,17 +86,10 @@ public class UserController {
 		return map;
 	}
 	
-	//Update EmailId 
-	@PostMapping("/api/users/update-emailId")
-	public ResponseEntity<Map<String,Object>> updateEmailId(@RequestBody UpdateUserEmail user){
-		Users responseuser = userService.updateEmailId(user);
-		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
-	}
-	
-	//Update company 
-	@PostMapping("/api/users/update-company")
-	public ResponseEntity<Map<String,Object>> updateCompany(@RequestBody UpdateUserCompany user){
-		Users responseuser = userService.updateCompany(user);
+	//Update EmailId && Company 
+	@PostMapping("/api/users/update-emailId-company")
+	public ResponseEntity<Map<String,Object>> updateEmailIdAndCompany(@RequestBody UpdateUserEmail user){
+		Users responseuser = userService.updateEmailIdAndCompany(user);
 		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
