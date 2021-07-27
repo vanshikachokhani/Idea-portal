@@ -56,27 +56,27 @@ public class ThemeController {
 	
 	// view all ideas of a particular theme
 	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas")
-    public List<Idea> viewIdeas(){
-		return ideaService.viewIdeas();
+    public List<Idea> viewIdeas(@PathVariable("themeID") long themeID){
+		return ideaService.viewIdeas(themeID);
 	}
 	
 	
 	// sort by most likes
-	@GetMapping(path="/api/loggedin/themes/{themeID}/likes")
-    public List<Idea> viewIdeasbyLikes(){
-		return ideaService.viewIdeasbyLikes();
+	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas/likes")
+    public List<Idea> viewIdeasbyLikes(@PathVariable("themeID") long themeID){
+		return ideaService.viewIdeasbyLikes(themeID);
 	}
 	
 	// sort by newest first
-	@GetMapping(path="/api/loggedin/themes/{themeID}/date")
-    public List<Idea> viewIdeasbyDate(){
-		return ideaService.viewIdeasbyDate();
+	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas/date")
+    public List<Idea> viewIdeasbyDate(@PathVariable("themeID") long themeID){
+		return ideaService.viewIdeasbyDate(themeID);
 	}
 	
 	//sort by most commented first
-	@GetMapping(path="/api/loggedin/themes/{themeID}/comment")
-    public List<Idea> viewIdeasbyComment(){
-		return ideaService.viewIdeasbyComment();
+	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas/comment")
+    public List<Idea> viewIdeasbyComment(@PathVariable("themeID") long themeID){
+		return ideaService.viewIdeasbyComment(themeID);
 	}
 	
 	// create a theme

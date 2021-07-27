@@ -20,6 +20,7 @@ import com.psl.idea.models.IdeaFiles;
 import com.psl.idea.models.Theme;
 import com.psl.idea.repository.IdeaFilesRepository;
 import com.psl.idea.repository.IdeaRepo;
+import com.psl.idea.repository.IdeaRepoImpl;
 import com.psl.idea.repository.ThemeRepo;
 
 @Service
@@ -34,29 +35,31 @@ public class IdeaService{
 	IdeaRepo ideaRepo;
 	@Autowired
 	IdeaFilesRepository ideaFilesRepository;
+	@Autowired
+	IdeaRepoImpl ideaRepoImpl;
 
 	public List<Theme> viewThemes(){
 		return 	themeRepo.findAll();
 	}
 
-	public List<Idea> viewIdeas(){
-		return ideaRepo.findAll();
+	public List<Idea> viewIdeas(long themeID){
+		return ideaRepoImpl.findAll(themeID);
 	}
 
 
 	// sort by most likes
-	public List<Idea> viewIdeasbyLikes(){
-		return ideaRepo.findAll();
+	public List<Idea> viewIdeasbyLikes(long themeID){
+		return ideaRepoImpl.findbylike(themeID);
 	}
 
 	// sort by newest first
-	public List<Idea> viewIdeasbyDate(){
-		return ideaRepo.findAll();
+	public List<Idea> viewIdeasbyDate(long themeID){
+		return ideaRepoImpl.findbydate(themeID);
 	}
 
 	//sort by most commented first
-	public List<Idea> viewIdeasbyComment(){
-		return ideaRepo.findAll();
+	public List<Idea> viewIdeasbyComment(long themeID){
+		return ideaRepoImpl.findbycomment(themeID);
 	}
 
 	public Idea createIdea(long themeId, Idea idea, MultipartFile[] multipartFiles) throws IOException {
