@@ -8,4 +8,6 @@ import com.psl.idea.models.ThemeFiles;
 @Repository
 public interface ThemeFileRepository extends JpaRepository<ThemeFiles, Long> {
 
+	ThemeFiles[] findAllByThemeThemeId(long themeId);
+
 }

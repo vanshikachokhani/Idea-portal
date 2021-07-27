@@ -27,6 +27,7 @@ import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.ThemeDetails;
 import com.psl.idea.models.ThemeFiles;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
@@ -77,6 +78,17 @@ public class ThemeController {
 	@GetMapping(path="/api/loggedin/themes/{themeID}/comment")
     public List<Idea> viewIdeasbyComment(){
 		return ideaService.viewIdeasbyComment();
+	}
+	
+	@GetMapping(path="/api/themes/{themeId}")
+	public ResponseEntity<ThemeDetails> getThemeDetails(@PathVariable("themeId") long themeId) throws NotFoundException {
+		Theme theme = themeService.getThemeById(themeId);
+		if(theme == null)
+			throw new NotFoundException("Theme Not Found");
+		ThemeFiles[] themeFiles = themeService.getAllThemeFilesByTheme(themeId);
+		Idea[] ideas = ideaService.getAllIdeasByTheme(themeId);
+		ThemeDetails themeDetails = new ThemeDetails(theme, themeFiles, ideas);
+		return new ResponseEntity<ThemeDetails>(themeDetails, HttpStatus.OK);
 	}
 	
 	// create a theme

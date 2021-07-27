@@ -10,5 +10,6 @@ public interface IdeaRepo extends JpaRepository<Idea, Long> {
 
 	List<Idea> findByUserUserId(long userId);
 	Idea findByIdeaId(long idea_id);
+	Idea[] findAllByThemeThemeId(long themeId);
 
 }
