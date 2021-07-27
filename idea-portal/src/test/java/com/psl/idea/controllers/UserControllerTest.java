@@ -133,5 +133,42 @@ public class UserControllerTest {
 				.content(jsonString))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+	
+	@Test
+	public void updateEmailIdAndCompanyTest() throws Exception{
+		String updateEmailAndCompany ="{\"oldemailId\":\"johndoe@gmail.com\", \"newemailId\": \"johndoe@gmail.com\", \"password\":\"123456\" ,\"oldcompany\":\"Test Compnay\" , \"newcompany\":\"Testing \"}";
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/update-emailId-company")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(updateEmailAndCompany))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		
+		String updateEmail = "{\"oldemailId\":\"johndoe@gmail.com\", \"newemailId\": \"johndoe@gmail.com\", \"password\":\"123456\"}"; 
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/update-emailId-company")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(updateEmail))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	
+		String updateCompany ="{\"oldcompany\":\"Test Compnay\" , \"newcompany\":\"Testing \",\"password\":\"123456\"}";
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/update-emailId-company")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(updateCompany))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		
+	}
+	
+	@Test
+	public void updatePasswordTest() throws Exception {
+		String updatePassword = "{\"emailId\":\"johndoe@gmail.com\", \"oldpassword\": \"12345678\", \"newpassword\":\"qwertyuiop\"}"; 
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/update-password")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(updatePassword))
+				.andExpect(MockMvcResultMatchers.status().isOk());		
+	}
 
+//	@Test
+//	public void 
 }
