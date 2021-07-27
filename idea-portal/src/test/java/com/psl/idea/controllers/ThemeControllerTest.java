@@ -1,6 +1,7 @@
 package com.psl.idea.controllers;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,6 +26,7 @@ import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.ThemeFiles;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
@@ -58,6 +60,8 @@ public class ThemeControllerTest {
 	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1);
 	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", 0, t, user2);
 	private MultipartFile[] files = {};
+	private ThemeFiles[] themeFiles = {};
+	private Idea[] ideas = {i};
 //	String jwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjY4NjA5ODEsImV4cCI6MTYyNjg2ODE4MSwidXNlcklkIjo0LCJlbWFpbElkIjoicmF0aGlyb2hhbjhAZ21haWwuY29tIiwibmFtZSI6IlJvaGFuIFJhdGhpIiwicHJpdmlsZWdlIjp7InByaXZpbGVnZUlkIjoxLCJwcml2aWxlZ2UiOiJDbGllbnQgUGFydG5lciJ9fQ.NOCopJfwqEaIZA9S9x_BeNSANjAd95g8vFfe2m_bI3M";
 	
 	@Autowired
@@ -110,6 +114,23 @@ public class ThemeControllerTest {
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
 				.contentType(MediaType.MULTIPART_FORM_DATA))
 				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getThemeDetailsTest() throws Exception {
+		when(themeService.getThemeById(1)).thenReturn(t);
+		when(themeService.getAllThemeFilesByTheme(1)).thenReturn(themeFiles);
+		when(ideaService.getAllIdeasByTheme(1)).thenReturn(ideas);
+		
+		mockMvc.perform(get("/api/themes/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+		
+		when(themeService.getThemeById(9)).thenReturn(null);
+		
+		mockMvc.perform(get("/api/themes/9")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNotFound());
 	}
 	
 }
