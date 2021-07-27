@@ -113,4 +113,8 @@ public class IdeaService{
 		return ideas;
 	}
 
+	public Idea[] getAllIdeasByTheme(long themeId) {
+		return ideaRepo.findAllByThemeThemeId(themeId);
+	}
+
 }

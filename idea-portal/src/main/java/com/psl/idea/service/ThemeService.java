@@ -86,5 +86,11 @@ public class ThemeService {
 	public Category getCategoryById(long categoryId) {
 		return categoryRepository.findById(categoryId).orElse(null);
 	}
+	public Theme getThemeById(long themeId) {
+		return themeRepo.findById(themeId).orElse(null);
+	}
+	public ThemeFiles[] getAllThemeFilesByTheme(long themeId) {
+		return themeFileRepository.findAllByThemeThemeId(themeId);
+	}
 		
 }

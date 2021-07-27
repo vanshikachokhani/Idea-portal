@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import com.psl.idea.models.Idea;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.Users;
+import com.psl.idea.repository.IdeaFilesRepository;
 import com.psl.idea.repository.IdeaRepo;
 import com.psl.idea.repository.ThemeRepo;
 
@@ -33,6 +36,10 @@ public class IdeaServiceTest {
 	ThemeRepo themeRepo;
 	@MockBean
 	IdeaRepo ideaRepo;
+	@MockBean
+	DataSource dataSource;
+	@MockBean
+	IdeaFilesRepository ideaFilesRepository;
 	
 	@Autowired
 	IdeaService ideaService;
