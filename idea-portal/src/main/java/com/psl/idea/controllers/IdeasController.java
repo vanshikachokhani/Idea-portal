@@ -31,6 +31,7 @@ import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ParticipantService;
 import com.psl.idea.service.RatingService;
 import com.psl.idea.util.UsersUtil;
+import com.sun.mail.iap.Response;
 
 @RestController
 @RequestMapping("/api/loggedin/ideas/{ideaId}")
@@ -58,8 +59,11 @@ public class IdeasController {
 	
 	//like or dislike an idea
 	@PostMapping(path="/like")
-	public void likeDislike(@PathVariable long ideaId,@RequestBody Rating rate) {
+	public ResponseEntity<Object> likeDislike(@PathVariable long ideaId,@RequestBody Rating rate) {
 		ratingService.doLike(ideaId,rate);
+		return ResponseEntity.status(HttpStatus.OK).body("inserted");
+		
+		
 	}
 	
 	//do comment
