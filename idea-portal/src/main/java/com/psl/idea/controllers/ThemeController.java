@@ -56,7 +56,7 @@ public class ThemeController {
 	
 	
 	// view all ideas of a particular theme
-	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas")
+	@GetMapping(path="/api/themes/{themeID}/ideas")
     public List<Idea> viewIdeas(@PathVariable("themeID") long themeID){
 		return ideaService.viewIdeas(themeID);
 	}
