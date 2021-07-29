@@ -32,7 +32,11 @@ public class IdeaPortalApplication extends SpringBootServletInitializer{
 
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/api/**").allowedOrigins("http://localhost:4200", "http://localhost:8080", "https://hopeful-leavitt-8a8a98.netlify.app");
+				registry.addMapping("/api/**").allowedOrigins("http://localhost:4200",
+						"http://localhost:8080",
+						"https://hopeful-leavitt-8a8a98.netlify.app",
+						"https://psl-ideaportal.herokuapps.com"
+						);
 			}
 		};
 	}
