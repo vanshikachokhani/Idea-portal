@@ -34,7 +34,7 @@ import com.psl.idea.service.RatingService;
 import com.psl.idea.util.UsersUtil;
 
 @RestController
-@RequestMapping("/api/loggedin/ideas/{ideaId}")
+@RequestMapping("/api")
 public class IdeasController {
 	
 	@Autowired
@@ -52,7 +52,7 @@ public class IdeasController {
 	@Autowired
 	private UsersUtil usersUtil;
 	
-	@GetMapping(path="/viewIdea")
+	@GetMapping(path="/ideas/{ideaId}/viewIdea")
 	public ResponseEntity<Idea> viewIdea(@PathVariable Long ideaId) throws NotFoundException {
 		Idea idea = participantService.viewIdea(ideaId);
 		if(idea == null)
@@ -61,7 +61,7 @@ public class IdeasController {
 	}
 	
 	//like or dislike an idea
-	@PostMapping(path="/like")
+	@PostMapping(path="/loggedin/ideas/{ideaId}/like")
 	public ResponseEntity<Object> likeDislike(@PathVariable long ideaId,@RequestBody Rating rate) {
 		ratingService.doLike(ideaId,rate);
 		return ResponseEntity.status(HttpStatus.OK).body("inserted");
@@ -70,24 +70,24 @@ public class IdeasController {
 	}
 	
 	//do comment
-	@PostMapping(path="/comment")
+	@PostMapping(path="/loggedin/ideas/{ideaId}/comment")
 	public void createComment(@RequestBody Comment comment,@PathVariable Long ideaId) {
 		commentService.createComment(comment,ideaId);
 	}
 	// showing all ratings
-	@GetMapping(path="/viewLike")
+	@GetMapping(path="/loggedin/ideas/{ideaId}/viewLike")
 	public List<Rating> viewRating(@PathVariable Long ideaId){
 		return ratingService.viewRating(ideaId);
 	}
 	
 	//showing comments
-	@GetMapping(path="/viewComments")
+	@GetMapping(path="/loggedin/ideas/{ideaId}/viewComments")
 	public List<Comment> viewComment(@PathVariable Long ideaId){
 		return commentService.viewComments(ideaId);
 	}
 	
 	//interest in idea
-	@PostMapping(path="/interested")
+	@PostMapping(path="/loggedin/ideas/{ideaId}/interested")
 	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 3)
@@ -102,7 +102,7 @@ public class IdeasController {
 	}
 	
 	// see all interested participants in this idea
-	@GetMapping(path="/viewInterested")
+	@GetMapping(path="/loggedin/ideas/{ideaId}/viewInterested")
 	public ResponseEntity<Object> viewInterestedParticipants(HttpServletRequest httpServletRequest,@PathVariable Long ideaId){
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 1)
@@ -116,7 +116,7 @@ public class IdeasController {
 		}
 	}
 	
-	@GetMapping(path="/download_file/{ideaFileId}")
+	@GetMapping(path="/loggedin/ideas/{ideaId}/download_file/{ideaFileId}")
 	public ResponseEntity<Object> downloadIdeaFile(@PathVariable("ideaId") long ideaId, @PathVariable("ideaFileId") long ideaFileId) throws IOException {
 		System.out.println("Get Mapping Idea");
 		IdeaFiles ideaFileDetails = ideaService.getIdeaFile(ideaId, ideaFileId);

@@ -63,19 +63,19 @@ public class ThemeController {
 	
 	
 	// sort by most likes
-	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas/likes")
+	@GetMapping(path="/api/themes/{themeID}/ideas/likes")
     public List<Idea> viewIdeasbyLikes(@PathVariable("themeID") long themeID){
 		return ideaService.viewIdeasbyLikes(themeID);
 	}
 	
 	// sort by newest first
-	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas/date")
+	@GetMapping(path="/api/themes/{themeID}/ideas/date")
     public List<Idea> viewIdeasbyDate(@PathVariable("themeID") long themeID){
 		return ideaService.viewIdeasbyDate(themeID);
 	}
 	
 	//sort by most commented first
-	@GetMapping(path="/api/loggedin/themes/{themeID}/ideas/comment")
+	@GetMapping(path="/api/themes/{themeID}/ideas/comment")
     public List<Idea> viewIdeasbyComment(@PathVariable("themeID") long themeID){
 		return ideaService.viewIdeasbyComment(themeID);
 	}
