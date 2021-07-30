@@ -4,9 +4,9 @@ public class ResponseUser {
 	private long userId;
 	private String name;
 	private String emailId;
-	private String privilege;
+	private Privilege privilege;
 	private String company;
-	public ResponseUser(long userId, String name, String emailId, String privilege, String company) {
+	public ResponseUser(long userId, String name, String emailId, Privilege privilege, String company) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -41,10 +41,10 @@ public class ResponseUser {
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-	public String getPrivilege() {
+	public Privilege getPrivilege() {
 		return privilege;
 	}
-	public void setPrivilege(String privilege) {
+	public void setPrivilege(Privilege privilege) {
 		this.privilege = privilege;
 	}
 

@@ -80,7 +80,7 @@ public class UserController {
 				.compact();
 		
 		Map<String, Object> map = new HashMap<>();
-		ResponseUser responseuser=new ResponseUser(user.getUserId(),user.getName(),user.getEmailId(),user.privilege(),user.getCompany());
+		ResponseUser responseuser=new ResponseUser(user.getUserId(),user.getName(),user.getEmailId(),user.getPrivilege(),user.getCompany());
 		map.put("token", token);
 		map.put("user", responseuser);
 		return map;

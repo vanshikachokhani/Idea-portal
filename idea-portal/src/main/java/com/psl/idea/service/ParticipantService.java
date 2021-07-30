@@ -48,14 +48,8 @@ public class ParticipantService {
 	}
 	
 	public Idea viewIdea(Long ideaId){
-		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
-		if(idea.isPresent()) {
-		   return ideaRepo.getById(ideaId);
-		}
-		else
-		{
-			return new Idea();
-		}
+		Idea idea=ideaRepo.findById(ideaId).orElse(null);
+		return idea;
 	}
 
 }

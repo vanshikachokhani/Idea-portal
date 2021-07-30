@@ -31,7 +31,6 @@ import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ParticipantService;
 import com.psl.idea.service.RatingService;
 import com.psl.idea.util.UsersUtil;
-import com.sun.mail.iap.Response;
 
 @RestController
 @RequestMapping("/api/loggedin/ideas/{ideaId}")
