@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Comment;
 import com.psl.idea.models.Idea;
@@ -52,8 +53,11 @@ public class IdeasController {
 	private UsersUtil usersUtil;
 	
 	@GetMapping(path="/viewIdea")
-	public Idea viewIdea(@PathVariable Long ideaId) {
-		return participantService.viewIdea(ideaId);
+	public ResponseEntity<Idea> viewIdea(@PathVariable Long ideaId) throws NotFoundException {
+		Idea idea = participantService.viewIdea(ideaId);
+		if(idea == null)
+			throw new NotFoundException("Idea Not Found!");
+		return new ResponseEntity<Idea>(idea, HttpStatus.NOT_FOUND);
 	}
 	
 	//like or dislike an idea
