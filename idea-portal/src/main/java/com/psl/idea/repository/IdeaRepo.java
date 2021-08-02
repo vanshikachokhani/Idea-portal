@@ -14,8 +14,8 @@ public interface IdeaRepo extends JpaRepository<Idea, Long> {
 	Idea[] findAllByThemeThemeId(long themeId);
 	
 	@Query(value ="SELECT *\r\n"
-			+ "	FROM ideaportal.ideas I\r\n"
-			+ "	LEFT OUTER JOIN ideaportal.comments C ON I.idea_id=C.idea_id WHERE theme_id=?1\r\n"
+			+ "	FROM ideas I\r\n"
+			+ "	LEFT OUTER JOIN comments C ON I.idea_id=C.idea_id WHERE theme_id=?1\r\n"
 			+ "	GROUP BY I.idea_id ORDER BY COUNT(C.idea_id) DESC;",nativeQuery = true)
 	List<Idea> findbycomment(long themeID);
 
