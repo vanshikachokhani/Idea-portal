@@ -59,7 +59,7 @@ public class IdeaService{
 
 	//sort by most commented first
 	public List<Idea> viewIdeasbyComment(long themeID){
-		return ideaRepoImpl.findbycomment(themeID);
+		return ideaRepo.findbycomment(themeID);
 	}
 
 	public Idea createIdea(long themeId, Idea idea, MultipartFile[] multipartFiles) throws IOException {
