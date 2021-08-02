@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+   idea_portal:
+      image: idea_portal
+      container_name: idea_portal
+      ports:
+        - "8086:8086"
+      networks:
+        - idea_network
+      depends_on:
+        - mysqldb
+   
+   mysqldb:
+      image: mysql:8
+      container_name: mysql_cont
+      ports:
+        - "3306:3306"
+      networks:
+        - idea_network
+      environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=ideaportal
+
+networks:
+   idea_network:
