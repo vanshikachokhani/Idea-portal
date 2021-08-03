@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -43,6 +44,8 @@ public class IdeaServiceTest {
 	IdeaFilesRepository ideaFilesRepository;
 	@MockBean
 	IdeaRepoImpl ideaRepoImpl;
+	@MockBean
+	Connection connection;
 	
 	@Autowired
 	IdeaService ideaService;
@@ -57,13 +60,14 @@ public class IdeaServiceTest {
 	Idea idea = new Idea(1, "Test Idea", "Testing Theme", 0, theme, user);
 	
 	@Test
-	public void createIdeaServiceTest() {
+	public void createIdeaServiceTest() throws Exception {
 		Optional<Theme> optionalTheme = Optional.of(theme);
 		when(themeRepo.findById(theme.getThemeId())).thenReturn(optionalTheme);
 		when(ideaRepo.save(idea)).thenReturn(idea);
 		
 		optionalTheme = Optional.empty();
 		when(themeRepo.findById((long) 2)).thenReturn(optionalTheme);
+		when(dataSource.getConnection()).thenReturn(connection);
 
 		try {
 			assertEquals(idea, ideaService.createIdea(1, idea, files));

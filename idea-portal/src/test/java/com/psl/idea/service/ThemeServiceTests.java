@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.sql.DataSource;
 
@@ -38,6 +39,8 @@ public class ThemeServiceTests {
 	CategoryRepository categoryRepository;
 	@MockBean
 	DataSource dataSource;
+	@MockBean
+	Connection connection;
 	
 	@Autowired
 	ThemeService themeService;
@@ -52,8 +55,9 @@ public class ThemeServiceTests {
 	Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
 	
 	@Test
-	public void createThemeTest() {
+	public void createThemeTest() throws Exception {
 		when(themeRepo.save(theme)).thenReturn(theme);
+		when(dataSource.getConnection()).thenReturn(connection);
 		try {
 			assertEquals(theme, themeService.createTheme(theme, files));
 		} catch(IOException io) {

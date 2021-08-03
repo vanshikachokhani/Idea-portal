@@ -1,13 +1,16 @@
 package com.psl.idea.controllers;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 
+import java.sql.Connection;
 import java.sql.Date;
-import java.util.Optional;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,15 +46,19 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class ThemeControllerTest {
 
 	@MockBean
-	IdeaService ideaService;
-	@MockBean
 	ThemeService themeService;
+	@MockBean
+	IdeaService ideaService;
 	@MockBean
 	UsersUtil usersUtil;
 	@MockBean
 	UserService userService;
 	@MockBean
 	ThemeRepo themeRepo;
+	@MockBean
+	DataSource dataSource;
+	@MockBean
+	Connection connection;
 	
 	@Autowired
 	WebApplicationContext webContext;
@@ -88,20 +95,20 @@ public class ThemeControllerTest {
 	
 	@Test
 	public void createThemeTest() throws Exception {
-		MockMultipartFile mockTheme = new MockMultipartFile("theme", "", MediaType.APPLICATION_JSON_VALUE, "{\"title\":\"Test Theme\", \"description\": \"Testing Theme\", \"category\": {\"categoryId\": 1}, \"user\": {\"userId\": 1}".getBytes());
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user1.getPrivilege().getPrivilegeId());
 		when(themeService.createTheme(t, files)).thenReturn(t);
+		when(themeService.getCategoryById((long) 1)).thenReturn(webapp);
+		when(userService.getUserByUserId((long) 1)).thenReturn(user1);
 		
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
-		mockMvc.perform(multipart("/api/loggedin/themes").file(mockTheme).file(themeFile).param("categoryId", "1").requestAttr("userId", 1)
+		mockMvc.perform(multipart("/api/loggedin/themes").file(themeFile).param("categoryId", "1").requestAttr("userId", 1).flashAttr("theme", t)
 				.header("Authorization", "Bearer " + this.generateJWTToken(user1))
 				.contentType(MediaType.MULTIPART_FORM_DATA))
 				.andExpect(status().isOk());
 		
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
 		
-		mockTheme = new MockMultipartFile("json", "", MediaType.APPLICATION_JSON_VALUE, "{\"title\":\"Test Theme\", \"description\": \"Testing Theme\", \"category\": {\"categoryId\": 1}, \"user\": {\"userId\": 2}".getBytes());
-		mockMvc.perform(multipart("/api/loggedin/themes").file(mockTheme).file(themeFile).param("categoryId", "1").requestAttr("userId", 2)
+		mockMvc.perform(multipart("/api/loggedin/themes").file(themeFile).param("categoryId", "1").requestAttr("userId", 2).flashAttr("theme", t)
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
 				.contentType(MediaType.MULTIPART_FORM_DATA))
 				.andExpect(status().isUnauthorized());
@@ -110,13 +117,15 @@ public class ThemeControllerTest {
 	
 	@Test
 	public void createIdeaTest() throws Exception {
-		MockMultipartFile mockIdea = new MockMultipartFile("idea", "", MediaType.APPLICATION_JSON_VALUE, "{\"title\": \"Test Idea\", \"description\": \"Testing Idea\", \"user\": {\"userId\": 2}}".getBytes());
-		Optional<Theme> optionalTheme = Optional.of(t);
+		doReturn(i).when(ideaService).createIdea(any(Long.class), any(Idea.class), any(MultipartFile[].class));
 		
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
-		when(ideaService.createIdea(1, i, files)).thenReturn(i);
-		when(themeRepo.findById((long) 1)).thenReturn(optionalTheme);
-		mockMvc.perform(multipart("/api/loggedin/themes/1/ideas").file(mockIdea).file(themeFile).requestAttr("userId", 2)
+		when(userService.getUserByUserId(2)).thenReturn(user2);
+		when(dataSource.getConnection()).thenReturn(connection);
+		
+		mockMvc.perform(multipart("/api/loggedin/themes/1/ideas").file(themeFile)
+				.requestAttr("userId", 2)
+				.flashAttr("idea", i)
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
 				.contentType(MediaType.MULTIPART_FORM_DATA))
 				.andExpect(status().isOk());
