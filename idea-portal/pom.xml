@@ -11,7 +11,7 @@
 	<groupId>com.psl.idea</groupId>
 	<artifactId>idea-portal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>idea-portal</name>
 	<description>Demo project for Spring Boot and Rest API</description>
 	<properties>
