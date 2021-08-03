@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.ArgumentMatchers.any;
 
 import java.sql.Date;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,7 @@ import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.ThemeFiles;
 import com.psl.idea.models.Users;
+import com.psl.idea.repository.ThemeRepo;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
@@ -48,6 +50,8 @@ public class ThemeControllerTest {
 	UsersUtil usersUtil;
 	@MockBean
 	UserService userService;
+	@MockBean
+	ThemeRepo themeRepo;
 	
 	@Autowired
 	WebApplicationContext webContext;
@@ -104,12 +108,14 @@ public class ThemeControllerTest {
 		
 	}
 	
-//	@Test
+	@Test
 	public void createIdeaTest() throws Exception {
 		MockMultipartFile mockIdea = new MockMultipartFile("idea", "", MediaType.APPLICATION_JSON_VALUE, "{\"title\": \"Test Idea\", \"description\": \"Testing Idea\", \"user\": {\"userId\": 2}}".getBytes());
+		Optional<Theme> optionalTheme = Optional.of(t);
 		
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
 		when(ideaService.createIdea(1, i, files)).thenReturn(i);
+		when(themeRepo.findById((long) 1)).thenReturn(optionalTheme);
 		mockMvc.perform(multipart("/api/loggedin/themes/1/ideas").file(mockIdea).file(themeFile).requestAttr("userId", 2)
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
 				.contentType(MediaType.MULTIPART_FORM_DATA))
