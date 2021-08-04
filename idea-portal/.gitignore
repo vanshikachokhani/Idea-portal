@@ -34,3 +34,6 @@ build/
 
 ### Java ###
 *.class
+
+# SonarQube
+sonarqube-analyzer.bat
