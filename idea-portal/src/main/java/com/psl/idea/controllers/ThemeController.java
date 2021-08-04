@@ -114,7 +114,6 @@ public class ThemeController {
 	
 	@GetMapping(path="/api/loggedin/themes/{themeId}/download_file/{themeFileId}")
 	public ResponseEntity<Object> downloadThemeFile(@PathVariable("themeId") long themeId, @PathVariable("themeFileId") long themeFileId) throws IOException {
-		System.out.println("Get Mapping");
 		ThemeFiles themeFileDetails = themeService.getThemeFile(themeId, themeFileId);
 		if(themeFileDetails == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found");

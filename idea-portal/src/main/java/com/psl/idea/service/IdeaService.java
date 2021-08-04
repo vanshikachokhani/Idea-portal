@@ -67,8 +67,7 @@ public class IdeaService{
 		if(t != null)
 		{
 			Idea i = null;
-			try {
-				Connection connection = dataSource.getConnection();
+			try(Connection connection = dataSource.getConnection()) {
 				connection.setAutoCommit(false);
 				try {
 					idea.setTheme(t);
@@ -88,8 +87,6 @@ public class IdeaService{
 				} catch(TransactionException te) {
 					System.out.println(te.getMessage());
 					connection.rollback();
-				} finally {
-					connection.close();
 				}
 			} catch(SQLException sql) {
 				System.out.println("Error");

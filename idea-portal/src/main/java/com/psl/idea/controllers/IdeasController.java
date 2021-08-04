@@ -55,7 +55,6 @@ public class IdeasController {
 	@GetMapping(path="/ideas/{ideaId}/viewIdea")
 	public ResponseEntity<Idea> viewIdea(@PathVariable Long ideaId) throws NotFoundException {
 		Idea idea = participantService.viewIdea(ideaId);
-		System.out.println(idea + ", " + ideaId);
 		if(idea == null)
 			throw new NotFoundException("Idea Not Found!");
 		return new ResponseEntity<Idea>(idea, HttpStatus.OK);
@@ -119,7 +118,6 @@ public class IdeasController {
 	
 	@GetMapping(path="/loggedin/ideas/{ideaId}/download_file/{ideaFileId}")
 	public ResponseEntity<Object> downloadIdeaFile(@PathVariable("ideaId") long ideaId, @PathVariable("ideaFileId") long ideaFileId) throws IOException {
-		System.out.println("Get Mapping Idea");
 		IdeaFiles ideaFileDetails = ideaService.getIdeaFile(ideaId, ideaFileId);
 		if(ideaFileDetails == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found");

@@ -39,8 +39,7 @@ public class ThemeService {
 	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException
 	{
 		Theme t = null;
-		try {
-			Connection connection = dataSource.getConnection();
+		try(Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
 			try {
 				t = themeRepo.save(theme);
