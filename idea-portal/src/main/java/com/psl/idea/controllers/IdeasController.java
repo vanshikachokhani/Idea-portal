@@ -55,9 +55,10 @@ public class IdeasController {
 	@GetMapping(path="/ideas/{ideaId}/viewIdea")
 	public ResponseEntity<Idea> viewIdea(@PathVariable Long ideaId) throws NotFoundException {
 		Idea idea = participantService.viewIdea(ideaId);
+		System.out.println(idea + ", " + ideaId);
 		if(idea == null)
 			throw new NotFoundException("Idea Not Found!");
-		return new ResponseEntity<Idea>(idea, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Idea>(idea, HttpStatus.OK);
 	}
 	
 	//like or dislike an idea

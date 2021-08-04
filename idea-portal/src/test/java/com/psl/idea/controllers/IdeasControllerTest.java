@@ -91,7 +91,7 @@ class IdeasControllerTest {
 	void viewIdeaTest() throws Exception {
 		long id=1L;
 		when(participantService.viewIdea(id)).thenReturn(i);
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/ideas/{ideaId}/viewIdea",id).header("Authorization", "Bearer " + this.generateJWTToken(user2)))
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/ideas/{ideaId}/viewIdea",id).header("Authorization", "Bearer " + this.generateJWTToken(user2)))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 		
 	}
