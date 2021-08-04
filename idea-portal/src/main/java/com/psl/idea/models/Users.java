@@ -6,7 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -30,7 +31,7 @@ public class Users {
 	@Column(nullable = false, unique = true, name = "email_id")
 	private String emailId;
 	
-	@JsonIgnore
+	@JsonProperty(access=Access.WRITE_ONLY)
 	@Column(nullable = false, name = "password")
 	private String password;
 	
