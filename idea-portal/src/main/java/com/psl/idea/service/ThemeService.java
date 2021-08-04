@@ -59,6 +59,8 @@ public class ThemeService {
 			} catch(TransactionException e) {
 				System.out.println(e.getMessage());
 				connection.rollback();
+			} finally {
+				connection.close();
 			}
 		} catch(SQLException sql) {
 			System.out.println("Error");

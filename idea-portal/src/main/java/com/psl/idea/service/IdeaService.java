@@ -88,6 +88,8 @@ public class IdeaService{
 				} catch(TransactionException te) {
 					System.out.println(te.getMessage());
 					connection.rollback();
+				} finally {
+					connection.close();
 				}
 			} catch(SQLException sql) {
 				System.out.println("Error");
