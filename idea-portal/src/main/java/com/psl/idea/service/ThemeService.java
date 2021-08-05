@@ -44,15 +44,17 @@ public class ThemeService {
 			try {
 				t = themeRepo.save(theme);
 				ThemeFiles themeFileToUpload;
-				for(MultipartFile file: multipartFiles) {
-					String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
-					String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
-					Tika tika = new Tika();
-					String fileType = tika.detect(fileName);
-					file.transferTo(new File(filePath));
-					themeFileToUpload = new ThemeFiles(fileName, fileType, t);
-					if(themeFileRepository.save(themeFileToUpload) == null)
-						throw new TransactionException("Could not save file");
+				if(multipartFiles != null) {
+					for(MultipartFile file: multipartFiles) {
+						String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
+						String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
+						Tika tika = new Tika();
+						String fileType = tika.detect(fileName);
+						file.transferTo(new File(filePath));
+						themeFileToUpload = new ThemeFiles(fileName, fileType, t);
+						if(themeFileRepository.save(themeFileToUpload) == null)
+							throw new TransactionException("Could not save file");
+					}
 				}
 			connection.commit();
 			} catch(TransactionException e) {

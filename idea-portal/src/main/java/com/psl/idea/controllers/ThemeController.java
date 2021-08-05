@@ -13,10 +13,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +38,7 @@ import com.psl.idea.service.UserService;
 import com.psl.idea.util.UsersUtil;
 
 
+@CrossOrigin(origins="http://localhost:4200")
 @RestController
 @RequestMapping()
 public class ThemeController {
@@ -92,8 +95,8 @@ public class ThemeController {
 	}
 	
 	// create a theme
-	@PostMapping(path="/api/loggedin/themes")
-	public ResponseEntity<Object> createTheme(@ModelAttribute Theme theme, HttpServletRequest httpServletRequest, @RequestParam("files") MultipartFile[] multipartFiles, @ModelAttribute("categoryId") long categoryId) throws IOException {
+	@PostMapping(path="/api/loggedin/themes", consumes= {"multipart/form-data"})
+	public ResponseEntity<Object> createTheme(@ModelAttribute Theme theme, HttpServletRequest httpServletRequest, @RequestParam(name = "files", required = false) MultipartFile[] multipartFiles, @ModelAttribute("categoryId") long categoryId) throws IOException {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 1)
 		{

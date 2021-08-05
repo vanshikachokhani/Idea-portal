@@ -5,8 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.psl.idea.filters.AuthFilter;
 
@@ -25,21 +26,19 @@ public class IdeaPortalApplication extends SpringBootServletInitializer{
 		registrationBean.addUrlPatterns("/api/loggedin/*");
 		return registrationBean;
 	}
-		
+	
 	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/api/**").allowedOrigins("http://localhost:4200",
-						"http://localhost:8080",
-						"http://localhost:8086",
-						"https://hopeful-leavitt-8a8a98.netlify.app",
-						"https://psl-ideaportal.herokuapp.com"
-						);
-			}
-		};
+	public FilterRegistrationBean<CorsFilter> corsFilter() {
+	   FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
+	   UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	   CorsConfiguration config = new CorsConfiguration();
+	   config.addAllowedOrigin("*");
+	   config.addAllowedHeader("*");
+	   config.addAllowedMethod("*");
+	   source.registerCorsConfiguration("/**", config);
+	   registrationBean.setFilter(new CorsFilter(source));
+	   registrationBean.setOrder(0);
+	   return registrationBean;
 	}
 
 }
