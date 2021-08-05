@@ -131,7 +131,7 @@ public class ThemeController {
 	
 	// create an idea
 	@PostMapping(path="/api/loggedin/themes/{themeId}/ideas")
-	public ResponseEntity<Object> createIdea(@ModelAttribute Idea idea, @PathVariable long themeId, HttpServletRequest httpServletRequest, @RequestParam("files") MultipartFile[] multipartFiles) throws NotFoundException, IOException
+	public ResponseEntity<Object> createIdea(@ModelAttribute Idea idea, @PathVariable long themeId, HttpServletRequest httpServletRequest, @RequestParam(name="files", required = false) MultipartFile[] multipartFiles) throws NotFoundException, IOException
 	{
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 2)

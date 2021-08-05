@@ -36,35 +36,27 @@ public class ThemeService {
 	@Autowired
 	DataSource dataSource;
 	
-	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException
+	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException, TransactionException
 	{
 		Theme t = null;
 		try(Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
-			try {
-				t = themeRepo.save(theme);
-				ThemeFiles themeFileToUpload;
-				if(multipartFiles != null) {
-					for(MultipartFile file: multipartFiles) {
-						String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
-						String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
-						Tika tika = new Tika();
-						String fileType = tika.detect(fileName);
-						file.transferTo(new File(filePath));
-						themeFileToUpload = new ThemeFiles(fileName, fileType, t);
-						if(themeFileRepository.save(themeFileToUpload) == null)
-							throw new TransactionException("Could not save file");
-					}
+			t = themeRepo.save(theme);
+			ThemeFiles themeFileToUpload;
+			if(multipartFiles != null) {
+				for(MultipartFile file: multipartFiles) {
+					String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
+					String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
+					Tika tika = new Tika();
+					String fileType = tika.detect(fileName);
+					file.transferTo(new File(filePath));
+					themeFileToUpload = new ThemeFiles(fileName, fileType, t);
+					if(themeFileRepository.save(themeFileToUpload) == null)
+						throw new TransactionException("Could not save file");
 				}
-			connection.commit();
-			} catch(TransactionException e) {
-				System.out.println(e.getMessage());
-				connection.rollback();
-			} finally {
-				connection.close();
 			}
+			connection.commit();
 		} catch(SQLException sql) {
-			System.out.println("Error");
 		}
 		return t;
 		
@@ -74,9 +66,7 @@ public class ThemeService {
 	}
 	
 	public List<Theme> getThemesByUser(long userId) {
-		List<Theme> themes = new ArrayList<>();
-		
-		themes = themeRepo.findByUserUserId(userId);
+		List<Theme> themes = themeRepo.findByUserUserId(userId);
 		
 		return themes;
 	}

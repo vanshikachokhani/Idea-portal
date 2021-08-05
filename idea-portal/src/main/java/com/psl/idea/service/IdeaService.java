@@ -62,17 +62,18 @@ public class IdeaService{
 		return ideaRepo.findbycomment(themeID);
 	}
 
-	public Idea createIdea(long themeId, Idea idea, MultipartFile[] multipartFiles) throws IOException {
+	public Idea createIdea(long themeId, Idea idea, MultipartFile[] multipartFiles) throws IOException, TransactionException {
 		Theme t = themeRepo.findById(themeId).orElse(null);
 		if(t != null)
 		{
 			Idea i = null;
 			try(Connection connection = dataSource.getConnection()) {
 				connection.setAutoCommit(false);
-				try {
-					idea.setTheme(t);
-					i = ideaRepo.save(idea);
-					IdeaFiles ideaFileToUpload;
+				idea.setTheme(t);
+				i = ideaRepo.save(idea);
+				IdeaFiles ideaFileToUpload;
+				if(multipartFiles != null)
+				{
 					for(MultipartFile file: multipartFiles) {
 						String fileName = idea.getUser().getUserId() + "." + idea.getIdeaId() + "_" + file.getOriginalFilename();
 						String filePath = "E:\\Persistent\\data\\Ideas\\" + fileName;
@@ -83,17 +84,11 @@ public class IdeaService{
 						if(ideaFilesRepository.save(ideaFileToUpload) == null)
 							throw new TransactionException("Could not save file");
 					}
-					return i;
-				} catch(TransactionException te) {
-					System.out.println(te.getMessage());
-					connection.rollback();
 				}
+				return i;
 			} catch(SQLException sql) {
-				System.out.println("Error");
 			}
 		}
-		else
-			System.out.println("Invalid Theme");
 		return null;
 	}
 	
@@ -105,9 +100,7 @@ public class IdeaService{
 	}
 
 	public List<Idea> getIdeasByUser(long userId) {
-		List<Idea> ideas = new ArrayList<>();
-		
-		ideas = ideaRepo.findByUserUserId(userId);
+		List<Idea> ideas = ideaRepo.findByUserUserId(userId);
 		
 		return ideas;
 	}
