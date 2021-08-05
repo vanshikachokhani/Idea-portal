@@ -32,7 +32,7 @@ public class UserService {
 	public Users validateUser(User user) throws AuthException {
 		String email_id = user.getEmailId();
 		if(email_id!=null)
-			email_id.toLowerCase();
+			email_id = email_id.toLowerCase();
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists");
@@ -45,7 +45,7 @@ public class UserService {
 		String email_id = user.getEmailId();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 		if(email_id!=null) {
-			email_id.toLowerCase();
+			email_id = email_id.toLowerCase();
 			user.setEmailId(email_id);
 		}
 		if(!pattern.matcher(email_id).matches())
@@ -63,7 +63,7 @@ public class UserService {
 		String email_id = user.getEmailId();
 		String password = user.getOldpassword();
 		if(email_id!=null)
-			email_id.toLowerCase();
+			email_id = email_id.toLowerCase();
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists.");
@@ -80,7 +80,7 @@ public class UserService {
 		String email_id = user.getOldemailId();
 		String password = user.getPassword();
 		if(email_id!=null)
-			email_id.toLowerCase();
+			email_id = email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
 		if(dbuser==null)
 			throw new AuthException("This email id does not exists.");
@@ -105,7 +105,7 @@ public class UserService {
 
 	public String forgotPassword(String email_id) {
 		if(email_id!=null)
-			email_id.toLowerCase();
+			email_id = email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
 //		confirmationToken.validateToken();
