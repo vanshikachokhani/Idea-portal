@@ -89,7 +89,7 @@ public class UserService {
 		
 		String newemailId = user.getNewemailId();
 		if(newemailId!=null) {
-			newemailId.toLowerCase();
+			newemailId = newemailId.toLowerCase();
 			dbuser.setEmailId(newemailId);
 		}
 		String newcompany = user.getNewcompany();
