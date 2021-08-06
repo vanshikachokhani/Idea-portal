@@ -14,11 +14,14 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.apache.tika.Tika;
+import org.hibernate.TransactionException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +49,8 @@ public class ThemeServiceTests {
 	DataSource dataSource;
 	@MockBean
 	Connection connection;
+	@MockBean
+	Tika tika;
 	
 	@Autowired
 	ThemeService themeService;
@@ -53,7 +58,9 @@ public class ThemeServiceTests {
 	@Autowired
 	MockMvc mockMvc;
 	
-	MultipartFile[] files = {};
+	MultipartFile multipartFile1 = new MockMultipartFile("Test.txt", new byte[100]);
+	MultipartFile multipartFile2 = new MockMultipartFile("Test.png", new byte[100]);
+	MultipartFile[] files = {multipartFile1};
 	Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	Category category = new Category(1, "WebApp");
 	Users user = new Users(1, "Rohan Rathi", "8830850720", "rohan_rathi@persistent.com", "RohanRathi", "Persistent", cpPrivilege);
@@ -62,16 +69,46 @@ public class ThemeServiceTests {
 	
 	@Test
 	public void createThemeTest() throws Exception {
+		String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + multipartFile1.getOriginalFilename();
+		themeFile = new ThemeFiles(fileName, "application/text", theme);
+		MultipartFile[] newFiles = {multipartFile2};
+		ThemeFiles newThemeFile = new ThemeFiles("Test.png", "image/png", theme);
+		
 		when(themeRepo.save(theme)).thenReturn(theme);
 		when(dataSource.getConnection()).thenReturn(connection);
+		when(tika.detect("Test.txt")).thenReturn("application/text");
+		when(tika.detect("Test.png")).thenReturn("image/png");
+		when(themeFilesRepository.save(themeFile)).thenReturn(themeFile);
+		when(themeFilesRepository.save(newThemeFile)).thenReturn(null);
+		
 		try {
 			assertEquals(theme, themeService.createTheme(theme, files));
 		} catch(IOException io) {
 			fail();
 			io.printStackTrace();
+		} catch(TransactionException t) {
+			fail();
+			t.printStackTrace();
 		}
 		
-		verify(themeRepo).save(theme);
+		try {
+			assertEquals(theme, themeService.createTheme(theme, null));
+		} catch(IOException io) {
+			fail();
+			io.printStackTrace();
+		}
+		
+		try {
+			assertEquals(theme, themeService.createTheme(theme, newFiles));
+		} catch(IOException io) {
+			fail();
+			io.printStackTrace();
+		} catch(TransactionException t) {
+			assertEquals("Could not save file", t.getMessage());
+		}
+		
+		
+		verify(themeRepo, times(3)).save(theme);
 		
 	}
 	

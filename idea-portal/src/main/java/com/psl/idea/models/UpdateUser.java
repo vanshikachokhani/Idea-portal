@@ -4,6 +4,18 @@ public class UpdateUser {
 	private String emailId;
 	private String oldpassword;
 	private String newpassword;
+	
+	public UpdateUser() {
+		super();
+	}
+	
+	public UpdateUser(String emailId, String oldpassword, String newpassword) {
+		super();
+		this.emailId = emailId;
+		this.oldpassword = oldpassword;
+		this.newpassword = newpassword;
+	}
+
 	public String getEmailId() {
 		return emailId;
 	}

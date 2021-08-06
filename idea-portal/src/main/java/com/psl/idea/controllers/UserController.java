@@ -22,7 +22,6 @@ import com.psl.idea.Constants;
 import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Idea;
-import com.psl.idea.models.ResponseUser;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.UpdateUserEmail;
@@ -67,7 +66,7 @@ public class UserController {
 	}
 
 	//creates JWT token
-	private Map<String,Object> generateJWTToken(Users user){
+	Map<String,Object> generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
 		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_KEY)
 				.setIssuedAt(new Date(timestamp))
@@ -80,9 +79,8 @@ public class UserController {
 				.compact();
 		
 		Map<String, Object> map = new HashMap<>();
-		ResponseUser responseuser=new ResponseUser(user.getUserId(),user.getName(),user.getEmailId(),user.getPrivilege(),user.getCompany());
 		map.put("token", token);
-		map.put("user", responseuser);
+		map.put("user", user);
 		return map;
 	}
 	
@@ -121,17 +119,19 @@ public class UserController {
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/themes")
-	public List<Theme> getUserThemes(@PathVariable long userId, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<List<Theme>> getUserThemes(@PathVariable long userId, HttpServletRequest httpServletRequest) {
+		System.out.println("getUserThemes " + httpServletRequest.getAttribute("userId"));
 		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 1 && userId == (int) httpServletRequest.getAttribute("userId"))
-			return themeService.getThemesByUser(userId);
+			return new ResponseEntity<>(themeService.getThemesByUser(userId), HttpStatus.OK);
 		else
 			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");
 	}
 	
 	@GetMapping("api/loggedin/users/{userId}/ideas")
-	public List<Idea> getUserIdeas(@PathVariable long userId, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<List<Idea>> getUserIdeas(@PathVariable long userId, HttpServletRequest httpServletRequest) {
+		System.out.println("getUserIdeas " + (int) httpServletRequest.getAttribute("userId"));
 		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 2 && userId == (int) httpServletRequest.getAttribute("userId"))
-			return ideaService.getIdeasByUser(userId);
+			return new ResponseEntity<>(ideaService.getIdeasByUser(userId), HttpStatus.OK);
 		else
 			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");
 	}

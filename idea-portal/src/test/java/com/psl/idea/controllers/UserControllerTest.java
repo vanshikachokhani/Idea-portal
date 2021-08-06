@@ -6,17 +6,24 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -26,6 +33,7 @@ import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
@@ -48,7 +56,9 @@ public class UserControllerTest {
 	@MockBean
 	UsersUtil usersUtil;
 	@MockBean
-	HttpServletRequest httpServletRequest;
+	UserController mockUserController;
+	HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+//	MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -79,9 +89,10 @@ public class UserControllerTest {
 	public void getUserThemesTest() throws Exception {
 		List<Theme> themes = new ArrayList<>();
 		themes.add(t);
+//		mockRequest.setAttribute("userId", (Object) 1);
 
-		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn((long) 1);
-		when(httpServletRequest.getAttribute("userId")).thenReturn(1);
+		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn((long) 1, (long) 2);
+		when(httpServletRequest.getAttribute("userId")).thenReturn((Object) 1);
 		
 		when(themeService.getThemesByUser(1)).thenReturn(themes);
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/themes")
@@ -99,20 +110,49 @@ public class UserControllerTest {
 	public void getUserIdeasTest() throws Exception {
 		List<Idea> ideas = new ArrayList<>();
 		ideas.add(i);
+//		mockRequest.setAttribute("userId", (Object) 2);
 		
-		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn((long) 2);
+		when(usersUtil.getPrivilegeIdFromRequest(any(HttpServletRequest.class))).thenReturn((long) 2);
+		when(httpServletRequest.getAttribute("userId")).thenReturn((Object) 2);
 		
 		when(ideaService.getIdeasByUser(2)).thenReturn(ideas);
-		when(httpServletRequest.getAttribute("userId")).thenReturn(2);
+		
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/ideas")
 				.header("Authorization", "Bearer " + generateJWTToken(user2)))
 				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getUserIdeasTestUnAuthorized() throws Exception {
+		when(usersUtil.getPrivilegeIdFromRequest(any(HttpServletRequest.class))).thenReturn((long) 2);
 		
+		final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();     
+
+		// Mock setAttribute
+		Mockito.doAnswer(new Answer<Void>() {
+		    @Override
+		    public Void answer(InvocationOnMock invocation) throws Throwable {
+		        attributes.put("userId", (Object) 2);
+		        System.out.println("put attribute key=userId"+", value="+2);
+		        return null;
+		    }
+		}).when(httpServletRequest).setAttribute("userId", (Object) 2);
+
+		// Mock getAttribute
+		Mockito.doAnswer(new Answer<Object>() {
+		    @Override
+		    public Object answer(InvocationOnMock invocation) throws Throwable {
+		        String key = "userId";
+		        Object value = attributes.get(key);
+		        System.out.println("get attribute value for key="+key+" : "+value);
+		        return value;
+		    }
+		}).when(httpServletRequest).getAttribute("userId");
+
 		when(ideaService.getIdeasByUser(1)).thenReturn(new ArrayList<Idea>());
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/ideas")
 				.header("Authorization", "Bearer " + generateJWTToken(user2)))
-		.andExpect(status().isUnauthorized())
-		.andReturn();
+		.andExpect(status().isUnauthorized());
 	}
 	
 	@Test
@@ -162,6 +202,13 @@ public class UserControllerTest {
 	@Test
 	public void updatePasswordTest() throws Exception {
 		String updatePassword = "{\"emailId\":\"johndoe@gmail.com\", \"oldpassword\": \"12345678\", \"newpassword\":\"qwertyuiop\"}"; 
+		UpdateUser updateUser = new UpdateUser("johndoe@gmail.com", "12345678", "qwertyuiop");
+		Map<String, Object> map = new HashMap<>();
+		map.put("token", generateJWTToken(user1));
+		map.put("user", user1);
+		
+		when(userService.updatePassword(updateUser)).thenReturn(user1);
+		when(mockUserController.generateJWTToken(user1)).thenReturn(map);
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/update-password")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -169,6 +216,4 @@ public class UserControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());		
 	}
 
-//	@Test
-//	public void 
 }
