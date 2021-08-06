@@ -72,6 +72,7 @@ class IdeasControllerTest {
 	private Users user3 = new Users(3, "Bharati", "9730850720", "bki@gmail.com", "$2a$10$TdFsgRMeUDN3IEuKuryH4etBNpN7hY.iWMi83gzjskNMSLUQw7jJe", "Persistent", pPrivilege);
 	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1);
 	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", 0, t, user2);
+	private Comment comment = new Comment("you are good", user2, i);
 	
 	private String generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
@@ -105,8 +106,12 @@ class IdeasControllerTest {
 	
 	@Test
 	void createCommentTest() throws Exception {
-		long id=1L;
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/loggedin/ideas/{ideaId}/comment",id).header("Authorization", "Bearer " + this.generateJWTToken(user2)).contentType(MediaType.APPLICATION_JSON).content("{\"comment\":\"you are good\",\"user\":{\"userId\": 2},\"idea\":{\"ideaId\":1}}"))
+		when(commentService.createComment(any(Comment.class), any(Long.class))).thenReturn(comment);
+		
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/loggedin/ideas/1/comment")
+				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"comment\":\"you are good\",\"user\":{\"userId\": 2},\"idea\":{\"ideaId\":1}}"))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	

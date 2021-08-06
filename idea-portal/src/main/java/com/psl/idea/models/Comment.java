@@ -65,7 +65,7 @@ public class Comment {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Comment [id=" + commentId + ", user=" + user.getUserId() + ", idea=" + idea.getIdeaId() + "]";
+		return "Comment [id=" + commentId + ", comment=" + comment + ", user=" + user.getUserId() + ", idea=" + idea.getIdeaId() + "]";
 	}
 
 }

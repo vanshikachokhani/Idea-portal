@@ -22,10 +22,9 @@ public class CommentService {
 	
 	
 	public Comment createComment(Comment comment,long ideaId) {	
-		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
-		Idea i=ideaRepo.findByIdeaId(ideaId);
-		if(idea.isPresent()) {
-			comment.setIdea(i);
+		Idea idea=ideaRepo.findById(ideaId).orElse(null);
+		if(idea != null) {
+			comment.setIdea(idea);
 			return repo.save(comment);
 		}
 		else {
