@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -36,7 +35,7 @@ public class ThemeService {
 	@Autowired
 	DataSource dataSource;
 	
-	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException, TransactionException
+	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException, SQLException
 	{
 		Theme t = null;
 		try(Connection connection = dataSource.getConnection()) {
@@ -56,7 +55,6 @@ public class ThemeService {
 				}
 			}
 			connection.commit();
-		} catch(SQLException sql) {
 		}
 		return t;
 		
@@ -66,9 +64,7 @@ public class ThemeService {
 	}
 	
 	public List<Theme> getThemesByUser(long userId) {
-		List<Theme> themes = themeRepo.findByUserUserId(userId);
-		
-		return themes;
+		return themeRepo.findByUserUserId(userId);
 	}
 	public ThemeFiles getThemeFile(long themeId, long themeFileId) {
 		ThemeFiles themeFile = themeFileRepository.findById(themeFileId).orElse(null);

@@ -57,7 +57,7 @@ public class IdeasController {
 		Idea idea = participantService.viewIdea(ideaId);
 		if(idea == null)
 			throw new NotFoundException("Idea Not Found!");
-		return new ResponseEntity<Idea>(idea, HttpStatus.OK);
+		return new ResponseEntity<>(idea, HttpStatus.OK);
 	}
 	
 	//like or dislike an idea
@@ -71,9 +71,13 @@ public class IdeasController {
 	
 	//do comment
 	@PostMapping(path="/loggedin/ideas/{ideaId}/comment")
-	public void createComment(@RequestBody Comment comment,@PathVariable Long ideaId) {
-		commentService.createComment(comment,ideaId);
+	public ResponseEntity<Comment> createComment(@RequestBody Comment comment,@PathVariable Long ideaId) throws NotFoundException {
+		comment = commentService.createComment(comment,ideaId);
+		if(comment != null)
+			return new ResponseEntity<>(comment, HttpStatus.OK);
+		throw new NotFoundException("Idea Not Found");
 	}
+	
 	// showing all ratings
 	@GetMapping(path="/loggedin/ideas/{ideaId}/viewLike")
 	public List<Rating> viewRating(@PathVariable Long ideaId){

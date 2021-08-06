@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -38,10 +37,6 @@ public class IdeaService{
 	@Autowired
 	IdeaRepoImpl ideaRepoImpl;
 
-	public List<Theme> viewThemes(){
-		return 	themeRepo.findAll();
-	}
-
 	public List<Idea> viewIdeas(long themeID){
 		return ideaRepoImpl.findAll(themeID);
 	}
@@ -62,7 +57,7 @@ public class IdeaService{
 		return ideaRepo.findbycomment(themeID);
 	}
 
-	public Idea createIdea(long themeId, Idea idea, MultipartFile[] multipartFiles) throws IOException, TransactionException {
+	public Idea createIdea(long themeId, Idea idea, MultipartFile[] multipartFiles) throws IOException, SQLException {
 		Theme t = themeRepo.findById(themeId).orElse(null);
 		if(t != null)
 		{
@@ -86,7 +81,6 @@ public class IdeaService{
 					}
 				}
 				return i;
-			} catch(SQLException sql) {
 			}
 		}
 		return null;
@@ -100,9 +94,7 @@ public class IdeaService{
 	}
 
 	public List<Idea> getIdeasByUser(long userId) {
-		List<Idea> ideas = ideaRepo.findByUserUserId(userId);
-		
-		return ideas;
+		return ideaRepo.findByUserUserId(userId);
 	}
 
 	public Idea[] getAllIdeasByTheme(long themeId) {

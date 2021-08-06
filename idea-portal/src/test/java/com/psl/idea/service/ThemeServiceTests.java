@@ -2,11 +2,15 @@ package com.psl.idea.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
+import com.psl.idea.models.ThemeFiles;
 import com.psl.idea.models.Users;
 import com.psl.idea.repository.CategoryRepository;
 import com.psl.idea.repository.ThemeFileRepository;
@@ -53,6 +58,7 @@ public class ThemeServiceTests {
 	Category category = new Category(1, "WebApp");
 	Users user = new Users(1, "Rohan Rathi", "8830850720", "rohan_rathi@persistent.com", "RohanRathi", "Persistent", cpPrivilege);
 	Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
+	ThemeFiles themeFile = new ThemeFiles("1.1_Test.txt", "application/text", theme);
 	
 	@Test
 	public void createThemeTest() throws Exception {
@@ -67,6 +73,83 @@ public class ThemeServiceTests {
 		
 		verify(themeRepo).save(theme);
 		
+	}
+	
+	@Test
+	public void getThemesByUserTest() {
+		List<Theme> themes = new ArrayList<>();
+		themes.add(theme);
+		
+		when(themeRepo.findByUserUserId((long) 1)).thenReturn(themes);
+		
+		assertEquals(themes, themeService.getThemesByUser((long) 1));
+		
+		verify(themeRepo).findByUserUserId((long) 1);
+	}
+	
+	@Test
+	public void viewThemesTest() {
+		List<Theme> themes = new ArrayList<>();
+		themes.add(theme);
+		
+		when(themeRepo.findAll()).thenReturn(themes);
+		
+		assertEquals(themes, themeService.viewThemes());
+		
+		verify(themeRepo).findAll();
+	}
+	
+	@Test
+	public void getThemeFileTest() {
+		when(themeFilesRepository.findById((long) 1)).thenReturn(Optional.of(themeFile));
+		when(themeFilesRepository.findById((long) 2)).thenReturn(Optional.empty());
+		
+		assertEquals(themeFile, themeService.getThemeFile(1, 1));
+		assertEquals(null, themeService.getThemeFile(1, 2));
+		assertEquals(null, themeService.getThemeFile(2, 1));
+		
+		verify(themeFilesRepository, times(2)).findById((long) 1);
+		verify(themeFilesRepository).findById((long) 2);
+		
+	}
+	
+	@Test
+	public void getCategoryByIdTest() {
+		when(categoryRepository.findById((long) 1)).thenReturn(Optional.of(category));
+		when(categoryRepository.findById((long) 2)).thenReturn(Optional.empty());
+		
+		assertEquals(category, themeService.getCategoryById(1));
+		assertEquals(null, themeService.getCategoryById(2));
+		
+		verify(categoryRepository).findById((long) 1);
+		verify(categoryRepository).findById((long) 2);
+	}
+	
+	@Test
+	public void getThemeByIdTest() {
+		when(themeRepo.findById((long) 1)).thenReturn(Optional.of(theme));
+		when(themeRepo.findById((long) 2)).thenReturn(Optional.empty());
+		
+		assertEquals(theme, themeService.getThemeById((long) 1));
+		assertEquals(null, themeService.getThemeById((long) 2));
+		
+		verify(themeRepo).findById((long) 1);
+		verify(themeRepo).findById((long) 2);
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void getAllThemeFilesByThemeTest() {
+		ThemeFiles[] themeFiles = {themeFile};
+		when(themeFilesRepository.findAllByThemeThemeId((long) 1)).thenReturn(themeFiles);
+		when(themeFilesRepository.findAllByThemeThemeId((long) 2)).thenReturn(null);
+		
+		assertEquals(themeFiles, themeService.getAllThemeFilesByTheme((long) 1));
+		assertEquals(null, themeService.getAllThemeFilesByTheme((long) 2));
+		
+		verify(themeFilesRepository).findAllByThemeThemeId((long) 1);
+		verify(themeFilesRepository).findAllByThemeThemeId((long) 2);
 	}
 
 }

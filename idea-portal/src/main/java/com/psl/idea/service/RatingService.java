@@ -20,10 +20,9 @@ public class RatingService {
 	IdeaRepo ideaRepo;
 	
 	public void doLike(Long ideaId,Rating rate) {
-		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
-		Idea i=ideaRepo.findByIdeaId(ideaId);
-		if(idea.isPresent()) {
-			rate.setIdea(i);
+		Idea idea=ideaRepo.findById(ideaId).orElse(null);
+		if(idea != null) {
+			rate.setIdea(idea);
 			repo.save(rate);
 		}
 		else {
@@ -38,7 +37,7 @@ public class RatingService {
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {
-			return new ArrayList<Rating>();
+			return new ArrayList<>();
 		}
 		
 	}

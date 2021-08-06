@@ -2,11 +2,14 @@ package com.psl.idea.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
+import com.psl.idea.models.IdeaFiles;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.Users;
@@ -58,6 +62,7 @@ public class IdeaServiceTest {
 	Users user = new Users(1, "Rohan Rathi", "8830850720", "rohan_rathi@persistent.com", "RohanRathi", "Persistent", cpPrivilege);
 	Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
 	Idea idea = new Idea(1, "Test Idea", "Testing Theme", 0, theme, user);
+	IdeaFiles ideaFile = new IdeaFiles("1.1_Test.txt", "application/text", idea);
 	
 	@Test
 	public void createIdeaServiceTest() throws Exception {
@@ -80,6 +85,45 @@ public class IdeaServiceTest {
 		
 		verify(themeRepo).findById(theme.getThemeId());
 		verify(ideaRepo).save(idea);
+	}
+	
+	@Test
+	public void getIdeaFileTest() {
+		when(ideaFilesRepository.findById((long) 1)).thenReturn(Optional.of(ideaFile));
+		when(ideaFilesRepository.findById((long) 2)).thenReturn(Optional.empty());
+		
+		assertEquals(ideaFile, ideaService.getIdeaFile(1, 1));
+		assertEquals(null, ideaService.getIdeaFile(1, 2));
+		assertEquals(null, ideaService.getIdeaFile(2, 1));
+		
+		verify(ideaFilesRepository, times(2)).findById((long) 1);
+		verify(ideaFilesRepository).findById((long) 2);
+	}
+	
+	@Test
+	public void getIdeasByUserTest() {
+		List<Idea> ideas = new ArrayList<>();
+		ideas.add(idea);
+		
+		when(ideaRepo.findByUserUserId((long) 1)).thenReturn(ideas);
+		
+		assertEquals(ideas, ideaService.getIdeasByUser((long) 1));
+		
+		verify(ideaRepo).findByUserUserId((long) 1);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void getAllIdeasByThemeTest() {
+		Idea[] ideas = {idea};
+		when(ideaRepo.findAllByThemeThemeId((long) 1)).thenReturn(ideas);
+		when(ideaRepo.findAllByThemeThemeId((long) 2)).thenReturn(null);
+		
+		assertEquals(ideas, ideaService.getAllIdeasByTheme((long) 1));
+		assertEquals(null, ideaService.getAllIdeasByTheme((long) 2));
+		
+		verify(ideaRepo).findAllByThemeThemeId((long) 1);
+		verify(ideaRepo).findAllByThemeThemeId((long) 2);
 	}
 
 }

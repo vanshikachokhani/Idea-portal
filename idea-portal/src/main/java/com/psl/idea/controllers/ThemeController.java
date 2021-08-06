@@ -3,6 +3,7 @@ package com.psl.idea.controllers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import com.psl.idea.models.Theme;
 import com.psl.idea.models.ThemeDetails;
 import com.psl.idea.models.ThemeFiles;
 import com.psl.idea.models.Users;
+import com.psl.idea.service.CategoryService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
@@ -49,6 +51,8 @@ public class ThemeController {
 	private UsersUtil usersUtil;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private CategoryService categoryService;
 	
      // view all themes
 	@GetMapping(path="/api/themes")
@@ -82,6 +86,12 @@ public class ThemeController {
 		return ideaService.viewIdeasbyComment(themeID);
 	}
 	
+	@GetMapping(path="/api/categories")
+	public ResponseEntity<List<Category>> getCategories() {
+		List<Category> categories = categoryService.getAllCategories();
+		return new ResponseEntity<>(categories, HttpStatus.OK);
+	}
+	
 	@GetMapping(path="/api/themes/{themeId}")
 	public ResponseEntity<ThemeDetails> getThemeDetails(@PathVariable("themeId") long themeId) throws NotFoundException {
 		Theme theme = themeService.getThemeById(themeId);
@@ -90,12 +100,12 @@ public class ThemeController {
 		ThemeFiles[] themeFiles = themeService.getAllThemeFilesByTheme(themeId);
 		Idea[] ideas = ideaService.getAllIdeasByTheme(themeId);
 		ThemeDetails themeDetails = new ThemeDetails(theme, themeFiles, ideas);
-		return new ResponseEntity<ThemeDetails>(themeDetails, HttpStatus.OK);
+		return new ResponseEntity<>(themeDetails, HttpStatus.OK);
 	}
 	
 	// create a theme
 	@PostMapping(path="/api/loggedin/themes", consumes= {"multipart/form-data"})
-	public ResponseEntity<Object> createTheme(@ModelAttribute Theme theme, HttpServletRequest httpServletRequest, @RequestParam(name = "files", required = false) MultipartFile[] multipartFiles, @ModelAttribute("categoryId") long categoryId) throws IOException {
+	public ResponseEntity<Object> createTheme(@ModelAttribute Theme theme, HttpServletRequest httpServletRequest, @RequestParam(name = "files", required = false) MultipartFile[] multipartFiles, @ModelAttribute("categoryId") long categoryId) throws IOException, SQLException {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 1)
 		{
@@ -131,7 +141,7 @@ public class ThemeController {
 	
 	// create an idea
 	@PostMapping(path="/api/loggedin/themes/{themeId}/ideas")
-	public ResponseEntity<Object> createIdea(@ModelAttribute Idea idea, @PathVariable long themeId, HttpServletRequest httpServletRequest, @RequestParam(name="files", required = false) MultipartFile[] multipartFiles) throws NotFoundException, IOException
+	public ResponseEntity<Object> createIdea(@ModelAttribute Idea idea, @PathVariable long themeId, HttpServletRequest httpServletRequest, @RequestParam(name="files", required = false) MultipartFile[] multipartFiles) throws NotFoundException, IOException, SQLException
 	{
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 2)

@@ -21,15 +21,15 @@ public class CommentService {
 	IdeaRepo ideaRepo;
 	
 	
-	public void createComment(Comment comment,long ideaId) {	
+	public Comment createComment(Comment comment,long ideaId) {	
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		Idea i=ideaRepo.findByIdeaId(ideaId);
 		if(idea.isPresent()) {
 			comment.setIdea(i);
-			repo.save(comment);
+			return repo.save(comment);
 		}
 		else {
-			System.out.println("Invalid comment");
+			return null;
 		}
 		
 	}
@@ -41,7 +41,7 @@ public class CommentService {
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {
-			return new ArrayList<Comment>();
+			return new ArrayList<>();
 		}
 		
 	}

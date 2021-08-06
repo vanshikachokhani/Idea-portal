@@ -9,6 +9,8 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -33,6 +35,7 @@ import com.psl.idea.models.Theme;
 import com.psl.idea.models.ThemeFiles;
 import com.psl.idea.models.Users;
 import com.psl.idea.repository.ThemeRepo;
+import com.psl.idea.service.CategoryService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
@@ -59,6 +62,8 @@ public class ThemeControllerTest {
 	DataSource dataSource;
 	@MockBean
 	Connection connection;
+	@MockBean
+	CategoryService categoryService;
 	
 	@Autowired
 	WebApplicationContext webContext;
@@ -146,6 +151,16 @@ public class ThemeControllerTest {
 		mockMvc.perform(get("/api/themes/9")
 				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void getCategoriesTest() throws Exception {
+		List<Category> categories = new ArrayList<>();
+		categories.add(webapp);
+		when(categoryService.getAllCategories()).thenReturn(categories);
+		
+		mockMvc.perform(get("/api/categories"))
+		.andExpect(status().isOk());
 	}
 	
 }
