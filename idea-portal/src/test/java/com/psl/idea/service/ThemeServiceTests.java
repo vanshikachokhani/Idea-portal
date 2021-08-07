@@ -1,12 +1,14 @@
 package com.psl.idea.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
-import java.io.IOException;
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,8 @@ public class ThemeServiceTests {
 	Connection connection;
 	@MockBean
 	Tika tika;
+	@MockBean
+	MultipartFile mockMultipartFile;
 	
 	@Autowired
 	ThemeService themeService;
@@ -58,8 +62,8 @@ public class ThemeServiceTests {
 	@Autowired
 	MockMvc mockMvc;
 	
-	MultipartFile multipartFile1 = new MockMultipartFile("Test.txt", new byte[100]);
-	MultipartFile multipartFile2 = new MockMultipartFile("Test.png", new byte[100]);
+	MultipartFile multipartFile1 = new MockMultipartFile("Test.txt", "Test.txt", "text/plain", new byte[100]);
+	MultipartFile multipartFile2 = new MockMultipartFile("Test.png", "Test.png", "image/png", new byte[100]);
 	MultipartFile[] files = {multipartFile1};
 	Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	Category category = new Category(1, "WebApp");
@@ -72,43 +76,21 @@ public class ThemeServiceTests {
 		String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + multipartFile1.getOriginalFilename();
 		themeFile = new ThemeFiles(fileName, "application/text", theme);
 		MultipartFile[] newFiles = {multipartFile2};
-		ThemeFiles newThemeFile = new ThemeFiles("Test.png", "image/png", theme);
 		
-		when(themeRepo.save(theme)).thenReturn(theme);
+		when(themeRepo.save(any(Theme.class))).thenReturn(theme);
 		when(dataSource.getConnection()).thenReturn(connection);
-		when(tika.detect("Test.txt")).thenReturn("application/text");
-		when(tika.detect("Test.png")).thenReturn("image/png");
-		when(themeFilesRepository.save(themeFile)).thenReturn(themeFile);
-		when(themeFilesRepository.save(newThemeFile)).thenReturn(null);
+		when(tika.detect("1.1_Test.txt")).thenReturn("text/plain");
+		when(tika.detect("1.1_Test.png")).thenReturn("image/png");
+		when(themeFilesRepository.save(any(ThemeFiles.class))).thenReturn(null, themeFile);
+		doNothing().when(mockMultipartFile).transferTo(any(File.class));
 		
-		try {
-			assertEquals(theme, themeService.createTheme(theme, files));
-		} catch(IOException io) {
-			fail();
-			io.printStackTrace();
-		} catch(TransactionException t) {
-			fail();
-			t.printStackTrace();
-		}
+		Exception exception = assertThrows(TransactionException.class, () -> { themeService.createTheme(theme, newFiles); });
+		assertEquals("Could not save file", exception.getMessage());
 		
-		try {
-			assertEquals(theme, themeService.createTheme(theme, null));
-		} catch(IOException io) {
-			fail();
-			io.printStackTrace();
-		}
+		assertEquals(theme, themeService.createTheme(theme, files));
 		
-		try {
-			assertEquals(theme, themeService.createTheme(theme, newFiles));
-		} catch(IOException io) {
-			fail();
-			io.printStackTrace();
-		} catch(TransactionException t) {
-			assertEquals("Could not save file", t.getMessage());
-		}
+		assertEquals(theme, themeService.createTheme(theme, null));
 		
-		
-		verify(themeRepo, times(3)).save(theme);
 		
 	}
 	

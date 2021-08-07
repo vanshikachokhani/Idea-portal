@@ -222,4 +222,40 @@ public class ThemeControllerTest {
 		.andExpect(status().isOk());
 	}
 	
+	@Test
+	public void viewIdeasByLikesTest() throws Exception {
+		List<Idea> ideas = new ArrayList<>();
+		ideas.add(i);
+		
+		when(ideaService.viewIdeasbyLikes(any(Long.class))).thenReturn(ideas);
+		
+		mockMvc.perform(get("/api/themes/1/ideas/likes")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
+	}
+
+	@Test
+	public void viewIdeasByDateTest() throws Exception {
+		List<Idea> ideas = new ArrayList<>();
+		ideas.add(i);
+		
+		when(ideaService.viewIdeasbyDate(any(Long.class))).thenReturn(ideas);
+		
+		mockMvc.perform(get("/api/themes/1/ideas/date")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
+	}
+
+	@Test
+	public void viewIdeasByCommentsTest() throws Exception {
+		List<Idea> ideas = new ArrayList<>();
+		ideas.add(i);
+		
+		when(ideaService.viewIdeasbyComment(any(Long.class))).thenReturn(ideas);
+		
+		mockMvc.perform(get("/api/themes/1/ideas/comment")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
+	}
+	
 }

@@ -34,6 +34,8 @@ public class ThemeService {
 	CategoryRepository categoryRepository;
 	@Autowired
 	DataSource dataSource;
+	@Autowired
+	Tika tika;
 	
 	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException, SQLException
 	{
@@ -43,20 +45,20 @@ public class ThemeService {
 			t = themeRepo.save(theme);
 			ThemeFiles themeFileToUpload;
 			if(multipartFiles != null) {
-				try {
-					for(MultipartFile file: multipartFiles) {
-						String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
-						String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
-						Tika tika = new Tika();
-						String fileType = tika.detect(fileName);
-						file.transferTo(new File(filePath));
-						themeFileToUpload = new ThemeFiles(fileName, fileType, t);
-						if(themeFileRepository.save(themeFileToUpload) == null)
-							throw new TransactionException("Could not save file");
+				for(MultipartFile file: multipartFiles) {
+					String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
+					String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
+					String fileType = tika.detect(fileName);
+					file.transferTo(new File(filePath));
+					themeFileToUpload = new ThemeFiles(fileName, fileType, t);
+					themeFileToUpload = themeFileRepository.save(themeFileToUpload);
+					if(themeFileToUpload == null)
+					{
+						connection.rollback();
+						throw new TransactionException("Could not save file");
 					}
-				} catch (TransactionException te) {
-					connection.rollback();
 				}
+				
 			}
 			connection.commit();
 		}

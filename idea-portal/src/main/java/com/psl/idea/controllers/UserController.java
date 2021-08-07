@@ -1,7 +1,5 @@
 package com.psl.idea.controllers;
 
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.psl.idea.Constants;
 import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Idea;
@@ -32,8 +29,6 @@ import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
 import com.psl.idea.util.UsersUtil;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @RequestMapping
@@ -54,68 +49,49 @@ public class UserController {
 	//Sign-Up 
 	@PostMapping("/api/users/register")
 	public ResponseEntity<Map<String,Object>> registerUser(@RequestBody Users user) {
-		userService.registerUser(user);
-		return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+		user = userService.registerUser(user);
+		return new ResponseEntity<>(usersUtil.generateJWTToken(user), HttpStatus.OK);
 	}
 
 	//Login 
 	@PostMapping("/api/users/login")
 	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {	
 		Users responseUser = userService.validateUser(user);
-		return new ResponseEntity<>(generateJWTToken(responseUser), HttpStatus.OK);
-	}
-
-	//creates JWT token
-	Map<String,Object> generateJWTToken(Users user){
-		long timestamp = System.currentTimeMillis();
-		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_KEY)
-				.setIssuedAt(new Date(timestamp))
-				.setExpiration(new Date(timestamp + Constants.TOKEN_VALIDAITY))
-				.claim("userId", user.getUserId())
-				.claim("emailId", user.getEmailId())
-				.claim("name",user.getName())
-				.claim("privilege", user.getPrivilege())
-				.claim("company", user.getCompany())
-				.compact();
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("token", token);
-		map.put("user", user);
-		return map;
+		return new ResponseEntity<>(usersUtil.generateJWTToken(responseUser), HttpStatus.OK);
 	}
 	
 	//Update EmailId && Company 
 	@PostMapping("/api/users/update-emailId-company")
 	public ResponseEntity<Map<String,Object>> updateEmailIdAndCompany(@RequestBody UpdateUserEmail user){
 		Users responseuser = userService.updateEmailIdAndCompany(user);
-		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
+		return new ResponseEntity<>(usersUtil.generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
 	//Update password 
 	@PostMapping("/api/users/update-password")
 	public ResponseEntity<Map<String,Object>> updatePassword(@RequestBody UpdateUser user){
 		Users responseuser = userService.updatePassword(user);
-		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
+		return new ResponseEntity<>(usersUtil.generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
 	//Forgot password
 	@PostMapping("/api/users/forgot-password")
 	public String forgotPassword(@RequestBody Map<String, Object> userMap) {
-		String email_id = (String) userMap.get("emailId");
-		return userService.forgotPassword(email_id);
+		String emailId = (String) userMap.get("emailId");
+		return userService.forgotPassword(emailId);
 	}
 	
 	@GetMapping("/confirm-account")
 	public ResponseEntity<Object> confirmAccount(@RequestParam String token)  throws AuthException{
 		if(userService.checkToken(token)==false)
 			throw new AuthException("Link expired");
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@PostMapping("/confirm-account")
 	public ResponseEntity<Map<String,Object>> setPassword(@RequestParam String token, @RequestBody User user) {
 		Users responseuser = userService.updateForgotPassword(token, user);
-		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
+		return new ResponseEntity<>(usersUtil.generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/loggedin/users/{userId}/themes")

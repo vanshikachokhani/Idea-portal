@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,6 +30,7 @@ import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Theme;
 import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.UpdateUserEmail;
+import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
@@ -97,6 +97,11 @@ public class UserControllerTest {
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2)))
 				.andExpect(status().isUnauthorized());
 		
+		when(themeService.getThemesByUser(2)).thenReturn(new ArrayList<Theme>());
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/2/themes")
+				.header("Authorization", "Bearer " + this.generateJWTToken(user2)))
+				.andExpect(status().isUnauthorized());
+		
 	}
 	
 	@Test
@@ -104,7 +109,7 @@ public class UserControllerTest {
 		List<Idea> ideas = new ArrayList<>();
 		ideas.add(i);
 		
-		when(usersUtil.getPrivilegeIdFromRequest(any(HttpServletRequest.class))).thenReturn((long) 2);
+		when(usersUtil.getPrivilegeIdFromRequest(any(HttpServletRequest.class))).thenReturn((long) 2, (long) 2, (long) 1);
 		
 		when(ideaService.getIdeasByUser(2)).thenReturn(ideas);
 		
@@ -116,11 +121,22 @@ public class UserControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/ideas")
 				.header("Authorization", "Bearer " + generateJWTToken(user2)))
 		.andExpect(status().isUnauthorized());
+		
+		when(ideaService.getIdeasByUser(1)).thenReturn(new ArrayList<Idea>());
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/users/1/ideas")
+				.header("Authorization", "Bearer " + generateJWTToken(user1)))
+		.andExpect(status().isUnauthorized());
 	}
 	
 	@Test
 	public void registerUserTest() throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("token", this.generateJWTToken(user1));
+		map.put("user", user1);
 		String jsonString="{\"emailId\":\"johndoe@gmail.com\", \"name\": \"John Doe\", \"password\":\"123456\" ,\"phoneNumber\":\"9423160789\" , \"privilege\": {\"privilegeId\": 1}}";
+		
+		when(userService.registerUser(any(Users.class))).thenReturn(user1);
+		when(usersUtil.generateJWTToken(user1)).thenReturn(map);
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/register")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -128,8 +144,15 @@ public class UserControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	@Test
 	public void loginUserTest() throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("token", this.generateJWTToken(user1));
+		map.put("user", user1);
 		String jsonString="{\"emailId\":\"johndoe@gmail.com\", \"password\":\"123456\"}";
+		
+		when(userService.validateUser(any(User.class))).thenReturn(user1);
+		when(usersUtil.generateJWTToken(user1)).thenReturn(map);
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/login")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -139,14 +162,12 @@ public class UserControllerTest {
 	
 	@Test
 	public void updateEmailIdAndCompanyTest() throws Exception {
-		UserController mockUserController = Mockito.mock(UserController.class);
 		Map<String, Object> map = new HashMap<>();
 		map.put("token", generateJWTToken(user1));
 		map.put("user", user1);
 		
 		when(userService.updateEmailIdAndCompany(any(UpdateUserEmail.class))).thenReturn(user1);
-		when(mockUserController.generateJWTToken(any(Users.class))).thenReturn(map);
-		when(mockUserController.updateEmailIdAndCompany(any(UpdateUserEmail.class))).thenCallRealMethod();
+		when(usersUtil.generateJWTToken(any(Users.class))).thenReturn(map);
 		
 		String updateEmailAndCompany ="{\"oldemailId\":\"johndoe@gmail.com\", \"newemailId\": \"johndoe@gmail.com\", \"password\":\"123456\" ,\"oldcompany\":\"Test Compnay\" , \"newcompany\":\"Testing \"}";
 		
@@ -173,15 +194,13 @@ public class UserControllerTest {
 	
 	@Test
 	public void updatePasswordTest() throws Exception {
-		UserController mockUserController = Mockito.mock(UserController.class);
 		String updatePassword = "{\"emailId\":\"johndoe@gmail.com\", \"oldpassword\": \"12345678\", \"newpassword\":\"qwertyuiop\"}"; 
 		Map<String, Object> map = new HashMap<>();
 		map.put("token", generateJWTToken(user1));
 		map.put("user", user1);
 		
 		when(userService.updatePassword(any(UpdateUser.class))).thenReturn(user1);
-		when(mockUserController.generateJWTToken(any(Users.class))).thenReturn(map);
-		when(mockUserController.updatePassword(any(UpdateUser.class))).thenCallRealMethod();
+		when(usersUtil.generateJWTToken(any(Users.class))).thenReturn(map);
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/users/update-password")
 				.contentType(MediaType.APPLICATION_JSON)

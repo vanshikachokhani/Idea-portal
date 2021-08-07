@@ -56,9 +56,9 @@ class IdeasControllerTest {
 	@MockBean
 	private IdeaService ideaService;
 	@MockBean
-	UsersUtil usersUtil;
+	private UsersUtil usersUtil;
 	@MockBean
-	FilesUtil filesUtil;
+	private FilesUtil filesUtil;
 	
 	
 	@Autowired

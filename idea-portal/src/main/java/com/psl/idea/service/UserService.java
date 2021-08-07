@@ -41,7 +41,7 @@ public class UserService {
 			return dbuser;
 	}
 	
-	public void registerUser(Users user) throws AuthException {
+	public Users registerUser(Users user) throws AuthException {
 		String email_id = user.getEmailId();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 		if(email_id!=null) {
@@ -56,7 +56,7 @@ public class UserService {
 			throw new AuthException("Email is already in use");
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
 		user.setPassword(hashedPassword);
-		userRepo.save(user);
+		return userRepo.save(user);
 	}
 	
 	public Users updatePassword(UpdateUser user) throws AuthException {

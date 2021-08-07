@@ -1,12 +1,12 @@
 package com.psl.idea.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,14 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.apache.tika.Tika;
+import org.hibernate.TransactionException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,22 +53,26 @@ public class IdeaServiceTest {
 	IdeaRepoImpl ideaRepoImpl;
 	@MockBean
 	Connection connection;
+	@MockBean
+	Tika tika;
 	
 	@Autowired
 	IdeaService ideaService;
 	@Autowired
 	MockMvc mockMvc;
 	
-	MultipartFile[] files = {};
+	MultipartFile multipartFile = new MockMultipartFile("Test.txt", "Test.txt", "text/plain", new byte[100]);
+	MultipartFile[] files = {multipartFile};
 	Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	Category category = new Category(1, "WebApp");
 	Users user = new Users(1, "Rohan Rathi", "8830850720", "rohan_rathi@persistent.com", "RohanRathi", "Persistent", cpPrivilege);
 	Theme theme = new Theme(1, "Test Theme", "Testing Theme", category, user);
 	Idea idea = new Idea(1, "Test Idea", "Testing Theme", 0, theme, user);
-	IdeaFiles ideaFile = new IdeaFiles("1.1_Test.txt", "application/text", idea);
+	IdeaFiles ideaFile = new IdeaFiles("1.1_Test.txt", "text/plain", idea);
 	
 	@Test
 	public void createIdeaServiceTest() throws Exception {
+		MultipartFile[] newFiles = {multipartFile};
 		Optional<Theme> optionalTheme = Optional.of(theme);
 		when(themeRepo.findById(theme.getThemeId())).thenReturn(optionalTheme);
 		when(ideaRepo.save(idea)).thenReturn(idea);
@@ -73,18 +80,19 @@ public class IdeaServiceTest {
 		optionalTheme = Optional.empty();
 		when(themeRepo.findById((long) 2)).thenReturn(optionalTheme);
 		when(dataSource.getConnection()).thenReturn(connection);
+		when(tika.detect("1.1_Test.txt")).thenReturn("text/plain");
+		when(tika.detect("1.1_Test.png")).thenReturn("image/png");
+		when(ideaFilesRepository.save(any(IdeaFiles.class))).thenReturn(null, ideaFile);
 
-		try {
-			assertEquals(idea, ideaService.createIdea(1, idea, files));
-			
-			assertEquals(null, ideaService.createIdea(2, idea, files));
-		} catch(IOException io) {
-			fail();
-			io.printStackTrace();
-		}
+
+		Exception exception = assertThrows(TransactionException.class, () -> { ideaService.createIdea(theme.getThemeId(), idea, newFiles); });
+		assertEquals("Could not save file", exception.getMessage());
+
+		assertEquals(idea, ideaService.createIdea(1, idea, files));
 		
-		verify(themeRepo).findById(theme.getThemeId());
-		verify(ideaRepo).save(idea);
+		assertEquals(null, ideaService.createIdea(2, idea, files));
+	
+		assertEquals(idea, ideaService.createIdea(theme.getThemeId(), idea, null));
 	}
 	
 	@Test

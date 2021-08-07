@@ -36,6 +36,8 @@ public class IdeaService{
 	IdeaFilesRepository ideaFilesRepository;
 	@Autowired
 	IdeaRepoImpl ideaRepoImpl;
+	@Autowired
+	Tika tika;
 
 	public List<Idea> viewIdeas(long themeID){
 		return ideaRepoImpl.findAll(themeID);
@@ -72,12 +74,14 @@ public class IdeaService{
 					for(MultipartFile file: multipartFiles) {
 						String fileName = idea.getUser().getUserId() + "." + idea.getIdeaId() + "_" + file.getOriginalFilename();
 						String filePath = "E:\\Persistent\\data\\Ideas\\" + fileName;
-						Tika tika = new Tika();
 						String fileType = tika.detect(fileName);
 						file.transferTo(new File(filePath));
 						ideaFileToUpload = new IdeaFiles(fileName, fileType, i);
 						if(ideaFilesRepository.save(ideaFileToUpload) == null)
+						{
+							connection.rollback();
 							throw new TransactionException("Could not save file");
+						}
 					}
 				}
 				return i;
