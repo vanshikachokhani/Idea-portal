@@ -1,8 +1,6 @@
 package com.psl.idea.controllers;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -36,6 +34,7 @@ import com.psl.idea.service.CategoryService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
+import com.psl.idea.util.FilesUtil;
 import com.psl.idea.util.UsersUtil;
 
 
@@ -53,10 +52,8 @@ public class ThemeController {
 	private UserService userService;
 	@Autowired
 	private CategoryService categoryService;
-	
-	byte[] getFileBytes(String fileLocation) throws IOException {
-		return Files.readAllBytes(Paths.get(fileLocation));
-	}
+	@Autowired
+	private FilesUtil filesUtil;
 	
      // view all themes
 	@GetMapping(path="/api/themes")
@@ -136,7 +133,7 @@ public class ThemeController {
 		}
 		String filePath = "E:\\Persistent\\data\\Themes\\";
 		String fileName = themeFileDetails.getFileName();
-		byte[] content = getFileBytes(filePath + fileName);
+		byte[] content = filesUtil.getFileBytes(filePath + fileName);
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(themeFileDetails.getFileType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileName.substring(fileName.lastIndexOf('_')) + "\"")

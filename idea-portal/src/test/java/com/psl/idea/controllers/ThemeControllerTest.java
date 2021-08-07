@@ -1,6 +1,5 @@
 package com.psl.idea.controllers;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -39,6 +38,7 @@ import com.psl.idea.service.CategoryService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ThemeService;
 import com.psl.idea.service.UserService;
+import com.psl.idea.util.FilesUtil;
 import com.psl.idea.util.UsersUtil;
 
 import io.jsonwebtoken.Jwts;
@@ -64,9 +64,13 @@ public class ThemeControllerTest {
 	Connection connection;
 	@MockBean
 	CategoryService categoryService;
+	@MockBean
+	FilesUtil filesUtil;
 	
 	@Autowired
 	WebApplicationContext webContext;
+	@Autowired
+	ThemeController themeController;
 
 	private Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	private Privilege pmPrivilege = new Privilege(2, "Product Manager");
@@ -204,10 +208,8 @@ public class ThemeControllerTest {
 	
 	@Test
 	public void downloadThemeFileTest() throws Exception {
-		ThemeController mockThemeController = mock(ThemeController.class);
 		when(themeService.getThemeFile(any(Long.class), any(Long.class))).thenReturn((ThemeFiles) null, themeFile);
-		when(mockThemeController.getFileBytes(any(String.class))).thenReturn(new byte[100]);
-		when(mockThemeController.downloadThemeFile((long) 1, (long) 1)).thenCallRealMethod();
+		when(filesUtil.getFileBytes(any(String.class))).thenReturn(new byte[100]);
 		
 		mockMvc.perform(get("/api/loggedin/themes/0/download_file/0")
 				.contentType(MediaType.APPLICATION_JSON)

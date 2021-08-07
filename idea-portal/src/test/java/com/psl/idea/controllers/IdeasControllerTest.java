@@ -2,6 +2,8 @@ package com.psl.idea.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Date;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import com.psl.idea.Constants;
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Comment;
 import com.psl.idea.models.Idea;
+import com.psl.idea.models.IdeaFiles;
 import com.psl.idea.models.Participants;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.Rating;
@@ -32,6 +35,7 @@ import com.psl.idea.service.CommentService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ParticipantService;
 import com.psl.idea.service.RatingService;
+import com.psl.idea.util.FilesUtil;
 import com.psl.idea.util.UsersUtil;
 
 import io.jsonwebtoken.Jwts;
@@ -45,18 +49,16 @@ class IdeasControllerTest {
 
 	@MockBean
 	private ParticipantService participantService;
-	
 	@MockBean
 	private RatingService ratingService;
-	
 	@MockBean
 	private CommentService commentService;
-	
 	@MockBean
 	private IdeaService ideaService;
-	
 	@MockBean
 	UsersUtil usersUtil;
+	@MockBean
+	FilesUtil filesUtil;
 	
 	
 	@Autowired
@@ -73,6 +75,7 @@ class IdeasControllerTest {
 	private Theme t = new Theme(1, "Test Theme", "Testing Theme", webapp, user1);
 	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", 0, t, user2);
 	private Comment comment = new Comment("you are good", user2, i);
+	private IdeaFiles ideaFile = new IdeaFiles("1.1_Test.txt", "application/text", i);
 	
 	private String generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
@@ -92,8 +95,14 @@ class IdeasControllerTest {
 	void viewIdeaTest() throws Exception {
 		long id=1L;
 		when(participantService.viewIdea(id)).thenReturn(i);
+		when(participantService.viewIdea((long) 0)).thenReturn((Idea) null);
+		
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/ideas/{ideaId}/viewIdea",id).header("Authorization", "Bearer " + this.generateJWTToken(user2)))
 		.andExpect(MockMvcResultMatchers.status().isOk());
+		
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/ideas/0/viewIdea")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNotFound());
 		
 	}
 	
@@ -106,13 +115,20 @@ class IdeasControllerTest {
 	
 	@Test
 	void createCommentTest() throws Exception {
-		when(commentService.createComment(any(Comment.class), any(Long.class))).thenReturn(comment);
+		when(commentService.createComment(any(Comment.class), any(Long.class))).thenReturn(comment, (Comment) null);
 		
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/loggedin/ideas/1/comment")
 				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"comment\":\"you are good\",\"user\":{\"userId\": 2},\"idea\":{\"ideaId\":1}}"))
 		.andExpect(MockMvcResultMatchers.status().isOk());
+		
+
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/loggedin/ideas/2/comment")
+				.header("Authorization", "Bearer " + this.generateJWTToken(user2))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"comment\":\"you are good\",\"user\":{\"userId\": 2},\"idea\":{\"ideaId\":2}}"))
+		.andExpect(MockMvcResultMatchers.status().isNotFound());
 	}
 	
 	@Test
@@ -159,6 +175,22 @@ class IdeasControllerTest {
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user2.getPrivilege().getPrivilegeId());
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/loggedin/ideas/{ideaId}/viewInterested",id).header("Authorization", "Bearer " + this.generateJWTToken(user1)))
 		.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	}
+	
+	@Test
+	public void downloadIdeaFileTest() throws Exception {
+		when(ideaService.getIdeaFile(any(Long.class), any(Long.class))).thenReturn((IdeaFiles) null, ideaFile);
+		when(filesUtil.getFileBytes(any(String.class))).thenReturn(new byte[100]);
+		
+		mockMvc.perform(get("/api/loggedin/ideas/0/download_file/0")
+				.contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + this.generateJWTToken(user1)))
+		.andExpect(status().isNotFound());
+
+		mockMvc.perform(get("/api/loggedin/ideas/1/download_file/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + this.generateJWTToken(user1)))
+		.andExpect(status().isOk());
 	}
 
 }

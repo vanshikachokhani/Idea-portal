@@ -1,8 +1,6 @@
 package com.psl.idea.controllers;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +29,7 @@ import com.psl.idea.service.CommentService;
 import com.psl.idea.service.IdeaService;
 import com.psl.idea.service.ParticipantService;
 import com.psl.idea.service.RatingService;
+import com.psl.idea.util.FilesUtil;
 import com.psl.idea.util.UsersUtil;
 
 @RestController
@@ -39,18 +38,17 @@ public class IdeasController {
 	
 	@Autowired
 	CommentService commentService;
-	
 	@Autowired
 	ParticipantService participantService;
-	
 	@Autowired
 	IdeaService ideaService;
-	
 	@Autowired
 	RatingService ratingService;
-	
 	@Autowired
 	private UsersUtil usersUtil;
+	@Autowired
+	private FilesUtil filesUtil;
+	
 	
 	@GetMapping(path="/ideas/{ideaId}/viewIdea")
 	public ResponseEntity<Idea> viewIdea(@PathVariable Long ideaId) throws NotFoundException {
@@ -128,7 +126,7 @@ public class IdeasController {
 		}
 		String filePath = "E:\\Persistent\\data\\Ideas\\";
 		String fileName = ideaFileDetails.getFileName();
-		byte[] content = Files.readAllBytes(Paths.get(filePath + fileName));
+		byte[] content = filesUtil.getFileBytes(filePath + fileName);
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(ideaFileDetails.getFileType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileName.substring(fileName.lastIndexOf('_')+1) + "\"")
