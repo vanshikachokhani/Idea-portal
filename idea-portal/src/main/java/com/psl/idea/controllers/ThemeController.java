@@ -54,6 +54,10 @@ public class ThemeController {
 	@Autowired
 	private CategoryService categoryService;
 	
+	byte[] getFileBytes(String fileLocation) throws IOException {
+		return Files.readAllBytes(Paths.get(fileLocation));
+	}
+	
      // view all themes
 	@GetMapping(path="/api/themes")
     public List<Theme> viewThemes(){
@@ -132,7 +136,7 @@ public class ThemeController {
 		}
 		String filePath = "E:\\Persistent\\data\\Themes\\";
 		String fileName = themeFileDetails.getFileName();
-		byte[] content = Files.readAllBytes(Paths.get(filePath + fileName));
+		byte[] content = getFileBytes(filePath + fileName);
 		return ResponseEntity.ok()
 				.contentType(MediaType.parseMediaType(themeFileDetails.getFileType()))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileName.substring(fileName.lastIndexOf('_')) + "\"")

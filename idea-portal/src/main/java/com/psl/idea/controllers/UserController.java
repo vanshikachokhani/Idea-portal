@@ -36,7 +36,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
-@RequestMapping()
+@RequestMapping
 public class UserController {
 	
 	@Autowired
@@ -118,18 +118,16 @@ public class UserController {
 		return new ResponseEntity<>(generateJWTToken(responseuser), HttpStatus.OK);
 	}
 	
-	@GetMapping("api/loggedin/users/{userId}/themes")
+	@GetMapping("/api/loggedin/users/{userId}/themes")
 	public ResponseEntity<List<Theme>> getUserThemes(@PathVariable long userId, HttpServletRequest httpServletRequest) {
-		System.out.println("getUserThemes " + httpServletRequest.getAttribute("userId"));
 		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 1 && userId == (int) httpServletRequest.getAttribute("userId"))
 			return new ResponseEntity<>(themeService.getThemesByUser(userId), HttpStatus.OK);
 		else
 			throw new UnauthorizedException("401: Unauthorized! Incorrect Privilege level!");
 	}
 	
-	@GetMapping("api/loggedin/users/{userId}/ideas")
+	@GetMapping("/api/loggedin/users/{userId}/ideas")
 	public ResponseEntity<List<Idea>> getUserIdeas(@PathVariable long userId, HttpServletRequest httpServletRequest) {
-		System.out.println("getUserIdeas " + (int) httpServletRequest.getAttribute("userId"));
 		if(usersUtil.getPrivilegeIdFromRequest(httpServletRequest) == 2 && userId == (int) httpServletRequest.getAttribute("userId"))
 			return new ResponseEntity<>(ideaService.getIdeasByUser(userId), HttpStatus.OK);
 		else
