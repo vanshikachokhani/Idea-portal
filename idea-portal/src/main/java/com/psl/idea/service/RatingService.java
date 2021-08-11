@@ -22,18 +22,20 @@ public class RatingService {
 	public void doLike(Long ideaId,Rating rate) {
 		Idea idea=ideaRepo.findById(ideaId).orElse(null);
 		if(idea != null) {
-			rate.setIdea(idea);
-			repo.save(rate);
 			int p=repo.findTruevalue();
 			int q=repo.findTotal();
+			
 			if(q==0)
 			{
 				idea.setRating(0f);
 			}
 			else {
-			float r=(p/q)*5;
+			float r=(float)(p/q)*5;
+			System.out.println(r);
 			idea.setRating(r);
 			}
+			rate.setIdea(idea);
+			repo.save(rate);
 		}
 		else {
 			System.out.println("Invalid rating");
