@@ -38,7 +38,7 @@ import com.psl.idea.util.FilesUtil;
 import com.psl.idea.util.UsersUtil;
 
 
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping()
 public class ThemeController {

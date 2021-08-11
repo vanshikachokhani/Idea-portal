@@ -33,11 +33,6 @@ public class IdeaPortalApplication extends SpringBootServletInitializer{
 	   UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	   CorsConfiguration config = new CorsConfiguration();
 	   config.addAllowedOrigin("*");
-	   config.addAllowedOrigin("http://localhost:4200");
-	   config.addAllowedOrigin("http://localhost:8080");
-	   config.addAllowedOrigin("http://localhost:8086");
-	   config.addAllowedOrigin("https://hopeful-leavitt-8a8a98.netlify.app");
-	   config.addAllowedOrigin("https://psl-ideaportal.herokuapp.com");
 	   config.addAllowedHeader("*");
 	   config.addAllowedMethod("*");
 	   source.registerCorsConfiguration("/**", config);
