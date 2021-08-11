@@ -14,10 +14,10 @@ public interface RatingRepo extends JpaRepository <Rating, RatingId> {
 	
 	public List<Rating> findByIdeaIdeaId(long idea_id);
 	
-	@Query("SELECT COALESCE(sum(CASE WHEN rating THEN 1 ELSE 0 END),0) FROM ratings")
+	@Query(value = "SELECT COALESCE(sum(CASE WHEN rating THEN 1 ELSE 0 END),0) FROM ratings", nativeQuery = true)
 	int findTruevalue();
 	
-	@Query("SELECT COUNT(*) FROM ratings")
+	@Query(value = "SELECT COUNT(*) FROM ratings", nativeQuery = true)
 	int findTotal();
 
 }
