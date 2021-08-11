@@ -34,8 +34,6 @@ public class ThemeService {
 	CategoryRepository categoryRepository;
 	@Autowired
 	DataSource dataSource;
-	@Autowired
-	Tika tika;
 	
 	public Theme createTheme(Theme theme, MultipartFile[] multipartFiles) throws IOException, SQLException
 	{
@@ -48,6 +46,7 @@ public class ThemeService {
 				for(MultipartFile file: multipartFiles) {
 					String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
 					String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
+					Tika tika = new Tika();
 					String fileType = tika.detect(fileName);
 					file.transferTo(new File(filePath));
 					themeFileToUpload = new ThemeFiles(fileName, fileType, t);
