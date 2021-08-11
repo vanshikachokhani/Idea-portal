@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.exceptions.NotFoundException;
+import com.psl.idea.models.ConfirmationToken;
 import com.psl.idea.models.Privilege;
 import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.UpdateUserEmail;
@@ -43,7 +44,9 @@ public class UserServiceTest {
 	
 	Privilege cpPrivilege = new Privilege(1, "Client Partner");
 	Users user = new Users(1, "John Doe", "1234567890", "john@gmail.com", BCrypt.hashpw("johnDoe", BCrypt.gensalt(10)), "Example", cpPrivilege);
-
+	ConfirmationToken token = new ConfirmationToken(user);
+	ConfirmationToken fakeToken = new ConfirmationToken();
+	
 	@Test
 	public void validateUserTest() throws NotFoundException {
 		User mockUser = new User();
@@ -147,6 +150,33 @@ public class UserServiceTest {
 		
 		assertEquals(user, userService.getUserByUserId(1));
 		assertEquals(null, userService.getUserByUserId(2));
+	}
+	
+	@Test
+	public void forgotPasswordTest() {
+		when(userRepo.findByEmailId(any(String.class))).thenReturn(user);
+		when(confirmationTokenRepo.save(any(ConfirmationToken.class))).thenReturn(token);
+		
+		assertEquals("Confirmation token sent to mail id", userService.forgotPassword("john@example.test"));
+	}
+	
+	@Test
+	public void checkTokenTest() {
+		when(confirmationTokenRepo.findByConfirmationToken(any(String.class))).thenReturn(token);
+		
+		assertEquals(true, userService.checkToken(token.getConfirmationToken()));
+	}
+	
+	@Test
+	public void updateForgotPasswordTest() {
+		User mockUser = new User();
+		when(confirmationTokenRepo.findByConfirmationToken(any(String.class))).thenReturn(token);
+		when(userRepo.save(any(Users.class))).thenReturn(user);
+		
+		mockUser.setEmailId("john@gmail.com");
+		mockUser.setPassword("JohnDoe");
+		
+		assertEquals(user, userService.updateForgotPassword(token.getConfirmationToken(), mockUser));
 	}
 	
 }

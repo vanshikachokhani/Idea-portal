@@ -113,11 +113,10 @@ public class UserService {
 	}
 
 	public String forgotPassword(String email_id) {
-		if(email_id!=null)
-			email_id = email_id.toLowerCase();
+		email_id = email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
-		confirmationTokenRepo.save(confirmationToken);
+		confirmationToken = confirmationTokenRepo.save(confirmationToken);
 		
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
 		mailmsg.setTo(email_id);
