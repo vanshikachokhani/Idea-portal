@@ -42,17 +42,14 @@ public class UserService {
 			return dbuser;
 		}
 		else {
-			throw new NotFoundException("Email Not found");
+			throw new NotFoundException("Email Not Found");
 		}
 	}
 	
 	public Users registerUser(Users user) {
-		String email_id = user.getEmailId();
+		String email_id = user.getEmailId().toLowerCase();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
-		if(email_id!=null) {
-			email_id = email_id.toLowerCase();
-			user.setEmailId(email_id);
-		}
+		
 		if(!pattern.matcher(email_id).matches())
 			throw new AuthException("Invalid email format");
 		Users u = userRepo.findByEmailId(email_id);
@@ -60,6 +57,7 @@ public class UserService {
 		if(u!=null)
 			throw new AuthException("Email is already in use");
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
+		user.setEmailId(email_id);
 		user.setPassword(hashedPassword);
 		return userRepo.save(user);
 	}
