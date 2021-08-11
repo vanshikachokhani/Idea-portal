@@ -124,7 +124,7 @@ public class IdeasController {
 		if(ideaFileDetails == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found");
 		}
-		String filePath = "E:\\Persistent\\data\\Ideas\\";
+		String filePath = ".\\data\\Ideas\\";
 		String fileName = ideaFileDetails.getFileName();
 		byte[] content = filesUtil.getFileBytes(filePath + fileName);
 		return ResponseEntity.ok()

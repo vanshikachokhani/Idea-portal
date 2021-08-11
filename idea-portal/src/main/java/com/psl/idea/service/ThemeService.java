@@ -45,7 +45,7 @@ public class ThemeService {
 			if(multipartFiles != null) {
 				for(MultipartFile file: multipartFiles) {
 					String fileName = theme.getUser().getUserId() + "." + theme.getThemeId() + "_" + file.getOriginalFilename();
-					String filePath = "E:\\Persistent\\data\\Themes\\" + fileName;
+					String filePath = ".\\data\\Themes\\" + fileName;
 					Tika tika = new Tika();
 					String fileType = tika.detect(fileName);
 					file.transferTo(new File(filePath));

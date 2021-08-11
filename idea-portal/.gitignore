@@ -37,3 +37,6 @@ build/
 
 # SonarQube
 sonarqube-analyzer.bat
+
+# FileStorage
+data/**

@@ -131,7 +131,7 @@ public class ThemeController {
 		if(themeFileDetails == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File Not Found");
 		}
-		String filePath = "E:\\Persistent\\data\\Themes\\";
+		String filePath = ".\\data\\Themes\\";
 		String fileName = themeFileDetails.getFileName();
 		byte[] content = filesUtil.getFileBytes(filePath + fileName);
 		return ResponseEntity.ok()

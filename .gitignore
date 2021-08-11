@@ -37,3 +37,6 @@ build/
 application.properties
 *.class
 *.log
+
+# FileStorage
+idea-portal/data/**
