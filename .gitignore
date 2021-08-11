@@ -39,4 +39,5 @@ application.properties
 *.log
 
 # FileStorage
-idea-portal/data/**
+idea-portal/data/Themes/**
+idea-portal/data/Ideas/**

@@ -39,4 +39,5 @@ build/
 sonarqube-analyzer.bat
 
 # FileStorage
-data/**
+data/Themes/**
+data/Ideas/**
