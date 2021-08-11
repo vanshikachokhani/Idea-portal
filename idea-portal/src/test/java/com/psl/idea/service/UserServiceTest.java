@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.psl.idea.exceptions.AuthException;
 import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.models.Privilege;
+import com.psl.idea.models.UpdateUser;
+import com.psl.idea.models.UpdateUserEmail;
 import com.psl.idea.models.User;
 import com.psl.idea.models.Users;
 import com.psl.idea.repository.ConfirmationTokenRepo;
@@ -79,6 +81,64 @@ public class UserServiceTest {
 		assertEquals("Email is already in use", a.getMessage());
 		
 		assertEquals(user, userService.registerUser(user));
+	}
+	
+	@Test
+	public void updatePasswordTest() throws NotFoundException {
+		UpdateUser mockUser = new UpdateUser();
+		mockUser.setEmailId(null);
+		
+		NotFoundException nf = assertThrows(NotFoundException.class, () -> { userService.updatePassword(mockUser); } );
+		assertEquals("Email not found", nf.getMessage());
+		
+		when(userRepo.findByEmailId(any(String.class))).thenReturn(null, user);
+		when(userRepo.save(any(Users.class))).thenReturn(user);
+		
+		mockUser.setEmailId(user.getEmailId());
+		mockUser.setOldpassword("JohnDoe");
+		mockUser.setNewpassword("JohnDoe");
+		
+		AuthException a = assertThrows(AuthException.class, () -> { userService.updatePassword(mockUser); } );
+		assertEquals("This email id does not exists.", a.getMessage());
+
+		a = assertThrows(AuthException.class, () -> { userService.updatePassword(mockUser); } );
+		assertEquals("Incorrect password", a.getMessage());
+		
+		mockUser.setOldpassword("johnDoe");
+		
+		assertEquals(user, userService.updatePassword(mockUser));
+	}
+	
+	@Test
+	public void updateEmailAndCompanyTest() throws NotFoundException {
+		UpdateUserEmail mockUser = new UpdateUserEmail();
+		
+		NotFoundException nf = assertThrows(NotFoundException.class, () -> { userService.updateEmailIdAndCompany(mockUser); });
+		assertEquals("Email not found!", nf.getMessage());
+		
+		when(userRepo.findByEmailId(any(String.class))).thenReturn(null, user);
+		when(userRepo.save(any(Users.class))).thenReturn(user);
+		
+		mockUser.setOldemailId(user.getEmailId());
+		mockUser.setOldcompany("ABC");
+		mockUser.setPassword("JohnDoe");
+		
+		AuthException a = assertThrows(AuthException.class, () -> { userService.updateEmailIdAndCompany(mockUser); });
+		assertEquals("This email id does not exists.", a.getMessage());
+		
+		a = assertThrows(AuthException.class, () -> { userService.updateEmailIdAndCompany(mockUser); });
+		assertEquals("Incorrect password", a.getMessage());
+		
+		mockUser.setPassword("johnDoe");
+
+		assertEquals(user, userService.updateEmailIdAndCompany(mockUser));
+		mockUser.setNewcompany("Persistent");
+		assertEquals(user, userService.updateEmailIdAndCompany(mockUser));
+		mockUser.setNewcompany(null);
+		mockUser.setNewemailId("johndoe@gmail.com");
+		assertEquals(user, userService.updateEmailIdAndCompany(mockUser));
+		mockUser.setNewcompany("Persistent");
+		assertEquals(user, userService.updateEmailIdAndCompany(mockUser));
 	}
 	
 	@Test

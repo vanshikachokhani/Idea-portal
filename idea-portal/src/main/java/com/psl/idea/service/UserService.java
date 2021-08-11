@@ -75,15 +75,14 @@ public class UserService {
 			String newPassword = user.getNewpassword();
 			String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
 			dbuser.setPassword(hashedPassword);
-			userRepo.save(dbuser);
-			return dbuser;
+			return userRepo.save(dbuser);
 		}
 		else {
 			throw new NotFoundException("Email not found");
 		}
 	}
 	
-	public Users updateEmailIdAndCompany(UpdateUserEmail user) {
+	public Users updateEmailIdAndCompany(UpdateUserEmail user) throws NotFoundException {
 		String email_id = user.getOldemailId();
 		String password = user.getPassword();
 		if(email_id!=null) {
@@ -106,7 +105,7 @@ public class UserService {
 			return dbuser;
 		}
 		else
-			return null;
+			throw new NotFoundException("Email not found!");
 	}
 	
 	public Users getUserByUserId(long userId) {
