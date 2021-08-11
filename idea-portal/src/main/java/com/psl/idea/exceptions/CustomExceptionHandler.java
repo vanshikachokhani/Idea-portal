@@ -16,7 +16,7 @@ public class CustomExceptionHandler {
 		error.setStatus(400);
 		error.setError("Bad Request");
 		error.setMessage(mnr.getMessage());
-		return new ResponseEntity<String>(error.toString(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(error.toString(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -25,7 +25,7 @@ public class CustomExceptionHandler {
 		error.setStatus(405);
 		error.setError("Method Not Allowed");
 		error.setMessage(mns.getMessage());
-		return new ResponseEntity<String>(error.toString(), HttpStatus.METHOD_NOT_ALLOWED);
+		return new ResponseEntity<>(error.toString(), HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
 	@ExceptionHandler(Exception.class)
@@ -34,36 +34,35 @@ public class CustomExceptionHandler {
 		error.setStatus(500);
 		error.setError("Internal Server Error");
 		error.setMessage(e.getMessage());
-		e.printStackTrace();
-		return new ResponseEntity<String>(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(UnauthorizedException.class)
-	public ResponseEntity<String> NotAuthorizedExceptionHandler (UnauthorizedException ex){
+	public ResponseEntity<String> notAuthorizedExceptionHandler (UnauthorizedException ex){
 		CustomErrorMessage error = new CustomErrorMessage();
 		error.setStatus(401);
 		error.setError("UNAUTHORIZED");
 		error.setMessage(ex.getMessage());
-        return new ResponseEntity<String>(error.toString(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(error.toString(), HttpStatus.UNAUTHORIZED);
 	}	
 	        
 	@ExceptionHandler(ForbiddenException.class)
- 	public ResponseEntity<String> ForbiddenException(ForbiddenException ex){
+ 	public ResponseEntity<String> forbiddenExceptionHandler(ForbiddenException ex){
 	 	CustomErrorMessage error = new CustomErrorMessage();
 	 	error.setStatus(403);
 	   	error.setError("Forbidden");
 	   	error.setMessage(ex.getMessage());
-	 	return new ResponseEntity<String>(error.toString(), HttpStatus.FORBIDDEN);
+	 	return new ResponseEntity<>(error.toString(), HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<String> NotFoundExceptionHandler(NotFoundException nf) {
+	public ResponseEntity<String> notFoundExceptionHandler(NotFoundException nf) {
 		CustomErrorMessage error = new CustomErrorMessage();
 		error.setStatus(404);
 		error.setError("Not Found");
 		error.setMessage(nf.getMessage());
 		
-		return new ResponseEntity<String>(error.toString(), HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(error.toString(), HttpStatus.NOT_FOUND);
 	}
 
 }

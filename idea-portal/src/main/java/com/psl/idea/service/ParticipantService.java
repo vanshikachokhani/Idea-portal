@@ -43,13 +43,12 @@ public class ParticipantService {
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {
-			return new ArrayList<Participants>();
+			return new ArrayList<>();
 		}
 	}
 	
 	public Idea viewIdea(Long ideaId){
-		Idea idea=ideaRepo.findById(ideaId).orElse(null);
-		return idea;
+		return ideaRepo.findById(ideaId).orElse(null);
 	}
 
 }

@@ -12,7 +12,7 @@ import com.psl.idea.models.Idea;
 public interface IdeaRepo extends JpaRepository<Idea, Long> {
 
 	List<Idea> findByUserUserId(long userId);
-	Idea findByIdeaId(long idea_id);
+	Idea findByIdeaId(long ideaId);
 	Idea[] findAllByThemeThemeId(long themeId);
 	
 	@Query(value ="SELECT *\r\n"

@@ -11,6 +11,6 @@ import com.psl.idea.models.ParticipantsId;
 @Repository
 public interface ParticipantRepo extends JpaRepository <Participants, ParticipantsId>{
 	
-	public List<Participants> findByIdeaIdeaId(long idea_id);
+	public List<Participants> findByIdeaIdeaId(long ideaId);
 
 }

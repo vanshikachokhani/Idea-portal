@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.psl.idea.exceptions.AuthException;
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.exceptions.UnauthorizedException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Theme;
@@ -55,7 +56,7 @@ public class UserController {
 
 	//Login 
 	@PostMapping("/api/users/login")
-	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) {	
+	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User user) throws NotFoundException {	
 		Users responseUser = userService.validateUser(user);
 		return new ResponseEntity<>(usersUtil.generateJWTToken(responseUser), HttpStatus.OK);
 	}
@@ -69,7 +70,7 @@ public class UserController {
 	
 	//Update password 
 	@PostMapping("/api/users/update-password")
-	public ResponseEntity<Map<String,Object>> updatePassword(@RequestBody UpdateUser user){
+	public ResponseEntity<Map<String,Object>> updatePassword(@RequestBody UpdateUser user) throws NotFoundException {
 		Users responseuser = userService.updatePassword(user);
 		return new ResponseEntity<>(usersUtil.generateJWTToken(responseuser), HttpStatus.OK);
 	}
@@ -82,8 +83,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/confirm-account")
-	public ResponseEntity<Object> confirmAccount(@RequestParam String token)  throws AuthException{
-		if(userService.checkToken(token)==false)
+	public ResponseEntity<Object> confirmAccount(@RequestParam String token) {
+		if(!userService.checkToken(token))
 			throw new AuthException("Link expired");
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

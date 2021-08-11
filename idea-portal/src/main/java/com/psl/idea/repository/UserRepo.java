@@ -9,11 +9,11 @@ import com.psl.idea.models.Users;
 public interface UserRepo extends JpaRepository<Users, Long> {
 
 
-	public Users findByEmailId(String email_id);
+	public Users findByEmailId(String emailId);
 	
-	public Users findByuserId (long user_id);
+	public Users findByuserId (long userId);
 	
-	public Users findByemailIdAndCompany(String email_id, String company);
+	public Users findByemailIdAndCompany(String emailId, String company);
 	
-	public Users findByemailIdAndPassword(String email_id, String password);
+	public Users findByemailIdAndPassword(String emailId, String password);
 }

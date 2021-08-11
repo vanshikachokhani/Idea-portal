@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.psl.idea.exceptions.AuthException;
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.models.ConfirmationToken;
 import com.psl.idea.models.UpdateUser;
 import com.psl.idea.models.UpdateUserEmail;
@@ -29,9 +30,9 @@ public class UserService {
 	@Autowired
 	ConfirmationTokenRepo confirmationTokenRepo;
 	
-	public Users validateUser(User user) throws AuthException {
+	public Users validateUser(User user) throws NotFoundException {
 		String email_id = user.getEmailId();
-		if(email_id!=null)
+		if(email_id!=null) {
 			email_id = email_id.toLowerCase();
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
@@ -39,9 +40,13 @@ public class UserService {
 			if(!BCrypt.checkpw(user.getPassword(), dbuser.getPassword()))
 				throw new AuthException("Invalid Login credentials");
 			return dbuser;
+		}
+		else {
+			throw new NotFoundException("Email Not found");
+		}
 	}
 	
-	public Users registerUser(Users user) throws AuthException {
+	public Users registerUser(Users user) {
 		String email_id = user.getEmailId();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 		if(email_id!=null) {
@@ -59,24 +64,28 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
-	public Users updatePassword(UpdateUser user) throws AuthException {
+	public Users updatePassword(UpdateUser user) throws NotFoundException {
 		String email_id = user.getEmailId();
 		String password = user.getOldpassword();
-		if(email_id!=null)
+		if(email_id!=null) {
 			email_id = email_id.toLowerCase();
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists.");
 			if(!BCrypt.checkpw(password, dbuser.getPassword()))
 				throw new AuthException("Incorrect password");	
-		String newPassword = user.getNewpassword();
-		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
-		dbuser.setPassword(hashedPassword);
-		userRepo.save(dbuser);
-		return dbuser;
+			String newPassword = user.getNewpassword();
+			String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
+			dbuser.setPassword(hashedPassword);
+			userRepo.save(dbuser);
+			return dbuser;
+		}
+		else {
+			throw new NotFoundException("Email not found");
+		}
 	}
 	
-	public Users updateEmailIdAndCompany(UpdateUserEmail user) throws AuthException {
+	public Users updateEmailIdAndCompany(UpdateUserEmail user) {
 		String email_id = user.getOldemailId();
 		String password = user.getPassword();
 		if(email_id!=null)
@@ -129,8 +138,7 @@ public class UserService {
 	
 	public Users updateForgotPassword(String token, User user) {
 		ConfirmationToken tokenentity = confirmationTokenRepo.findByConfirmationToken(token);
-		System.out.println(tokenentity.getUserEntity().getEmailId());
-		if(checkToken(token)==false)
+		if(!checkToken(token))
 			throw new AuthException("Incorrect token");	
 		Users dbuser = tokenentity.getUserEntity();
 		System.out.println(user.getPassword());

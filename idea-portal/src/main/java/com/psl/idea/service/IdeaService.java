@@ -71,7 +71,8 @@ public class IdeaService{
 				{
 					for(MultipartFile file: multipartFiles) {
 						String fileName = idea.getUser().getUserId() + "." + idea.getIdeaId() + "_" + file.getOriginalFilename();
-						String filePath = ".\\data\\Ideas\\" + fileName;Tika tika = new Tika();
+						String filePath = ".\\data\\Ideas\\" + fileName;
+						Tika tika = new Tika();
 						String fileType = tika.detect(fileName);
 						file.transferTo(new File(filePath));
 						ideaFileToUpload = new IdeaFiles(fileName, fileType, i);

@@ -10,6 +10,6 @@ import com.psl.idea.models.Comment;
 @Repository
 public interface CommentRepo extends JpaRepository<Comment, Long> {
 	
-	 List<Comment> findByIdeaIdeaId (long idea_id);
+	 List<Comment> findByIdeaIdeaId (long ideaId);
 
 }
