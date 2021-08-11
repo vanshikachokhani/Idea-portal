@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Rating;
 import com.psl.idea.repository.IdeaRepo;
@@ -19,7 +20,7 @@ public class RatingService {
 	@Autowired
 	IdeaRepo ideaRepo;
 	
-	public void doLike(Long ideaId,Rating rate) {
+	public void doLike(Long ideaId,Rating rate) throws NotFoundException {
 		Idea idea=ideaRepo.findById(ideaId).orElse(null);
 		if(idea != null) {
 			int p=repo.findTruevalue();
@@ -31,21 +32,19 @@ public class RatingService {
 			}
 			else {
 			float r=(float)(p/q)*5;
-			System.out.println(r);
 			idea.setRating(r);
 			}
 			rate.setIdea(idea);
 			repo.save(rate);
 		}
 		else {
-			System.out.println("Invalid rating");
+			throw new NotFoundException("Invalid Idea");
 		}
 	}
 	
 	public List<Rating> viewRating(Long ideaId) {
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		if(idea.isPresent()) {
-			//return idea.get().getRatings();
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {
