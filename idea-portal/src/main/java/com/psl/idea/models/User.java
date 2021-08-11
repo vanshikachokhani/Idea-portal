@@ -10,7 +10,7 @@ public class User {
 		this.password = password;
 	}
 	public User() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	public String getEmailId() {
 		return emailId;

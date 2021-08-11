@@ -36,7 +36,6 @@ public class CommentService {
 	public List<Comment> viewComments(Long ideaId){
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		if(idea.isPresent()) {
-			//return idea.get().getComments();
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {

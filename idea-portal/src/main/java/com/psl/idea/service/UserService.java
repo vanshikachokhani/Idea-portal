@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,10 @@ public class UserService {
 	@Autowired
 	ConfirmationTokenRepo confirmationTokenRepo;
 	
+	@SuppressWarnings("deprecation")
 	public Users validateUser(User user) throws AuthException {
 		String email_id = user.getEmailId();
-		if(email_id!=null)
+		if(email_id!=null) {
 			email_id = email_id.toLowerCase();
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
@@ -39,6 +41,10 @@ public class UserService {
 			if(!BCrypt.checkpw(user.getPassword(), dbuser.getPassword()))
 				throw new AuthException("Invalid Login credentials");
 			return dbuser;
+		}
+		else {
+			throw new HttpMessageNotReadableException("Bad Request");
+		}
 	}
 	
 	public Users registerUser(Users user) throws AuthException {
@@ -59,21 +65,25 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Users updatePassword(UpdateUser user) throws AuthException {
 		String email_id = user.getEmailId();
 		String password = user.getOldpassword();
-		if(email_id!=null)
+		if(email_id!=null) {
 			email_id = email_id.toLowerCase();
 			Users dbuser = userRepo.findByEmailId(email_id);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists.");
 			if(!BCrypt.checkpw(password, dbuser.getPassword()))
 				throw new AuthException("Incorrect password");	
-		String newPassword = user.getNewpassword();
-		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
-		dbuser.setPassword(hashedPassword);
-		userRepo.save(dbuser);
-		return dbuser;
+			String newPassword = user.getNewpassword();
+			String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(10));
+			dbuser.setPassword(hashedPassword);
+			userRepo.save(dbuser);
+			return dbuser;
+		} else {
+			throw new HttpMessageNotReadableException("Bad Request");
+		}
 	}
 	
 	public Users updateEmailIdAndCompany(UpdateUserEmail user) throws AuthException {
@@ -93,8 +103,9 @@ public class UserService {
 			dbuser.setEmailId(newemailId);
 		}
 		String newcompany = user.getNewcompany();
-		if(newcompany!=null)
-		dbuser.setCompany(newcompany);
+		if(newcompany!=null) {
+			dbuser.setCompany(newcompany);
+		}
 		userRepo.save(dbuser);
 		return dbuser;
 	}
@@ -108,7 +119,6 @@ public class UserService {
 			email_id = email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
-//		confirmationToken.validateToken();
 		confirmationTokenRepo.save(confirmationToken);
 		
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
@@ -129,11 +139,9 @@ public class UserService {
 	
 	public Users updateForgotPassword(String token, User user) {
 		ConfirmationToken tokenentity = confirmationTokenRepo.findByConfirmationToken(token);
-		System.out.println(tokenentity.getUserEntity().getEmailId());
 		if(checkToken(token)==false)
 			throw new AuthException("Incorrect token");	
 		Users dbuser = tokenentity.getUserEntity();
-		System.out.println(user.getPassword());
 		dbuser = changepassword(dbuser, user.getPassword());
 		return dbuser;
 	}

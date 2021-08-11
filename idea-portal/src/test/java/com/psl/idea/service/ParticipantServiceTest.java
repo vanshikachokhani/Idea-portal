@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.models.Category;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Participants;
@@ -69,7 +71,7 @@ class ParticipantServiceTest {
 	}
 	
 	@Test
-	public void interestInTest(){
+	public void interestInTest() throws NotFoundException {
 		int i=1;
 		long id=i;
 		Users user=new Users(id,"bharat","9999999","fh@ok.com","fdh@Q1","fg",new Privilege(1,"pm"));

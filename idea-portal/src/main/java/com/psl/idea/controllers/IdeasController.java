@@ -60,7 +60,7 @@ public class IdeasController {
 	
 	//like or dislike an idea
 	@PostMapping(path="/loggedin/ideas/{ideaId}/like")
-	public ResponseEntity<Object> likeDislike(@PathVariable long ideaId,@RequestBody Rating rate) {
+	public ResponseEntity<Object> likeDislike(@PathVariable long ideaId,@RequestBody Rating rate) throws NotFoundException {
 		ratingService.doLike(ideaId,rate);
 		return ResponseEntity.status(HttpStatus.OK).body("inserted");
 		
@@ -90,7 +90,7 @@ public class IdeasController {
 	
 	//interest in idea
 	@PostMapping(path="/loggedin/ideas/{ideaId}/interested")
-	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) {
+	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) throws NotFoundException {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 3)
 		{

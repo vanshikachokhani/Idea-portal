@@ -30,7 +30,6 @@ public class ThemeFiles extends Files {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Theme File [File Name: " + fileName + ", MimeType: " + fileType + "]";
 	}
 	

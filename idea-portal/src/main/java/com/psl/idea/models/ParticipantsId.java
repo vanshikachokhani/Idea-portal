@@ -17,7 +17,6 @@ public class ParticipantsId implements Serializable {
 	}
 	public ParticipantsId() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public int hashCode() {

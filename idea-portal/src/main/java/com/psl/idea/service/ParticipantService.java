@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.psl.idea.exceptions.NotFoundException;
 import com.psl.idea.models.Idea;
 import com.psl.idea.models.Participants;
 import com.psl.idea.repository.IdeaRepo;
@@ -22,7 +23,7 @@ public class ParticipantService {
 	IdeaRepo ideaRepo;
 
 	//interested participants in this idea
-	public void interestIn(Participants participants,Long ideaId) {
+	public void interestIn(Participants participants,Long ideaId) throws NotFoundException {
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		Idea i=ideaRepo.findByIdeaId(ideaId);
 		if(idea.isPresent()) {
@@ -30,7 +31,7 @@ public class ParticipantService {
 			repo.save(participants);
 		}
 		else {
-			System.out.println("Invalid participant");
+			throw new NotFoundException("Invalid Participation");
 		}
 		
 	}
@@ -39,7 +40,6 @@ public class ParticipantService {
 	public List<Participants> viewInterested(Long ideaId){
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		if(idea.isPresent()) {
-		//	return idea.get().getParticipant();
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {

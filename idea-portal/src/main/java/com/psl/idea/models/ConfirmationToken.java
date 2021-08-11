@@ -80,6 +80,5 @@ public class ConfirmationToken {
 		Date currentTime = new Date(System.currentTimeMillis()-Constants.CONFIRMATION_TOKEN_VALIDAITY);
 		
 		return currentTime.before(createdDate);
-//		System.out.println(createdDate.toString());
 	}
 }
