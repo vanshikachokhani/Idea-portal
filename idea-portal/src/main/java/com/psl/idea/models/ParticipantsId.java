@@ -17,7 +17,6 @@ public class ParticipantsId implements Serializable {
 	}
 	public ParticipantsId() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public int hashCode() {
@@ -34,9 +33,5 @@ public class ParticipantsId implements Serializable {
 		ParticipantsId other = (ParticipantsId) obj;
 		return idea == other.idea && role == other.role && user == other.user;
 	}
-	
-	
-	
-	
 
 }

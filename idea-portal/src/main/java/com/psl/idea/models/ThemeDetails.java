@@ -46,7 +46,6 @@ public class ThemeDetails {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Theme Details [Theme=" + theme.getThemeId() + "]";
 	}
 

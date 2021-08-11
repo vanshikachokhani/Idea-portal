@@ -90,17 +90,17 @@ public class IdeasController {
 	
 	//interest in idea
 	@PostMapping(path="/loggedin/ideas/{ideaId}/interested")
-	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) {
+	public ResponseEntity<Object> interestedParticipant(@RequestBody Participants participants, HttpServletRequest httpServletRequest,@PathVariable Long ideaId) throws NotFoundException {
 		long userPrivilege = usersUtil.getPrivilegeIdFromRequest(httpServletRequest);
 		if(userPrivilege == 3)
 		{
-		  participantService.interestIn(participants,ideaId);
-		  return ResponseEntity.status(HttpStatus.OK).body("your interest created");
+		  if(participantService.interestIn(participants,ideaId) != null)
+			  return ResponseEntity.status(HttpStatus.OK).body("your interest created");
+		  else
+			  throw new NotFoundException("Idea not found!");
 		}
 		else
-		{
 			throw new UnauthorizedException("you are not Authorized to participate");
-		}
 	}
 	
 	// see all interested participants in this idea

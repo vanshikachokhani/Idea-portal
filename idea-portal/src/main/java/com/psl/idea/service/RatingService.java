@@ -31,7 +31,7 @@ public class RatingService {
 				idea.setRating(0f);
 			}
 			else {
-			float r=(float)(p/q)*5;
+			float r=((float)p/q)*5;
 			idea.setRating(r);
 			}
 			rate.setIdea(idea);

@@ -96,7 +96,6 @@ public class Idea {
 	}
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Idea [id=" + ideaId + ", title=" + title + ", theme=" + theme.getThemeId() + ", submitted by=" + user.getUserId() + "]";
 	}
 	

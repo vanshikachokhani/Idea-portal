@@ -22,15 +22,14 @@ public class ParticipantService {
 	IdeaRepo ideaRepo;
 
 	//interested participants in this idea
-	public void interestIn(Participants participants,Long ideaId) {
-		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
+	public Participants interestIn(Participants participants,Long ideaId) {
 		Idea i=ideaRepo.findByIdeaId(ideaId);
-		if(idea.isPresent()) {
+		if(i != null) {
 			participants.setIdea(i);
-			repo.save(participants);
+			return repo.save(participants);
 		}
 		else {
-			System.out.println("Invalid participant");
+			return null;
 		}
 		
 	}
@@ -39,7 +38,6 @@ public class ParticipantService {
 	public List<Participants> viewInterested(Long ideaId){
 		java.util.Optional<Idea> idea=ideaRepo.findById(ideaId);
 		if(idea.isPresent()) {
-		//	return idea.get().getParticipant();
 			return repo.findByIdeaIdeaId(ideaId);
 		}
 		else {

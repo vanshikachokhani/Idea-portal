@@ -63,9 +63,12 @@ public class UserController {
 	
 	//Update EmailId && Company 
 	@PostMapping("/api/users/update-emailId-company")
-	public ResponseEntity<Map<String,Object>> updateEmailIdAndCompany(@RequestBody UpdateUserEmail user){
+	public ResponseEntity<Map<String,Object>> updateEmailIdAndCompany(@RequestBody UpdateUserEmail user) throws NotFoundException {
 		Users responseuser = userService.updateEmailIdAndCompany(user);
-		return new ResponseEntity<>(usersUtil.generateJWTToken(responseuser), HttpStatus.OK);
+		if(responseuser != null)
+			return new ResponseEntity<>(usersUtil.generateJWTToken(responseuser), HttpStatus.OK);
+		else
+			throw new NotFoundException("Email Not Found!");
 	}
 	
 	//Update password 

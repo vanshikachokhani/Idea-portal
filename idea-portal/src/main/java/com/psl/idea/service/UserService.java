@@ -88,24 +88,27 @@ public class UserService {
 	public Users updateEmailIdAndCompany(UpdateUserEmail user) {
 		String email_id = user.getOldemailId();
 		String password = user.getPassword();
-		if(email_id!=null)
+		if(email_id!=null) {
 			email_id = email_id.toLowerCase();
-		Users dbuser = userRepo.findByEmailId(email_id);
-		if(dbuser==null)
-			throw new AuthException("This email id does not exists.");
-		if(!BCrypt.checkpw(password, dbuser.getPassword()))
-			throw new AuthException("Incorrect password");
-		
-		String newemailId = user.getNewemailId();
-		if(newemailId!=null) {
-			newemailId = newemailId.toLowerCase();
-			dbuser.setEmailId(newemailId);
+			Users dbuser = userRepo.findByEmailId(email_id);
+			if(dbuser==null)
+				throw new AuthException("This email id does not exists.");
+			if(!BCrypt.checkpw(password, dbuser.getPassword()))
+				throw new AuthException("Incorrect password");
+			
+			String newemailId = user.getNewemailId();
+			if(newemailId!=null) {
+				dbuser.setEmailId(newemailId.toLowerCase());
+			}
+			String newcompany = user.getNewcompany();
+			if(newcompany!=null) {
+				dbuser.setCompany(newcompany);
+			}
+			dbuser = userRepo.save(dbuser);
+			return dbuser;
 		}
-		String newcompany = user.getNewcompany();
-		if(newcompany!=null)
-		dbuser.setCompany(newcompany);
-		userRepo.save(dbuser);
-		return dbuser;
+		else
+			return null;
 	}
 	
 	public Users getUserByUserId(long userId) {
@@ -117,7 +120,6 @@ public class UserService {
 			email_id = email_id.toLowerCase();
 		Users dbuser = userRepo.findByEmailId(email_id);
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
-//		confirmationToken.validateToken();
 		confirmationTokenRepo.save(confirmationToken);
 		
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
@@ -141,7 +143,6 @@ public class UserService {
 		if(!checkToken(token))
 			throw new AuthException("Incorrect token");	
 		Users dbuser = tokenentity.getUserEntity();
-		System.out.println(user.getPassword());
 		dbuser = changepassword(dbuser, user.getPassword());
 		return dbuser;
 	}
@@ -149,7 +150,7 @@ public class UserService {
 	public Users changepassword(Users user, String newpassword) {
 		String hashedPassword = BCrypt.hashpw(newpassword, BCrypt.gensalt(10));
 		user.setPassword(hashedPassword);
-		userRepo.save(user);
+		user = userRepo.save(user);
 		return user;
 	}
 }

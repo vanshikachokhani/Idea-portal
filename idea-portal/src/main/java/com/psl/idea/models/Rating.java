@@ -66,7 +66,6 @@ public class Rating implements Serializable {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Rating [user=" + user.getUserId() + ", idea=" + idea.getIdeaId() + ", rating=" + rating + "]";
 	}
 	

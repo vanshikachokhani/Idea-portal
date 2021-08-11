@@ -31,7 +31,6 @@ public class IdeaFiles extends Files {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Idea File [File Name: " + fileName + ", MimeType: " + fileType + "]";
 	}
 	

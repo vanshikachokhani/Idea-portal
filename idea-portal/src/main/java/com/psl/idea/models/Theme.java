@@ -93,7 +93,6 @@ public class Theme {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Theme [id=" + themeId + ", title=" + title + ", category=" + category.getCategoryId() + ", user=" + user.getUserId() + "]";
 	}
 	
