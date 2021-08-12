@@ -76,6 +76,7 @@ class IdeasControllerTest {
 	private Idea i = new Idea(1, "Test Idea", "Testing Ideas", 0, t, user2);
 	private Comment comment = new Comment("you are good", user2, i);
 	private IdeaFiles ideaFile = new IdeaFiles("1.1_Test.txt", "application/text", i);
+	private Participants participants = new Participants(user3, i, role);
 	
 	private String generateJWTToken(Users user){
 		long timestamp = System.currentTimeMillis();
@@ -152,6 +153,7 @@ class IdeasControllerTest {
 	void interestedParticipantTest() throws Exception {
 		long id=1L;
 		when(usersUtil.getPrivilegeIdFromRequest(any())).thenReturn(user3.getPrivilege().getPrivilegeId());
+		when(participantService.interestIn(any(Participants.class), any(Long.class))).thenReturn(participants);
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/api/loggedin/ideas/{ideaId}/interested",id).header("Authorization", "Bearer " + this.generateJWTToken(user3)).contentType(MediaType.APPLICATION_JSON).content("{\"user\":{\"userId\": 3},\"idea\":{\"ideaId\":1},\"role\":{\"roleId\":1}}"))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 		

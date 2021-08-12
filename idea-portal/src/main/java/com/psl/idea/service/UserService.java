@@ -31,10 +31,10 @@ public class UserService {
 	ConfirmationTokenRepo confirmationTokenRepo;
 	
 	public Users validateUser(User user) throws NotFoundException {
-		String email_id = user.getEmailId();
-		if(email_id!=null) {
-			email_id = email_id.toLowerCase();
-			Users dbuser = userRepo.findByEmailId(email_id);
+		String emailId = user.getEmailId();
+		if(emailId!=null) {
+			emailId = emailId.toLowerCase();
+			Users dbuser = userRepo.findByEmailId(emailId);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists");
 			if(!BCrypt.checkpw(user.getPassword(), dbuser.getPassword()))
@@ -47,27 +47,27 @@ public class UserService {
 	}
 	
 	public Users registerUser(Users user) {
-		String email_id = user.getEmailId().toLowerCase();
+		String emailId = user.getEmailId().toLowerCase();
 		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 		
-		if(!pattern.matcher(email_id).matches())
+		if(!pattern.matcher(emailId).matches())
 			throw new AuthException("Invalid email format");
-		Users u = userRepo.findByEmailId(email_id);
+		Users u = userRepo.findByEmailId(emailId);
 		
 		if(u!=null)
 			throw new AuthException("Email is already in use");
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
-		user.setEmailId(email_id);
+		user.setEmailId(emailId);
 		user.setPassword(hashedPassword);
 		return userRepo.save(user);
 	}
 	
 	public Users updatePassword(UpdateUser user) throws NotFoundException {
-		String email_id = user.getEmailId();
+		String emailId = user.getEmailId();
 		String password = user.getOldpassword();
-		if(email_id!=null) {
-			email_id = email_id.toLowerCase();
-			Users dbuser = userRepo.findByEmailId(email_id);
+		if(emailId!=null) {
+			emailId = emailId.toLowerCase();
+			Users dbuser = userRepo.findByEmailId(emailId);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists.");
 			if(!BCrypt.checkpw(password, dbuser.getPassword()))
@@ -83,11 +83,11 @@ public class UserService {
 	}
 	
 	public Users updateEmailIdAndCompany(UpdateUserEmail user) throws NotFoundException {
-		String email_id = user.getOldemailId();
+		String emailId = user.getOldemailId();
 		String password = user.getPassword();
-		if(email_id!=null) {
-			email_id = email_id.toLowerCase();
-			Users dbuser = userRepo.findByEmailId(email_id);
+		if(emailId!=null) {
+			emailId = emailId.toLowerCase();
+			Users dbuser = userRepo.findByEmailId(emailId);
 			if(dbuser==null)
 				throw new AuthException("This email id does not exists.");
 			if(!BCrypt.checkpw(password, dbuser.getPassword()))
@@ -112,14 +112,14 @@ public class UserService {
 		return userRepo.findByuserId(userId);
 	}
 
-	public String forgotPassword(String email_id) {
-		email_id = email_id.toLowerCase();
-		Users dbuser = userRepo.findByEmailId(email_id);
+	public String forgotPassword(String emailId) {
+		emailId = emailId.toLowerCase();
+		Users dbuser = userRepo.findByEmailId(emailId);
 		ConfirmationToken confirmationToken = new ConfirmationToken(dbuser);
 		confirmationToken = confirmationTokenRepo.save(confirmationToken);
 		
 		SimpleMailMessage mailmsg = new SimpleMailMessage();
-		mailmsg.setTo(email_id);
+		mailmsg.setTo(emailId);
 		mailmsg.setSubject("Password Reset!");
 		mailmsg.setText("To reset your password, please enter this : "
 	            +"http://localhost:8080/confirm-account?token="

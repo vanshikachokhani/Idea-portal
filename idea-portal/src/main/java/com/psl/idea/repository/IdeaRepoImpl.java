@@ -41,17 +41,7 @@ public class IdeaRepoImpl {
 		session.close();
 		return ans;
 	}
-//	public List<Idea> findbycomment(long themeID) {
-//		// this function isn't working fine
-//		Session session=sessionFactory.openSession();
-//		String hql="FROM Idea I where I.theme.themeId=:id LEFT OUTER JOIN FROM Comment C WHERE C.theme.themeId=:id1 GROUP BY C.idea.ideaId ON I.theme=C.theme ORDER BY COUNT(C.commentId) DESC";
-//		Query<Idea> query=session.createQuery(hql, Idea.class);
-//		query.setParameter("id", themeID);
-//		query.setParameter("id1", themeID);
-//		List<Idea> ans=query.list();
-//		session.close();
-//		return ans;
-//	}
+	
 	public List<Idea> findAll(long themeID) {
 		Session session=sessionFactory.openSession();
 		String hql="FROM Idea I where I.theme.themeId=:id";
